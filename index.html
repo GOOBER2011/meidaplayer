@@ -204,12 +204,13 @@
       const sourceLabel   = document.getElementById('sourceLabel');
       const clearBtn      = document.getElementById('clearBtn');
 
-      // Extract YouTube video ID from various URL formats
+      // Extract YouTube video ID from various URL formats, stripping extra params
       function getYouTubeId(url) {
         try {
           const parsed = new URL(url);
           const host = parsed.hostname.replace('www.', '');
           if (host === 'youtube.com' || host === 'm.youtube.com') {
+            // Strip &t= and other params, only use the v= value
             return parsed.searchParams.get('v');
           }
           if (host === 'youtu.be') {
@@ -223,7 +224,6 @@
       }
 
       function resetPlayer(message) {
-        // Hide all players
         videoPlayer.hidden = true;
         videoPlayer.pause();
         videoPlayer.removeAttribute('src');
@@ -289,8 +289,7 @@
         // Check for YouTube first
         const ytId = getYouTubeId(url);
         if (ytId) {
-          // Embed URL format required by YouTube
-          // Note: This will NOT work from file:// (Error 153)
+          // Use the embed format and REMOVE any extra parameters like &t=1s
           const embedUrl = `https://www.youtube.com/embed/${ytId}?rel=0`;
           showYouTube();
           youtubePlayer.src = embedUrl;
@@ -330,7 +329,6 @@
         }
       }
 
-      // Event listeners
       loadBtn.addEventListener('click', loadFromInput);
 
       urlInput.addEventListener('keydown', (e) => {
@@ -346,7 +344,6 @@
         resetPlayer('⚡ Paste a link and click <strong>Play</strong>');
       });
 
-      // Error handling for direct files
       videoPlayer.addEventListener('error', () => {
         if (videoPlayer.src && !videoPlayer.hidden) {
           resetPlayer('⚠️ Could not load video. Check the URL or file format.');
@@ -359,7 +356,6 @@
         }
       });
 
-      // Initialize
       resetPlayer('⚡ Paste a link and click <strong>Play</strong>');
     })();
   </script>
