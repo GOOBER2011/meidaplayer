@@ -235,7 +235,18 @@
       localStorage.setItem('tubeYouUsername', username);
     }
 
+    // SELF-HEALING: Fix old local data missing youtube_id
     let localVideos = JSON.parse(localStorage.getItem('tubeYouVideos')) || [];
+    let dataMigrated = false;
+    localVideos = localVideos.map(v => {
+      if (!v.youtube_id && v.id) {
+        v.youtube_id = v.id;
+        dataMigrated = true;
+      }
+      return v;
+    });
+    if (dataMigrated) localStorage.setItem('tubeYouVideos', JSON.stringify(localVideos));
+
     let publicVideos = [];
     let currentPublicVideoId = null;
     
