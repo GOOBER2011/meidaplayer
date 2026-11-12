@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TubeYou</title>
   
-  <!-- Supabase Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -217,37 +216,28 @@
   </div>
 
   <script>
-    // ==========================================
-    // SUPABASE CONFIGURATION
-    // ==========================================
     const SUPABASE_URL = 'https://yudpsvfjqeiffsahhutf.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_kDGmA7Bcq4VCHrnOT2vtLg_bUpV5IZH';
     
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
-    // Generate a unique Session ID for Likes
     let sessionId = localStorage.getItem('tubeYouSessionId');
     if (!sessionId) {
       sessionId = crypto.randomUUID();
       localStorage.setItem('tubeYouSessionId', sessionId);
     }
 
-    // Ask for username on first visit, save to localStorage
     let username = localStorage.getItem('tubeYouUsername');
     if (!username) {
-      username = prompt("Welcome to TubeYou! Please enter a display name for commenting and posting:", "Guest User");
+      username = prompt("Welcome to TubeYou! Please enter a display name:", "Guest");
       if (!username || username.trim() === '') username = "Anonymous";
       localStorage.setItem('tubeYouUsername', username);
     }
 
-    // ==========================================
-    // STATE & VARIABLES
-    // ==========================================
     let localVideos = JSON.parse(localStorage.getItem('tubeYouVideos')) || [];
     let publicVideos = [];
     let currentPublicVideoId = null;
-    let currentPublicVideoData = null;
     
     let ytPlayerPrivate = null;
     let ytPlayerPublic = null;
@@ -262,9 +252,6 @@
     const publicView = document.getElementById('publicView');
     const publicSelectedArea = document.getElementById('publicSelectedArea');
 
-    // ==========================================
-    // YOUTUBE METADATA
-    // ==========================================
     function getYouTubeId(url) {
       try {
         const parsed = new URL(url);
@@ -295,10 +282,7 @@
       };
     }
 
-    // ==========================================
-    // PLAYERS
-    // ==========================================
-    function onPlayerError(event) {
+    function onPlayerError() {
       alert('This video is not allowed to be played by the creator.');
     }
 
@@ -315,7 +299,6 @@
 
     async function playPublicVideo(video) {
       currentPublicVideoId = video.id;
-      currentPublicVideoData = video;
       publicSelectedArea.hidden = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -333,22 +316,18 @@
         });
       } else setTimeout(() => playPublicVideo(video), 500);
 
-      // Increment view count
       await db.rpc('increment_views', { v_id: video.id });
       document.getElementById('pubViews').innerText = video.views + 1;
 
-      // Load Comments and Likes
       loadPublicInteractions(video.id);
     }
 
-    // ==========================================
-    // SUPABASE INTERACTIONS
-    // ==========================================
     async function loadPublicVideos() {
       publicVideoGrid.innerHTML = '<div class="loader"></div>';
       const { data, error } = await db.from('videos').select('*').order('created_at', { ascending: false });
       
       if (error) {
+        console.error(error);
         publicVideoGrid.innerHTML = '<div class="empty-state">Failed to load public videos.</div>';
         return;
       }
@@ -364,7 +343,6 @@
     }
 
     async function loadPublicInteractions(videoId) {
-      // 1. Fetch Likes
       const { data: likes } = await db.from('likes').select('*').eq('video_id', videoId);
       const likeCount = likes ? likes.length : 0;
       const hasLiked = likes ? likes.some(l => l.session_id === sessionId) : false;
@@ -372,7 +350,6 @@
       document.getElementById('pubLikeCount').innerText = likeCount;
       document.getElementById('pubLikeBtn').classList.toggle('liked', hasLiked);
 
-      // 2. Fetch Comments
       const { data: comments } = await db.from('comments').select('*').eq('video_id', videoId).order('created_at', { ascending: false });
       const commentList = document.getElementById('pubCommentList');
       commentList.innerHTML = '';
@@ -395,14 +372,8 @@
       });
     }
 
-    // ==========================================
-    // EVENT LISTENERS
-    // ==========================================
-    
-    // Like Button
     document.getElementById('pubLikeBtn').onclick = async () => {
       if (!currentPublicVideoId) return;
-      
       const isLiked = document.getElementById('pubLikeBtn').classList.contains('liked');
       
       if (isLiked) {
@@ -413,23 +384,23 @@
       loadPublicInteractions(currentPublicVideoId);
     };
 
-    // Post Comment
     document.getElementById('pubCommentBtn').onclick = async () => {
       const input = document.getElementById('pubCommentInput');
       const text = input.value.trim();
       if (!text || !currentPublicVideoId) return;
 
-      await db.from('comments').insert({
+      const { error } = await db.from('comments').insert({
         video_id: currentPublicVideoId,
         author: username,
         text: text
       });
       
+      if (error) alert("Error posting comment: " + error.message);
+      
       input.value = '';
       loadPublicInteractions(currentPublicVideoId);
     };
 
-    // Render Cards
     function createLocalCard(video) {
       const card = document.createElement('div');
       card.className = 'video-card';
@@ -444,11 +415,47 @@
             <div class="video-author">${video.author}</div>
           </div>
         </div>
+        <div style="padding: 0 1rem 1rem;">
+          <button class="btn" style="height: 2rem; width: 100%; font-size:0.85rem;" id="pubBtn_${video.youtube_id}">Publish Publicly</button>
+        </div>
       `;
-      card.onclick = () => {
+      
+      card.querySelector('.thumbnail-container').onclick = () => {
         playPrivateVideo(video.youtube_id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       };
+      
+      card.querySelector(`#pubBtn_${video.youtube_id}`).onclick = async (e) => {
+        e.stopPropagation();
+        const btn = e.target;
+        btn.innerText = "Publishing...";
+        
+        const { data: existing } = await db.from('videos').select('id').eq('youtube_id', video.youtube_id);
+        if (existing && existing.length > 0) {
+          btn.innerText = "Already Public";
+          return;
+        }
+
+        const { error } = await db.from('videos').insert({
+          youtube_id: video.youtube_id,
+          title: video.title,
+          author: video.author,
+          thumbnail: video.thumbnail,
+          avatar: video.avatar
+        });
+
+        if (error) {
+          console.error("Supabase Error:", error);
+          alert("Failed to publish: " + error.message); 
+          btn.innerText = "Publish Publicly";
+        } else {
+          btn.innerText = "Published!";
+          btn.style.background = "var(--bg-hover)";
+          btn.style.color = "var(--accent)";
+          loadPublicVideos();
+        }
+      };
+      
       return card;
     }
 
@@ -471,7 +478,6 @@
       return card;
     }
 
-    // Add Video (Local + Supabase)
     addBtn.addEventListener('click', async () => {
       const url = urlInput.value.trim();
       if (!url) return;
@@ -483,7 +489,6 @@
       try {
         const newVideo = await fetchVideoMetadata(ytId);
         
-        // Check if it exists locally
         if (localVideos.some(v => v.youtube_id === ytId)) {
            alert('Already saved locally!');
         } else {
@@ -491,7 +496,6 @@
            localStorage.setItem('tubeYouVideos', JSON.stringify(localVideos));
            renderLocalVideos();
         }
-        
         urlInput.value = '';
       } catch (err) { 
         alert('Failed to fetch video. It may be private or restricted.'); 
@@ -501,7 +505,6 @@
       }
     });
 
-    // Render Local Videos
     function renderLocalVideos() {
       myVideoGrid.innerHTML = '';
       if (localVideos.length === 0) {
@@ -511,51 +514,6 @@
       localVideos.forEach(video => myVideoGrid.appendChild(createLocalCard(video)));
     }
 
-    // Publish to Public Feed
-    async function publishVideo(video) {
-      const { data: existing } = await db.from('videos').select('id').eq('youtube_id', video.youtube_id);
-      if (existing && existing.length > 0) {
-        return alert('This video is already public!');
-      }
-
-      const { error } = await db.from('videos').insert({
-        youtube_id: video.youtube_id,
-        title: video.title,
-        author: video.author,
-        thumbnail: video.thumbnail,
-        avatar: video.avatar
-      });
-
-      if (error) {
-        console.error(error);
-        alert('Failed to publish video.');
-      } else {
-        alert('Successfully published to the Public Feed!');
-        loadPublicVideos(); // Refresh public feed
-      }
-    }
-
-    // Add Publish Button to Local Cards
-    const originalCreateLocalCard = createLocalCard;
-    createLocalCard = function(video) {
-      const card = originalCreateLocalCard(video);
-      const actions = document.createElement('div');
-      actions.style.padding = '0 1rem 1rem';
-      const btn = document.createElement('button');
-      btn.className = 'btn';
-      btn.style.height = '2rem';
-      btn.style.width = '100%';
-      btn.innerText = 'Publish Publicly';
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        publishVideo(video);
-      };
-      actions.appendChild(btn);
-      card.appendChild(actions);
-      return card;
-    };
-
-    // Navigation
     document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
     document.querySelector('[data-view="library"]').onclick = () => {
       libraryView.hidden = false; publicView.hidden = true;
@@ -569,7 +527,6 @@
       loadPublicVideos();
     };
 
-    // INIT
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
