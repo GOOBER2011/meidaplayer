@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Media Player</title>
+  <title>URL Media Player (YouTube + Direct Files)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -89,6 +89,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
     .player-wrapper.video-mode {
       aspect-ratio: 16 / 9;
@@ -96,6 +97,15 @@
     .player-wrapper.audio-mode {
       padding: 1.5rem 1rem;
       aspect-ratio: auto;
+    }
+    .player-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
     video {
       width: 100%;
@@ -152,15 +162,15 @@
 </head>
 <body>
   <div class="player-card">
-    <h1>🎬 URL Player <span>video &amp; audio</span></h1>
+    <h1>🎬 URL Player <span>YouTube &amp; files</span></h1>
 
     <div class="input-group">
       <input
         type="url"
         id="urlInput"
         class="url-input"
-        placeholder="Paste video or audio URL (mp4, webm, mp3...)"
-        value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        placeholder="Paste YouTube link OR direct video/audio URL"
+        value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
         spellcheck="false"
         aria-label="Media URL"
       />
@@ -169,10 +179,11 @@
 
     <div id="playerWrapper" class="player-wrapper">
       <div id="defaultMessage" class="message">
-        ⚡ Paste a URL and click <strong>Play</strong>
+        ⚡ Paste a link and click <strong>Play</strong>
       </div>
       <video id="videoPlayer" controls playsinline preload="metadata" hidden></video>
       <audio id="audioPlayer" controls preload="metadata" hidden></audio>
+      <iframe id="youtubePlayer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen hidden></iframe>
     </div>
 
     <div class="status-bar">
@@ -187,35 +198,57 @@
       const loadBtn       = document.getElementById('loadBtn');
       const videoPlayer   = document.getElementById('videoPlayer');
       const audioPlayer   = document.getElementById('audioPlayer');
+      const youtubePlayer = document.getElementById('youtubePlayer');
       const playerWrapper = document.getElementById('playerWrapper');
       const defaultMsg    = document.getElementById('defaultMessage');
       const sourceLabel   = document.getElementById('sourceLabel');
       const clearBtn      = document.getElementById('clearBtn');
 
+      // Extract YouTube video ID from various URL formats
+      function getYouTubeId(url) {
+        try {
+          const parsed = new URL(url);
+          const host = parsed.hostname.replace('www.', '');
+          if (host === 'youtube.com' || host === 'm.youtube.com') {
+            return parsed.searchParams.get('v');
+          }
+          if (host === 'youtu.be') {
+            return parsed.pathname.slice(1).split('?')[0];
+          }
+          if (host === 'youtube.com' && parsed.pathname.startsWith('/embed/')) {
+            return parsed.pathname.split('/')[2];
+          }
+        } catch (e) { /* not a valid URL */ }
+        return null;
+      }
+
       function resetPlayer(message) {
+        // Hide all players
+        videoPlayer.hidden = true;
         videoPlayer.pause();
         videoPlayer.removeAttribute('src');
         videoPlayer.load();
-        videoPlayer.hidden = true;
 
+        audioPlayer.hidden = true;
         audioPlayer.pause();
         audioPlayer.removeAttribute('src');
         audioPlayer.load();
-        audioPlayer.hidden = true;
+
+        youtubePlayer.hidden = true;
+        youtubePlayer.removeAttribute('src');
 
         playerWrapper.classList.remove('video-mode', 'audio-mode');
-        playerWrapper.classList.add('video-mode'); // default framing
+        playerWrapper.classList.add('video-mode');
 
         defaultMsg.hidden = false;
-        defaultMsg.innerHTML = message || '⚡ Paste a URL and click <strong>Play</strong>';
+        defaultMsg.innerHTML = message || '⚡ Paste a link and click <strong>Play</strong>';
         sourceLabel.textContent = 'No media loaded';
       }
 
       function showVideo() {
         defaultMsg.hidden = true;
         audioPlayer.hidden = true;
-        audioPlayer.pause();
-        audioPlayer.removeAttribute('src');
+        youtubePlayer.hidden = true;
         videoPlayer.hidden = false;
         playerWrapper.classList.remove('audio-mode');
         playerWrapper.classList.add('video-mode');
@@ -224,19 +257,26 @@
       function showAudio() {
         defaultMsg.hidden = true;
         videoPlayer.hidden = true;
-        videoPlayer.pause();
-        videoPlayer.removeAttribute('src');
+        youtubePlayer.hidden = true;
         audioPlayer.hidden = false;
         playerWrapper.classList.remove('video-mode');
         playerWrapper.classList.add('audio-mode');
       }
 
-      // Guess media type from extension
-      function guessType(url) {
+      function showYouTube() {
+        defaultMsg.hidden = true;
+        videoPlayer.hidden = true;
+        audioPlayer.hidden = true;
+        youtubePlayer.hidden = false;
+        playerWrapper.classList.remove('audio-mode');
+        playerWrapper.classList.add('video-mode');
+      }
+
+      function guessDirectType(url) {
         const path = url.split('?')[0].split('#')[0].toLowerCase();
         const audioExts = ['.mp3', '.wav', '.m4a', '.aac', '.flac', '.opus', '.oga'];
         if (audioExts.some(ext => path.endsWith(ext))) return 'audio';
-        return 'video'; // default to video
+        return 'video';
       }
 
       function loadFromInput() {
@@ -246,7 +286,19 @@
           return;
         }
 
-        // Validate URL
+        // Check for YouTube first
+        const ytId = getYouTubeId(url);
+        if (ytId) {
+          // Embed URL format required by YouTube
+          // Note: This will NOT work from file:// (Error 153)
+          const embedUrl = `https://www.youtube.com/embed/${ytId}?rel=0`;
+          showYouTube();
+          youtubePlayer.src = embedUrl;
+          sourceLabel.textContent = '📡 YouTube: ' + ytId;
+          return;
+        }
+
+        // Validate as direct media URL
         let parsed;
         try {
           parsed = new URL(url.startsWith('//') ? 'https:' + url : url);
@@ -260,9 +312,7 @@
           return;
         }
 
-        const type = guessType(url);
-
-        // Show source label
+        const type = guessDirectType(url);
         sourceLabel.textContent = '📡 ' + (url.length > 60 ? url.slice(0, 57) + '…' : url);
 
         if (type === 'audio') {
@@ -270,10 +320,7 @@
           audioPlayer.src = url;
           audioPlayer.load();
           const p = audioPlayer.play();
-          if (p) p.catch(err => {
-            console.warn('Autoplay blocked:', err);
-            // If autoplay fails, still show the player — user can hit play
-          });
+          if (p) p.catch(err => console.warn('Autoplay blocked:', err));
         } else {
           showVideo();
           videoPlayer.src = url;
@@ -296,10 +343,10 @@
       clearBtn.addEventListener('click', () => {
         urlInput.value = '';
         urlInput.focus();
-        resetPlayer('⚡ Paste a URL and click <strong>Play</strong>');
+        resetPlayer('⚡ Paste a link and click <strong>Play</strong>');
       });
 
-      // If video fails to load, show a helpful message
+      // Error handling for direct files
       videoPlayer.addEventListener('error', () => {
         if (videoPlayer.src && !videoPlayer.hidden) {
           resetPlayer('⚠️ Could not load video. Check the URL or file format.');
@@ -312,12 +359,8 @@
         }
       });
 
-      // When playback starts, make sure default message stays hidden
-      videoPlayer.addEventListener('play', () => { defaultMsg.hidden = true; });
-      audioPlayer.addEventListener('play', () => { defaultMsg.hidden = true; });
-
-      // Initialize state (sample URL pre-filled but not loaded)
-      resetPlayer('⚡ Paste a URL and click <strong>Play</strong>');
+      // Initialize
+      resetPlayer('⚡ Paste a link and click <strong>Play</strong>');
     })();
   </script>
 </body>
