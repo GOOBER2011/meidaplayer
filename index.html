@@ -3,14 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL media player · video & audio</title>
+  <title>URL Media Player</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: #1a1d23;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -20,45 +15,37 @@
       min-height: 100vh;
       padding: 1.5rem;
     }
-
     .player-card {
       max-width: 900px;
       width: 100%;
       background: #0f1115;
       border-radius: 2rem;
-      padding: 2rem 1.8rem 2rem 1.8rem;
-      box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      transition: all 0.2s ease;
+      padding: 2rem;
+      box-shadow: 0 25px 40px -12px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
     }
-
     h1 {
-      font-size: 1.6rem;
-      font-weight: 500;
-      letter-spacing: -0.02em;
+      font-size: 1.5rem;
       color: #eef2f6;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: 500;
     }
-
     h1 span {
       background: #2f3542;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 400;
       padding: 0.2rem 0.8rem;
       border-radius: 100px;
       color: #b0b8c5;
-      letter-spacing: 0.3px;
     }
-
     .input-group {
       display: flex;
       gap: 0.75rem;
-      margin: 1.5rem 0 1.2rem 0;
+      margin-bottom: 1.2rem;
       flex-wrap: wrap;
     }
-
     .url-input {
       flex: 1 1 280px;
       background: #1e2128;
@@ -70,20 +57,13 @@
       color: #eef2f6;
       outline: none;
       transition: border 0.2s, box-shadow 0.2s;
-      font-family: inherit;
       min-width: 0;
     }
-
-    .url-input::placeholder {
-      color: #6b7482;
-      font-weight: 300;
-    }
-
+    .url-input::placeholder { color: #6b7482; }
     .url-input:focus {
       border-color: #4a7db5;
-      box-shadow: 0 0 0 3px rgba(74, 125, 181, 0.25);
+      box-shadow: 0 0 0 3px rgba(74,125,181,0.25);
     }
-
     .load-btn {
       background: #2d7aff;
       border: none;
@@ -94,86 +74,47 @@
       font-weight: 500;
       color: white;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
       transition: background 0.2s, transform 0.1s;
       white-space: nowrap;
-      letter-spacing: 0.2px;
-      box-shadow: 0 6px 14px rgba(45, 122, 255, 0.3);
     }
-
-    .load-btn:hover {
-      background: #1f6ae0;
-    }
-
-    .load-btn:active {
-      transform: scale(0.97);
-    }
-
-    .load-btn:disabled {
-      background: #2f3542;
-      color: #7a8391;
-      box-shadow: none;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .load-btn:hover { background: #1f6ae0; }
+    .load-btn:active { transform: scale(0.97); }
 
     .player-wrapper {
       background: #050608;
       border-radius: 1.5rem;
       overflow: hidden;
-      margin-top: 1.8rem;
       border: 1px solid #252a33;
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
-      aspect-ratio: 16 / 9;
+      min-height: 200px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
     }
-
-    video, audio {
+    .player-wrapper.video-mode {
+      aspect-ratio: 16 / 9;
+    }
+    .player-wrapper.audio-mode {
+      padding: 1.5rem 1rem;
+      aspect-ratio: auto;
+    }
+    video {
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: contain;
       background: black;
+      object-fit: contain;
     }
-
     audio {
       width: 100%;
-      height: auto;
-      aspect-ratio: auto;
-      min-height: 54px;
-      background: #0f1115;
-      border-radius: 0.5rem;
+      display: block;
     }
-
-    .player-wrapper.audio-mode {
-      aspect-ratio: auto;
-      padding: 1.5rem 1rem;
-      background: #0f1115;
-      border-radius: 1.5rem;
-    }
-
-    .player-wrapper.audio-mode audio {
-      border-radius: 2rem;
-      background: #181c22;
-    }
-
     .message {
       color: #7d8796;
       font-size: 1rem;
       text-align: center;
-      padding: 1rem 2rem;
-      font-weight: 400;
+      padding: 2rem;
       line-height: 1.5;
-      background: #0b0d10;
-      border-radius: 1rem;
     }
-
     .status-bar {
       display: flex;
       justify-content: space-between;
@@ -182,90 +123,58 @@
       font-size: 0.85rem;
       color: #8f9aa8;
       padding: 0 0.5rem;
-      min-height: 1.6rem;
-      flex-wrap: wrap;
       gap: 0.5rem;
+      flex-wrap: wrap;
     }
-
     .source-hint {
       background: #1c2028;
-      padding: 0.2rem 0.9rem;
+      padding: 0.25rem 0.9rem;
       border-radius: 40px;
       color: #b7c1d0;
-      font-size: 0.8rem;
-      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
       max-width: 70%;
     }
-
     .clear-btn {
       background: none;
       border: 1px solid #2e3540;
       color: #b6c0cd;
       border-radius: 40px;
-      padding: 0.2rem 1rem;
+      padding: 0.25rem 1rem;
       font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.15s;
-      font-family: inherit;
     }
-
-    .clear-btn:hover {
-      background: #252b34;
-      color: white;
-      border-color: #46505f;
-    }
-
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      white-space: nowrap;
-      border: 0;
-    }
+    .clear-btn:hover { background: #252b34; color: white; }
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <div class="player-card">
-    <h1>
-      🎬 URL player
-      <span>video & audio</span>
-    </h1>
+    <h1>🎬 URL Player <span>video &amp; audio</span></h1>
 
-    <!-- URL input row -->
     <div class="input-group">
       <input
         type="url"
         id="urlInput"
         class="url-input"
-        placeholder="Paste video or audio URL (mp4, webm, m3u8, mp3, ...)"
+        placeholder="Paste video or audio URL (mp4, webm, mp3...)"
         value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-        aria-label="Media URL"
         spellcheck="false"
+        aria-label="Media URL"
       />
-      <button id="loadBtn" class="load-btn">
-        ▶ Play
-      </button>
+      <button id="loadBtn" class="load-btn" type="button">▶ Play</button>
     </div>
 
-    <!-- Media display area -->
     <div id="playerWrapper" class="player-wrapper">
-      <!-- default message (no media loaded) -->
       <div id="defaultMessage" class="message">
         ⚡ Paste a URL and click <strong>Play</strong>
       </div>
-      <!-- video element (hidden by default) -->
-      <video id="videoPlayer" controls playsinline preload="metadata" style="display: none;"></video>
-      <!-- audio element (hidden by default) -->
-      <audio id="audioPlayer" controls preload="metadata" style="display: none;"></audio>
+      <video id="videoPlayer" controls playsinline preload="metadata" hidden></video>
+      <audio id="audioPlayer" controls preload="metadata" hidden></audio>
     </div>
 
-    <!-- status & controls -->
     <div class="status-bar">
       <span id="sourceLabel" class="source-hint">No media loaded</span>
       <button id="clearBtn" class="clear-btn" type="button">Clear</button>
@@ -273,204 +182,142 @@
   </div>
 
   <script>
-    (function() {
-      // DOM elements
-      const urlInput = document.getElementById('urlInput');
-      const loadBtn = document.getElementById('loadBtn');
-      const videoPlayer = document.getElementById('videoPlayer');
-      const audioPlayer = document.getElementById('audioPlayer');
+    (function () {
+      const urlInput      = document.getElementById('urlInput');
+      const loadBtn       = document.getElementById('loadBtn');
+      const videoPlayer   = document.getElementById('videoPlayer');
+      const audioPlayer   = document.getElementById('audioPlayer');
       const playerWrapper = document.getElementById('playerWrapper');
-      const defaultMessage = document.getElementById('defaultMessage');
-      const sourceLabel = document.getElementById('sourceLabel');
-      const clearBtn = document.getElementById('clearBtn');
+      const defaultMsg    = document.getElementById('defaultMessage');
+      const sourceLabel   = document.getElementById('sourceLabel');
+      const clearBtn      = document.getElementById('clearBtn');
 
-      // Helper: reset UI to "no media" state
-      function resetToEmpty(message = '⚡ Paste a URL and click Play') {
-        // hide & reset video
-        videoPlayer.style.display = 'none';
+      function resetPlayer(message) {
         videoPlayer.pause();
         videoPlayer.removeAttribute('src');
         videoPlayer.load();
+        videoPlayer.hidden = true;
 
-        // hide & reset audio
-        audioPlayer.style.display = 'none';
         audioPlayer.pause();
         audioPlayer.removeAttribute('src');
         audioPlayer.load();
+        audioPlayer.hidden = true;
 
-        // show default message
-        defaultMessage.style.display = 'flex';
-        defaultMessage.textContent = message;
+        playerWrapper.classList.remove('video-mode', 'audio-mode');
+        playerWrapper.classList.add('video-mode'); // default framing
 
-        // reset wrapper class (remove audio-mode)
-        playerWrapper.classList.remove('audio-mode');
-
-        // update source label
+        defaultMsg.hidden = false;
+        defaultMsg.innerHTML = message || '⚡ Paste a URL and click <strong>Play</strong>';
         sourceLabel.textContent = 'No media loaded';
       }
 
-      // Helper: show only the video element, hide others
-      function activateVideo() {
-        defaultMessage.style.display = 'none';
-        audioPlayer.style.display = 'none';
+      function showVideo() {
+        defaultMsg.hidden = true;
+        audioPlayer.hidden = true;
         audioPlayer.pause();
         audioPlayer.removeAttribute('src');
-        videoPlayer.style.display = 'block';
+        videoPlayer.hidden = false;
         playerWrapper.classList.remove('audio-mode');
+        playerWrapper.classList.add('video-mode');
       }
 
-      // Helper: show only the audio element, hide others
-      function activateAudio() {
-        defaultMessage.style.display = 'none';
-        videoPlayer.style.display = 'none';
+      function showAudio() {
+        defaultMsg.hidden = true;
+        videoPlayer.hidden = true;
         videoPlayer.pause();
         videoPlayer.removeAttribute('src');
-        audioPlayer.style.display = 'block';
+        audioPlayer.hidden = false;
+        playerWrapper.classList.remove('video-mode');
         playerWrapper.classList.add('audio-mode');
       }
 
-      // Load media from the input URL
-      function loadMediaFromInput() {
-        const rawUrl = urlInput.value.trim();
-        if (!rawUrl) {
-          resetToEmpty('⚠️ Please enter a URL');
+      // Guess media type from extension
+      function guessType(url) {
+        const path = url.split('?')[0].split('#')[0].toLowerCase();
+        const audioExts = ['.mp3', '.wav', '.m4a', '.aac', '.flac', '.opus', '.oga'];
+        if (audioExts.some(ext => path.endsWith(ext))) return 'audio';
+        return 'video'; // default to video
+      }
+
+      function loadFromInput() {
+        const url = urlInput.value.trim();
+        if (!url) {
+          resetPlayer('⚠️ Please enter a URL');
           return;
         }
 
-        // Basic URL validation (allow relative? we enforce absolute)
-        let parsedUrl;
+        // Validate URL
+        let parsed;
         try {
-          // check if it's a valid absolute URL (or protocol-relative)
-          if (rawUrl.startsWith('//')) {
-            parsedUrl = new URL('https:' + rawUrl);
-          } else {
-            parsedUrl = new URL(rawUrl);
-          }
+          parsed = new URL(url.startsWith('//') ? 'https:' + url : url);
         } catch (e) {
-          resetToEmpty('❌ Invalid URL format');
+          resetPlayer('❌ Invalid URL format');
           return;
         }
 
-        // Optional: block non-http(s) to avoid weird stuff, but keep blob/data for flexibility? 
-        // For safety, we allow http(s) and blob/data but we can just warn.
-        // We'll allow http, https, blob, data. (blob/data may be useful for local tests)
-        const protocol = parsedUrl.protocol;
-        if (!['http:', 'https:', 'blob:', 'data:'].includes(protocol)) {
-          resetToEmpty('⛔ Unsupported URL scheme (use http/https)');
+        if (!['http:', 'https:', 'blob:', 'data:'].includes(parsed.protocol)) {
+          resetPlayer('⛔ Unsupported URL scheme');
           return;
         }
 
-        // --- Detect media type by extension (best effort) ---
-        const pathname = parsedUrl.pathname.toLowerCase();
-        // Common video extensions
-        const videoExts = ['.mp4', '.webm', '.ogg', '.ogv', '.mov', '.m4v', '.mkv', '.m3u8', '.mpd'];
-        // Common audio extensions
-        const audioExts = ['.mp3', '.wav', '.ogg', '.oga', '.m4a', '.aac', '.flac', '.opus'];
+        const type = guessType(url);
 
-        const isVideoExt = videoExts.some(ext => pathname.endsWith(ext));
-        const isAudioExt = audioExts.some(ext => pathname.endsWith(ext));
+        // Show source label
+        sourceLabel.textContent = '📡 ' + (url.length > 60 ? url.slice(0, 57) + '…' : url);
 
-        // For m3u8 / mpd – typically video streams, we treat as video.
-        // But if it's .mp3, .m4a etc -> audio.
-        let mediaType = 'video'; // default
-        
-        if (isAudioExt && !isVideoExt) {
-          mediaType = 'audio';
-        } else if (isVideoExt && !isAudioExt) {
-          mediaType = 'video';
-        } else if (!isVideoExt && !isAudioExt) {
-          // No clear extension: use video as default (many audio-only files might still play as video? better to default to video)
-          mediaType = 'video';
-        } else if (isVideoExt && isAudioExt) {
-          // e.g. .ogg can be both -> prefer audio? but let's prefer video if it's .ogg? we'll set video as default, 
-          // but if you have both extensions it's rare. Set to video.
-          mediaType = 'video';
-        }
-
-        // Special case: "audio" in path or query sometimes indicates audio, but we skip for simplicity.
-
-        // Update source label
-        const displayUrl = rawUrl.length > 60 ? rawUrl.substring(0, 57) + '…' : rawUrl;
-        sourceLabel.textContent = `📡 ${displayUrl}`;
-
-        // --- Assign to corresponding element and play ---
-        if (mediaType === 'audio') {
-          activateAudio();
-          audioPlayer.src = rawUrl;
-          // Try to play automatically
-          audioPlayer.play().catch(err => {
-            console.warn('Auto-play prevented or failed:', err);
-            // not critical, user can press play
+        if (type === 'audio') {
+          showAudio();
+          audioPlayer.src = url;
+          audioPlayer.load();
+          const p = audioPlayer.play();
+          if (p) p.catch(err => {
+            console.warn('Autoplay blocked:', err);
+            // If autoplay fails, still show the player — user can hit play
           });
         } else {
-          // video
-          activateVideo();
-          videoPlayer.src = rawUrl;
-          videoPlayer.play().catch(err => {
-            console.warn('Auto-play prevented or failed:', err);
-          });
+          showVideo();
+          videoPlayer.src = url;
+          videoPlayer.load();
+          const p = videoPlayer.play();
+          if (p) p.catch(err => console.warn('Autoplay blocked:', err));
         }
       }
 
-      // --- Event listeners ---
-      loadBtn.addEventListener('click', loadMediaFromInput);
+      // Event listeners
+      loadBtn.addEventListener('click', loadFromInput);
 
-      // Press Enter in input field triggers load
-      urlInput.addEventListener('keypress', (e) => {
+      urlInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          loadMediaFromInput();
+          loadFromInput();
         }
       });
 
-      // Clear button resets everything
       clearBtn.addEventListener('click', () => {
-        resetToEmpty('⚡ Paste a URL and click Play');
         urlInput.value = '';
         urlInput.focus();
+        resetPlayer('⚡ Paste a URL and click <strong>Play</strong>');
       });
 
-      // --- Media element error handling & fallback ---
-      // If video fails, show a message and fallback to audio attempt? but we keep it simple.
-      videoPlayer.addEventListener('error', (e) => {
-        // Only if video has a src and is visible
-        if (videoPlayer.style.display !== 'none' && videoPlayer.src) {
-          console.warn('Video error:', videoPlayer.error);
-          // Show error message but keep element
-          defaultMessage.style.display = 'flex';
-          defaultMessage.textContent = '⚠️ Could not load video. Check URL or format.';
-          videoPlayer.style.display = 'none';
-          // If audio hasn't been tried? we could try audio but we already set media type.
-          // Instead, we keep the UI clean.
+      // If video fails to load, show a helpful message
+      videoPlayer.addEventListener('error', () => {
+        if (videoPlayer.src && !videoPlayer.hidden) {
+          resetPlayer('⚠️ Could not load video. Check the URL or file format.');
         }
       });
 
-      audioPlayer.addEventListener('error', (e) => {
-        if (audioPlayer.style.display !== 'none' && audioPlayer.src) {
-          console.warn('Audio error:', audioPlayer.error);
-          defaultMessage.style.display = 'flex';
-          defaultMessage.textContent = '⚠️ Could not load audio. Check URL or format.';
-          audioPlayer.style.display = 'none';
+      audioPlayer.addEventListener('error', () => {
+        if (audioPlayer.src && !audioPlayer.hidden) {
+          resetPlayer('⚠️ Could not load audio. Check the URL or file format.');
         }
       });
 
-      // When video/audio starts playing, hide any leftover message (safety)
-      videoPlayer.addEventListener('play', () => {
-        defaultMessage.style.display = 'none';
-      });
-      audioPlayer.addEventListener('play', () => {
-        defaultMessage.style.display = 'none';
-      });
+      // When playback starts, make sure default message stays hidden
+      videoPlayer.addEventListener('play', () => { defaultMsg.hidden = true; });
+      audioPlayer.addEventListener('play', () => { defaultMsg.hidden = true; });
 
-      // Initial reset to ensure consistent state
-      resetToEmpty('⚡ Paste a URL and click Play');
-      // Pre-fill input with sample (already in HTML value)
-      // But set label to "No media loaded" – so we reset but keep the sample in input
-      // We do NOT auto-load, so user sees sample.
-      urlInput.value = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-      // but we want the label to show "No media loaded" since we didn't load
-      // resetToEmpty already set that.
-      // Ensure video/audio hidden.
+      // Initialize state (sample URL pre-filled but not loaded)
+      resetPlayer('⚡ Paste a URL and click <strong>Play</strong>');
     })();
   </script>
 </body>
