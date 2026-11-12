@@ -42,45 +42,35 @@
     [hidden] { display: none !important; }
     button { font-family: inherit; cursor: pointer; border: none; outline: none; }
     
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 
     /* --- SIDEBAR --- */
-    .sidebar {
-      width: var(--sidebar-width); background-color: var(--bg-surface); backdrop-filter: blur(20px);
-      border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0;
-      transition: width var(--transition); overflow: hidden; z-index: 20;
-    }
+    .sidebar { width: var(--sidebar-width); background-color: var(--bg-surface); backdrop-filter: blur(20px); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; transition: width var(--transition); overflow: hidden; z-index: 20; }
     .sidebar.collapsed { width: var(--sidebar-collapsed); }
-    
-    .sidebar-header { display: flex; align-items: center; padding: 1.5rem; font-size: 1.4rem; font-weight: 800; border-bottom: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; transition: padding var(--transition); }
+    .sidebar-header { display: flex; align-items: center; padding: 1.5rem; font-size: 1.4rem; font-weight: 800; border-bottom: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; }
     .sidebar.collapsed .sidebar-header { justify-content: center; padding: 1.5rem 0; }
     .sidebar.collapsed .nav-text, .sidebar.collapsed .playlist-header, .sidebar.collapsed .playlist-list { display: none; }
-    .logo-icon { color: var(--accent); margin-right: 12px; width: 28px; height: 28px; flex-shrink: 0; transition: margin var(--transition); }
+    .logo-icon { color: var(--accent); margin-right: 12px; width: 28px; height: 28px; flex-shrink: 0; }
     .sidebar.collapsed .logo-icon { margin-right: 0; }
-
     .nav-section { padding: 1rem 0; display: flex; flex-direction: column; gap: 4px; }
     .nav-item { padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 1.2rem; cursor: pointer; color: var(--text-secondary); transition: all var(--transition); font-size: 0.95rem; font-weight: 600; border-left: 3px solid transparent; white-space: nowrap; }
     .sidebar.collapsed .nav-item { justify-content: center; padding: 0.8rem 0; border-left: none; border-radius: 8px; margin: 0 10px; }
     .nav-item svg { width: 22px; height: 22px; flex-shrink: 0; }
     .nav-item:hover { background-color: var(--bg-hover); color: var(--text-primary); }
     .nav-item.active { background-color: var(--bg-elevated); color: var(--accent); border-left: 3px solid var(--accent); }
-
     .playlist-header { padding: 1rem 1.5rem 0.5rem; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
-    .create-pl-btn { cursor: pointer; color: var(--accent); font-size: 1.4rem; line-height: 1; padding: 0 4px; }
+    .create-pl-btn { cursor: pointer; color: var(--accent); font-size: 1.4rem; line-height: 1; }
     .playlist-list { display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 1rem; }
     .playlist-item { padding: 0.6rem 1.5rem; cursor: pointer; color: var(--text-secondary); font-size: 0.9rem; transition: background var(--transition); white-space: nowrap; display: flex; justify-content: space-between; align-items: center; }
     .playlist-item:hover { background: var(--bg-hover); color: white; }
     .playlist-item.active { color: var(--accent); background: var(--bg-elevated); }
-    .del-pl-btn { color: var(--text-secondary); opacity: 0; transition: opacity var(--transition); }
+    .del-pl-btn { opacity: 0; }
     .playlist-item:hover .del-pl-btn { opacity: 1; }
 
     /* --- MAIN CONTENT --- */
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 2rem 3rem; position: relative; }
-    
     .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
     .section-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
     .section-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
@@ -91,47 +81,65 @@
     .input-icon { position: absolute; left: 1rem; color: var(--text-secondary); width: 20px; height: 20px; }
     .url-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 8px; padding: 0 1rem 0 3rem; height: 3rem; font-size: 0.95rem; color: white; outline: none; transition: border var(--transition); }
     .url-input:focus { border-color: var(--accent); }
-    
     .btn { background: var(--accent); border-radius: 8px; padding: 0 1.5rem; height: 3rem; font-size: 0.95rem; font-weight: 600; color: white; transition: background var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
     .btn:hover { background: var(--accent-hover); }
     .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
     .btn-outline { background: transparent; border: 1px solid var(--border-color); color: white; }
     .btn-outline:hover { background: var(--bg-hover); }
 
-    /* --- PLAYER --- */
-    .player-container { width: 100%; max-width: 1100px; aspect-ratio: 16 / 9; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 2.5rem; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); }
-    #youtubeContainer, iframe { width: 100%; height: 100%; border: 0; position: absolute; top: 0; left: 0; }
+    /* --- PLAYERS --- */
+    .player-container { width: 100%; max-width: 1100px; aspect-ratio: 16 / 9; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 2rem; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); }
+    .player-container iframe { width: 100%; height: 100%; border: 0; position: absolute; top: 0; left: 0; }
     .error-message { color: var(--text-secondary); text-align: center; padding: 2rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
     .error-message svg { width: 48px; height: 48px; color: var(--accent); }
+
+    /* --- PUBLIC PLAYER SECTION --- */
+    .public-player-section { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .public-player-main { flex: 1 1 600px; }
+    .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; max-height: 500px; display: flex; flex-direction: column; }
+    .public-video-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .public-video-meta { display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    
+    /* Like Button */
+    .like-btn { display: flex; align-items: center; gap: 6px; background: var(--bg-base); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; color: white; font-weight: 600; transition: all 0.2s; }
+    .like-btn:hover { background: var(--bg-hover); }
+    .like-btn.liked { color: var(--accent); border-color: var(--accent); background: rgba(0,102,255,0.1); }
+    .like-btn svg { width: 18px; height: 18px; }
+
+    /* Comments */
+    .comments-section h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+    .comment-input-wrapper { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+    .comment-input { flex: 1; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.8rem; color: white; outline: none; }
+    .comment-input:focus { border-color: var(--accent); }
+    .comment-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-right: 5px; }
+    .comment { display: flex; gap: 10px; }
+    .comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
+    .comment-content { background: var(--bg-base); padding: 0.8rem; border-radius: 8px; flex: 1; }
+    .comment-author { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+    .comment-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.4; word-break: break-word; }
 
     /* --- VIDEO GRID --- */
     .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
     .video-card { background: var(--bg-surface); border-radius: 12px; transition: transform var(--transition), border-color var(--transition); position: relative; display: flex; flex-direction: column; border: 1px solid transparent; overflow: hidden; }
     .video-card:hover { transform: translateY(-4px); border-color: var(--border-color); }
     .video-card.selected { border-color: var(--accent); background: rgba(0, 102, 255, 0.08); }
-
     .thumbnail-container { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; cursor: pointer; }
     .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition); }
     .video-card:hover .thumbnail-container img { transform: scale(1.05); }
-    
     .card-checkbox { position: absolute; top: 12px; left: 12px; width: 22px; height: 22px; cursor: pointer; z-index: 10; accent-color: var(--accent); border-radius: 4px; }
-    .card-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(4px); }
-
     .video-info { display: flex; gap: 12px; padding: 1rem; }
     .channel-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--bg-elevated); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent); }
     .video-text { display: flex; flex-direction: column; overflow: hidden; }
     .video-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; cursor: pointer; }
     .video-author { font-size: 0.85rem; color: var(--text-secondary); }
-    
     .card-actions { display: flex; gap: 8px; padding: 0 1rem 1rem; margin-top: auto; }
     .action-btn { flex: 1; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: var(--bg-base); color: var(--text-secondary); border: 1px solid var(--border-color); transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 4px; }
     .action-btn:hover { background: var(--bg-hover); color: white; border-color: var(--text-secondary); }
     .action-btn.publish:hover { color: var(--accent); border-color: var(--accent); }
 
-    /* --- TOOLBAR --- */
+    /* --- TOOLBAR & UTILS --- */
     .toolbar { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; background: var(--bg-surface); padding: 0.8rem 1.2rem; border-radius: 10px; border: 1px solid var(--border-color); }
     .toolbar-select { background: var(--bg-base); color: white; border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; outline: none; font-size: 0.9rem; }
-    
     .empty-state { color: var(--text-secondary); font-size: 1rem; grid-column: 1 / -1; text-align: center; padding: 4rem; background: var(--bg-surface); border-radius: 12px; border: 1px dashed var(--border-color); display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 
     /* --- SETTINGS VIEW --- */
@@ -152,21 +160,19 @@
     /* --- MODALS --- */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity var(--transition); }
     .modal-overlay.active { opacity: 1; pointer-events: all; }
-    .modal { background: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: 16px; padding: 2.5rem; width: 90%; max-width: 420px; text-align: center; transform: translateY(20px); transition: transform var(--transition); }
-    .modal-overlay.active .modal { transform: translateY(0); }
+    .modal { background: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: 16px; padding: 2.5rem; width: 90%; max-width: 420px; text-align: center; }
     .modal h3 { margin-bottom: 0.5rem; font-size: 1.4rem; }
-    .modal p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem; line-height: 1.5; }
-    .modal-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; outline: none; font-size: 1rem; transition: border 0.2s; }
+    .modal p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem; }
+    .modal-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; outline: none; }
     .modal-input:focus { border-color: var(--accent); }
     .modal-actions { display: flex; gap: 1rem; justify-content: center; }
-    .modal-btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
+    .modal-btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; }
     .modal-btn.cancel { background: transparent; color: white; border: 1px solid var(--border-color); }
-    .modal-btn.cancel:hover { background: var(--bg-hover); }
     .modal-btn.confirm { background: var(--danger); color: white; }
-    .modal-btn.confirm:hover { background: #ff5555; }
     .modal-btn.primary { background: var(--accent); color: white; }
-    .modal-btn.primary:hover { background: var(--accent-hover); }
 
+    /* Utility classes */
+    .flex { display: flex; } .gap-2 { gap: 0.5rem; } .items-center { align-items: center; }
   </style>
 </head>
 <body>
@@ -181,31 +187,25 @@
       <svg class="logo-icon" viewBox="0 0 24 24"><path d="M21.582 6.186a2.6 2.6 0 0 0-1.836-1.844C18.09 3.9 12 3.9 12 3.9s-6.09 0-7.746.442a2.6 2.6 0 0 0-1.836 1.844C2 7.863 2 12 2 12s0 4.137.418 5.814a2.6 2.6 0 0 0 1.836 1.844C5.91 20.1 12 20.1 12 20.1s6.09 0 7.746-.442a2.6 2.6 0 0 0 1.836-1.844C22 16.137 22 12 22 12s0-4.137-.418-5.814zM9.9 15.3V8.7l5.8 3.3-5.8 3.3z"/></svg>
       <span class="nav-text">TubeYou</span>
     </div>
-    
     <div class="nav-section">
       <div class="nav-item active" data-view="library">
         <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
         <span class="nav-text">Library</span>
       </div>
-      
       <div class="nav-item" data-view="public">
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         <span class="nav-text">Public Feed</span>
       </div>
-
       <div class="nav-item" data-view="settings">
         <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
         <span class="nav-text">Settings</span>
       </div>
     </div>
-
     <div class="playlist-header">
       <span>Playlists</span>
       <span class="create-pl-btn" id="createPlaylistBtn" title="Create Playlist">+</span>
     </div>
-    <div class="playlist-list" id="playlistList">
-      <!-- Playlists injected here -->
-    </div>
+    <div class="playlist-list" id="playlistList"></div>
   </div>
 
   <!-- MAIN CONTENT -->
@@ -219,7 +219,6 @@
           <p class="section-subtitle">Manage your saved videos and playlists</p>
         </div>
       </div>
-
       <div class="add-video-box">
         <div class="input-wrapper">
           <svg class="input-icon" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
@@ -230,31 +229,25 @@
           Save Video
         </button>
       </div>
-
-      <div class="player-container" id="playerContainer">
-        <div id="defaultMsg" class="error-message">
+      <div class="player-container" id="privatePlayerContainer">
+        <div id="privateDefaultMsg" class="error-message">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           <span>Select a video to start watching.</span>
         </div>
-        <div id="youtubeContainer" hidden></div>
+        <div id="privateYoutubeContainer" hidden></div>
       </div>
-
       <div class="view-header" style="margin-top: 1rem; margin-bottom: 1rem;">
         <h2 class="section-title" id="viewTitle" style="font-size:1.3rem;">All Videos</h2>
       </div>
-      
       <div class="toolbar" id="bulkToolbar">
         <span style="font-size:0.9rem; font-weight:600;">Bulk Actions</span>
-        <select class="toolbar-select" id="bulkPlaylistSelect">
-          <option value="">Add to Playlist...</option>
-        </select>
+        <select class="toolbar-select" id="bulkPlaylistSelect"><option value="">Add to Playlist...</option></select>
         <button class="btn btn-outline" id="bulkAddBtn" style="height: 2.2rem; padding: 0 1rem; font-size:0.85rem;">Apply</button>
         <button class="btn btn-outline" id="bulkDeleteBtn" style="margin-left:auto; height: 2.2rem; padding: 0 1rem; font-size:0.85rem; color:var(--danger); border-color: rgba(255,51,51,0.3);">
           <svg style="width:16px;height:16px; margin-right:4px;" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
           Delete Selected
         </button>
       </div>
-
       <div class="video-grid" id="myVideoGrid"></div>
     </div>
 
@@ -263,46 +256,67 @@
       <div class="view-header">
         <div>
           <h1 class="section-title">Public Feed</h1>
-          <p class="section-subtitle">Videos published by you and the community</p>
+          <p class="section-subtitle">Watch and interact with public videos</p>
         </div>
       </div>
+      
+      <!-- Public Selected Video Area -->
+      <div id="publicSelectedArea" hidden>
+        <div class="public-player-section">
+          <!-- Left: Video Player & Meta -->
+          <div class="public-player-main">
+            <div class="player-container" style="margin-bottom: 1rem;">
+              <div id="publicYoutubeContainer"></div>
+            </div>
+            <h2 class="public-video-title" id="pubTitle"></h2>
+            <div class="public-video-meta">
+              <div class="flex items-center gap-2">
+                <img id="pubAuthorAvatar" src="" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" />
+                <span id="pubAuthorName" style="font-weight:600; color:white;"></span>
+              </div>
+              <button class="like-btn" id="pubLikeBtn">
+                <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                <span id="pubLikeCount">0</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Right: Comments -->
+          <div class="public-player-sidebar">
+            <div class="comments-section">
+              <h3>Comments</h3>
+              <div class="comment-input-wrapper">
+                <input type="text" id="pubCommentInput" class="comment-input" placeholder="Add a comment..." />
+                <button class="btn" id="pubCommentBtn" style="height: auto; padding: 0 1rem;">Post</button>
+              </div>
+              <div class="comment-list" id="pubCommentList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="video-grid" id="publicVideoGrid"></div>
     </div>
 
     <!-- SETTINGS VIEW -->
     <div id="settingsView" hidden>
       <div class="view-header">
-        <div>
-          <h1 class="section-title">Settings</h1>
-          <p class="section-subtitle">Customize your TubeYou experience</p>
-        </div>
+        <div><h1 class="section-title">Settings</h1><p class="section-subtitle">Customize your TubeYou experience</p></div>
       </div>
-
       <div class="settings-group">
         <h3>Appearance</h3>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Accent Color</h4>
-            <p>Choose the primary highlight color for the app.</p>
-          </div>
+          <div class="setting-info"><h4>Accent Color</h4><p>Choose the primary highlight color.</p></div>
           <input type="color" class="color-picker" id="accentColorPicker" value="#0066ff" />
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Aurora Background</h4>
-            <p>Toggle the animated background on or off.</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="auroraToggle" checked>
-            <span class="slider"></span>
-          </label>
+          <div class="setting-info"><h4>Aurora Background</h4><p>Toggle the animated background.</p></div>
+          <label class="toggle-switch"><input type="checkbox" id="auroraToggle" checked><span class="slider"></span></label>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- MODALS -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h3 id="modalTitle">Title</h3>
@@ -321,24 +335,31 @@
     let publicVideos = JSON.parse(localStorage.getItem('tubeYouPublicVideos')) || [];
     let savedPlaylists = JSON.parse(localStorage.getItem('tubeYouPlaylists')) || [];
     
-    let currentView = 'library'; // 'library', 'public', 'settings', or playlistId
-    let selectedVideos = new Set(); 
-    let ytPlayer = null;
-    let currentYtId = null;
+    // Public Interactions
+    let publicLikes = JSON.parse(localStorage.getItem('tubeYouLikes')) || {};
+    let publicComments = JSON.parse(localStorage.getItem('tubeYouComments')) || {};
 
-    // --- DOM ELEMENTS ---
+    let currentView = 'library';
+    let selectedVideos = new Set(); 
+    
+    // Players
+    let ytPlayerPrivate = null;
+    let ytPlayerPublic = null;
+    let currentPublicVideoId = null;
+
+    // DOM Elements
     const urlInput = document.getElementById('urlInput');
     const addBtn = document.getElementById('addBtn');
     const myVideoGrid = document.getElementById('myVideoGrid');
     const publicVideoGrid = document.getElementById('publicVideoGrid');
-    const ytContainer = document.getElementById('youtubeContainer');
-    const defaultMsg = document.getElementById('defaultMsg');
+    const privateYtContainer = document.getElementById('privateYoutubeContainer');
+    const privateDefaultMsg = document.getElementById('privateDefaultMsg');
     
     const libraryView = document.getElementById('libraryView');
     const publicView = document.getElementById('publicView');
     const settingsView = document.getElementById('settingsView');
-    
-    const viewTitle = document.getElementById('viewTitle');
+    const publicSelectedArea = document.getElementById('publicSelectedArea');
+
     const sidebar = document.getElementById('sidebar');
     const playlistList = document.getElementById('playlistList');
     const bulkPlaylistSelect = document.getElementById('bulkPlaylistSelect');
@@ -360,25 +381,15 @@
       modalInput.value = '';
       modalConfirm.innerText = confirmText;
       modalConfirm.className = isPrompt ? 'modal-btn primary' : 'modal-btn confirm';
-      
       if (isPrompt) setTimeout(() => modalInput.focus(), 100);
-      
       modalAction = action;
       modalOverlay.classList.add('active');
     }
-
-    function closeModal() {
-      modalOverlay.classList.remove('active');
-      modalAction = null;
-    }
-
+    function closeModal() { modalOverlay.classList.remove('active'); modalAction = null; }
     modalCancel.onclick = closeModal;
-    modalConfirm.onclick = () => {
-      if (modalAction) modalAction(modalInput.value);
-      closeModal();
-    };
+    modalConfirm.onclick = () => { if (modalAction) modalAction(modalInput.value); closeModal(); };
 
-    // --- YOUTUBE & METADATA ---
+    // --- API / METADATA ---
     function getYouTubeId(url) {
       try {
         const parsed = new URL(url);
@@ -393,50 +404,122 @@
       const noembedRes = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`);
       const noembedData = await noembedRes.json();
       if (noembedData.error) throw new Error('Video unavailable');
-
       let authorAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(noembedData.author_name)}&background=0c1322&color=0066ff&bold=true`;
-      
       try {
         if (noembedData.author_url) {
            const channelId = noembedData.author_url.split('/channel/')[1];
            if (channelId) authorAvatar = `https://unavatar.io/youtube/${channelId}`;
         }
-      } catch (e) { console.warn('Avatar fallback used.'); }
-
+      } catch (e) {}
       return {
-        id: ytId,
-        title: noembedData.title,
-        author: noembedData.author_name,
+        id: ytId, title: noembedData.title, author: noembedData.author_name,
         thumbnail: noembedData.thumbnail_url || `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`,
         avatar: authorAvatar
       };
     }
 
     function onPlayerError(event) {
-      let errorMessage = 'An error occurred while trying to play this video.';
-      if (event.data === 101 || event.data === 150) errorMessage = 'This video is not allowed to be played by the creator.';
-      ytContainer.hidden = true;
-      defaultMsg.hidden = false;
-      defaultMsg.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><span>${errorMessage}</span>`;
+      let errorMessage = 'This video is not allowed to be played by the creator.';
+      if (event.data === 153) errorMessage = 'Configuration error (153).';
+      alert(errorMessage);
     }
 
-    function playVideo(videoId) {
-      if (currentYtId === videoId && ytPlayer) return;
-      currentYtId = videoId;
-      defaultMsg.hidden = true;
-      ytContainer.hidden = false;
-
+    // --- PLAYERS ---
+    function playPrivateVideo(videoId) {
+      privateDefaultMsg.hidden = true;
+      privateYtContainer.hidden = false;
       if (window.YT && window.YT.Player) {
-        if (ytPlayer) ytPlayer.loadVideoById(videoId);
-        else {
-          ytPlayer = new YT.Player('youtubeContainer', {
-            height: '100%', width: '100%', videoId: videoId,
-            playerVars: { 'rel': 0, 'autoplay': 1 },
-            events: { 'onError': onPlayerError }
-          });
-        }
-      } else setTimeout(() => playVideo(videoId), 500);
+        if (ytPlayerPrivate) ytPlayerPrivate.loadVideoById(videoId);
+        else ytPlayerPrivate = new YT.Player('privateYoutubeContainer', {
+          height: '100%', width: '100%', videoId: videoId, playerVars: { 'rel': 0, 'autoplay': 1 }, events: { 'onError': onPlayerError }
+        });
+      } else setTimeout(() => playPrivateVideo(videoId), 500);
     }
+
+    function playPublicVideo(video) {
+      if (currentPublicVideoId === video.id) return;
+      currentPublicVideoId = video.id;
+      
+      publicSelectedArea.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Update Metadata UI
+      document.getElementById('pubTitle').innerText = video.title;
+      document.getElementById('pubAuthorName').innerText = video.author;
+      document.getElementById('pubAuthorAvatar').src = video.avatar;
+
+      // Init Player
+      if (window.YT && window.YT.Player) {
+        if (ytPlayerPublic) ytPlayerPublic.loadVideoById(video.id);
+        else ytPlayerPublic = new YT.Player('publicYoutubeContainer', {
+          height: '100%', width: '100%', videoId: video.id, playerVars: { 'rel': 0, 'autoplay': 1 }, events: { 'onError': onPlayerError }
+        });
+      } else setTimeout(() => playPublicVideo(video), 500);
+
+      updatePublicInteractionsUI(video.id);
+    }
+
+    // --- PUBLIC INTERACTIONS (Likes & Comments) ---
+    function updatePublicInteractionsUI(videoId) {
+      // Update Likes
+      const likes = publicLikes[videoId] || 0;
+      document.getElementById('pubLikeCount').innerText = likes;
+      const likeBtn = document.getElementById('pubLikeBtn');
+      const hasLiked = localStorage.getItem(`liked_${videoId}`) === 'true';
+      likeBtn.classList.toggle('liked', hasLiked);
+
+      // Update Comments
+      const commentList = document.getElementById('pubCommentList');
+      commentList.innerHTML = '';
+      const comments = publicComments[videoId] || [];
+      
+      if (comments.length === 0) {
+        commentList.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem;">No comments yet. Be the first!</div>';
+      } else {
+        comments.forEach(c => {
+          commentList.innerHTML += `
+            <div class="comment">
+              <div class="comment-avatar">${c.author.charAt(0).toUpperCase()}</div>
+              <div class="comment-content">
+                <div class="comment-author">${c.author}</div>
+                <div class="comment-text">${c.text}</div>
+              </div>
+            </div>
+          `;
+        });
+      }
+    }
+
+    // Like Button Event
+    document.getElementById('pubLikeBtn').onclick = () => {
+      if (!currentPublicVideoId) return;
+      const isLiked = localStorage.getItem(`liked_${currentPublicVideoId}`) === 'true';
+      
+      if (isLiked) {
+        publicLikes[currentPublicVideoId] = (publicLikes[currentPublicVideoId] || 0) - 1;
+        localStorage.setItem(`liked_${currentPublicVideoId}`, 'false');
+      } else {
+        publicLikes[currentPublicVideoId] = (publicLikes[currentPublicVideoId] || 0) + 1;
+        localStorage.setItem(`liked_${currentPublicVideoId}`, 'true');
+      }
+      localStorage.setItem('tubeYouLikes', JSON.stringify(publicLikes));
+      updatePublicInteractionsUI(currentPublicVideoId);
+    };
+
+    // Post Comment Event
+    document.getElementById('pubCommentBtn').onclick = () => {
+      const input = document.getElementById('pubCommentInput');
+      const text = input.value.trim();
+      if (!text || !currentPublicVideoId) return;
+
+      if (!publicComments[currentPublicVideoId]) publicComments[currentPublicVideoId] = [];
+      publicComments[currentPublicVideoId].unshift({ author: 'You', text: text });
+      
+      localStorage.setItem('tubeYouComments', JSON.stringify(publicComments));
+      input.value = '';
+      updatePublicInteractionsUI(currentPublicVideoId);
+    };
+
 
     // --- RENDER LOGIC ---
     function renderSidebar() {
@@ -444,31 +527,22 @@
       savedPlaylists.forEach(pl => {
         const el = document.createElement('div');
         el.className = `playlist-item ${currentView === pl.id ? 'active' : ''}`;
-        el.innerHTML = `
-          <span style="overflow:hidden; text-overflow:ellipsis;">${pl.name}</span>
-          <span class="del-pl-btn" title="Delete Playlist">×</span>
-        `;
-        
+        el.innerHTML = `<span>${pl.name}</span><span class="del-pl-btn">×</span>`;
         el.onclick = (e) => {
           if (e.target.classList.contains('del-pl-btn')) {
             e.stopPropagation();
-            showModal('Delete Playlist', `Delete "${pl.name}"? Videos will not be deleted.`, false, 'Delete', () => {
+            showModal('Delete Playlist', `Delete "${pl.name}"?`, false, 'Delete', () => {
               savedPlaylists = savedPlaylists.filter(p => p.id !== pl.id);
               localStorage.setItem('tubeYouPlaylists', JSON.stringify(savedPlaylists));
               if (currentView === pl.id) switchView('library');
               renderSidebar();
             });
-          } else {
-            switchView(pl.id);
-          }
+          } else switchView(pl.id);
         };
         playlistList.appendChild(el);
       });
-
       bulkPlaylistSelect.innerHTML = '<option value="">Add to Playlist...</option>';
-      savedPlaylists.forEach(pl => {
-        bulkPlaylistSelect.innerHTML += `<option value="${pl.id}">${pl.name}</option>`;
-      });
+      savedPlaylists.forEach(pl => bulkPlaylistSelect.innerHTML += `<option value="${pl.id}">${pl.name}</option>`);
     }
 
     function createVideoCard(video, isPublicView = false) {
@@ -504,7 +578,6 @@
           else selectedVideos.delete(video.id);
           card.classList.toggle('selected', e.target.checked);
         });
-
         const publishBtn = card.querySelector('.publish');
         publishBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -514,16 +587,18 @@
             publishBtn.innerHTML = 'Published!';
             publishBtn.style.color = 'var(--accent)';
             publishBtn.disabled = true;
-          } else {
-            alert('Already published!');
-          }
+          } else alert('Already published!');
         });
       }
 
       card.addEventListener('click', (e) => {
         if (e.target.closest('.card-checkbox') || e.target.closest('.action-btn')) return;
-        playVideo(video.id);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (isPublicView) {
+          playPublicVideo(video);
+        } else {
+          playPrivateVideo(video.id);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
 
       return card;
@@ -533,17 +608,16 @@
       myVideoGrid.innerHTML = '';
       publicVideoGrid.innerHTML = '';
       
-      // Render Public
       if (publicVideos.length === 0) {
         publicVideoGrid.innerHTML = '<div class="empty-state">No public videos yet. Publish some from your library!</div>';
       } else {
         publicVideos.forEach(video => publicVideoGrid.appendChild(createVideoCard(video, true)));
       }
 
-      // Render Library / Playlist
       let videosToShow = savedVideos;
+      let viewTitle = document.getElementById('viewTitle');
 
-      if (currentView !== 'library') {
+      if (currentView !== 'library' && currentView !== 'public' && currentView !== 'settings') {
         const pl = savedPlaylists.find(p => p.id === currentView);
         videosToShow = savedVideos.filter(v => pl && pl.videos.includes(v.id));
         viewTitle.innerText = `Playlist: ${pl ? pl.name : 'Unknown'}`;
@@ -551,46 +625,44 @@
         viewTitle.innerText = 'All Videos';
       }
 
-      if (videosToShow.length === 0) {
+      if (videosToShow.length === 0 && currentView === 'library') {
         myVideoGrid.innerHTML = '<div class="empty-state">No videos here yet. Add some above!</div>';
-        return;
+      } else {
+        videosToShow.forEach(video => myVideoGrid.appendChild(createVideoCard(video, false)));
       }
-
-      videosToShow.forEach(video => myVideoGrid.appendChild(createVideoCard(video, false)));
     }
 
     function switchView(viewId) {
       currentView = viewId;
       selectedVideos.clear();
       
-      // Update Sidebar UI
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if (viewId === 'library') document.querySelector('[data-view="library"]').classList.add('active');
       if (viewId === 'public') document.querySelector('[data-view="public"]').classList.add('active');
       if (viewId === 'settings') document.querySelector('[data-view="settings"]').classList.add('active');
       
-      // Toggle Views
       libraryView.hidden = (viewId !== 'library' && !viewId.startsWith('pl_'));
       publicView.hidden = (viewId !== 'public');
       settingsView.hidden = (viewId !== 'settings');
+      
+      // Destroy public player when leaving view to save resources
+      if (viewId !== 'public' && ytPlayerPublic) {
+        ytPlayerPublic.destroy();
+        ytPlayerPublic = null;
+        currentPublicVideoId = null;
+        publicSelectedArea.hidden = true;
+      }
       
       renderSidebar();
       renderVideos();
     }
 
-    // --- EVENT LISTENERS ---
-
-    // Sidebar Collapse
-    document.getElementById('sidebarToggle').addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-    });
-
-    // Navigation
+    // --- EVENTS ---
+    document.getElementById('sidebarToggle').addEventListener('click', () => sidebar.classList.toggle('collapsed'));
     document.querySelector('[data-view="library"]').onclick = () => switchView('library');
     document.querySelector('[data-view="public"]').onclick = () => switchView('public');
     document.querySelector('[data-view="settings"]').onclick = () => switchView('settings');
 
-    // Create Playlist
     document.getElementById('createPlaylistBtn').onclick = () => {
       showModal('Create Playlist', 'Enter a name for your new playlist:', true, 'Create', (name) => {
         if (!name.trim()) return;
@@ -600,7 +672,6 @@
       });
     };
 
-    // Add Video
     addBtn.addEventListener('click', async () => {
       const url = urlInput.value.trim();
       if (!url) return;
@@ -610,26 +681,23 @@
 
       addBtn.disabled = true;
       addBtn.innerText = 'Fetching...';
-
       try {
         const newVideo = await fetchVideoMetadata(ytId);
         savedVideos.unshift(newVideo);
         localStorage.setItem('tubeYouVideos', JSON.stringify(savedVideos));
         urlInput.value = '';
         renderVideos();
-      } catch (err) {
-        alert('Failed to fetch video. It may be private or restricted.');
-      } finally {
+      } catch (err) { alert('Failed to fetch video.'); } 
+      finally {
         addBtn.disabled = false;
         addBtn.innerHTML = `<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Save Video`;
       }
     });
 
-    // Bulk Add
     document.getElementById('bulkAddBtn').onclick = () => {
       const plId = bulkPlaylistSelect.value;
-      if (!plId) return alert('Select a playlist first.');
-      if (selectedVideos.size === 0) return alert('Select some videos first.');
+      if (!plId) return alert('Select a playlist.');
+      if (selectedVideos.size === 0) return alert('Select videos.');
       const pl = savedPlaylists.find(p => p.id === plId);
       selectedVideos.forEach(vid => { if (!pl.videos.includes(vid)) pl.videos.push(vid); });
       localStorage.setItem('tubeYouPlaylists', JSON.stringify(savedPlaylists));
@@ -637,10 +705,9 @@
       renderVideos();
     };
 
-    // Bulk Delete
     document.getElementById('bulkDeleteBtn').onclick = () => {
       if (selectedVideos.size === 0) return alert('Select videos to delete.');
-      showModal('Delete Videos', `Permanently delete ${selectedVideos.size} video(s) from your library?`, false, 'Delete', () => {
+      showModal('Delete Videos', `Permanently delete ${selectedVideos.size} video(s)?`, false, 'Delete', () => {
         savedVideos = savedVideos.filter(v => !selectedVideos.has(v.id));
         savedPlaylists.forEach(pl => { pl.videos = pl.videos.filter(vid => !selectedVideos.has(vid)); });
         localStorage.setItem('tubeYouVideos', JSON.stringify(savedVideos));
@@ -650,17 +717,13 @@
       });
     };
 
-    // Settings: Accent Color
     document.getElementById('accentColorPicker').addEventListener('input', (e) => {
       document.documentElement.style.setProperty('--accent', e.target.value);
-      // Calculate a lighter hover color
       document.documentElement.style.setProperty('--accent-hover', e.target.value + 'cc');
     });
 
-    // Settings: Aurora Toggle
     document.getElementById('auroraToggle').addEventListener('change', (e) => {
-      if (e.target.checked) document.getElementById('auroraBg').classList.remove('disabled');
-      else document.getElementById('auroraBg').classList.add('disabled');
+      document.getElementById('auroraBg').classList.toggle('disabled', !e.target.checked);
     });
 
     // --- INIT ---
