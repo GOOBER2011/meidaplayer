@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Media Player (YouTube + Direct Files)</title>
+  <title>URL Media Player (YouTube + Proxy)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -98,7 +98,7 @@
       padding: 1.5rem 1rem;
       aspect-ratio: auto;
     }
-    .player-wrapper iframe {
+    #youtubeContainer, iframe {
       width: 100%;
       height: 100%;
       border: 0;
@@ -159,10 +159,12 @@
     .clear-btn:hover { background: #252b34; color: white; }
     [hidden] { display: none !important; }
   </style>
+  <!-- Load the YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
   <div class="player-card">
-    <h1>🎬 URL Player <span>YouTube &amp; files</span></h1>
+    <h1>🎬 URL Player <span>YouTube &amp; Proxy</span></h1>
 
     <div class="input-group">
       <input
@@ -183,7 +185,8 @@
       </div>
       <video id="videoPlayer" controls playsinline preload="metadata" hidden></video>
       <audio id="audioPlayer" controls preload="metadata" hidden></audio>
-      <iframe id="youtubePlayer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen hidden></iframe>
+      <!-- Container for the YouTube Player API -->
+      <div id="youtubeContainer" hidden></div>
     </div>
 
     <div class="status-bar">
@@ -198,26 +201,24 @@
       const loadBtn       = document.getElementById('loadBtn');
       const videoPlayer   = document.getElementById('videoPlayer');
       const audioPlayer   = document.getElementById('audioPlayer');
-      const youtubePlayer = document.getElementById('youtubePlayer');
+      const ytContainer   = document.getElementById('youtubeContainer');
       const playerWrapper = document.getElementById('playerWrapper');
       const defaultMsg    = document.getElementById('defaultMessage');
       const sourceLabel   = document.getElementById('sourceLabel');
       const clearBtn      = document.getElementById('clearBtn');
 
-      // Extract YouTube video ID from various URL formats, stripping extra params
+      let ytPlayer = null; // Holds the YouTube Player instance
+
+      // Extract YouTube video ID
       function getYouTubeId(url) {
         try {
           const parsed = new URL(url);
           const host = parsed.hostname.replace('www.', '');
           if (host === 'youtube.com' || host === 'm.youtube.com') {
-            // Strip &t= and other params, only use the v= value
             return parsed.searchParams.get('v');
           }
           if (host === 'youtu.be') {
             return parsed.pathname.slice(1).split('?')[0];
-          }
-          if (host === 'youtube.com' && parsed.pathname.startsWith('/embed/')) {
-            return parsed.pathname.split('/')[2];
           }
         } catch (e) { /* not a valid URL */ }
         return null;
@@ -234,8 +235,11 @@
         audioPlayer.removeAttribute('src');
         audioPlayer.load();
 
-        youtubePlayer.hidden = true;
-        youtubePlayer.removeAttribute('src');
+        ytContainer.hidden = true;
+        if (ytPlayer) {
+          ytPlayer.destroy();
+          ytPlayer = null;
+        }
 
         playerWrapper.classList.remove('video-mode', 'audio-mode');
         playerWrapper.classList.add('video-mode');
@@ -245,10 +249,52 @@
         sourceLabel.textContent = 'No media loaded';
       }
 
+      // Handler for YouTube errors
+      function onPlayerError(event) {
+        let errorMessage = '⚠️ An error occurred while trying to play this video.';
+        
+        // 101 and 150 mean embedding is disabled by the creator
+        if (event.data === 101 || event.data === 150) {
+          errorMessage = '⛔ This video is not allowed to be played by the creator. There is nothing I can do about this restriction.';
+        } else if (event.data === 153) {
+          errorMessage = '⚠️ Configuration error (153). Ensure you are on a valid domain (not file://).';
+        }
+        
+        resetPlayer(errorMessage);
+      }
+
+      function playYouTube(videoId) {
+        defaultMsg.hidden = true;
+        videoPlayer.hidden = true;
+        audioPlayer.hidden = true;
+        ytContainer.hidden = false;
+        
+        playerWrapper.classList.remove('audio-mode');
+        playerWrapper.classList.add('video-mode');
+
+        if (ytPlayer) {
+          ytPlayer.destroy();
+        }
+
+        // Create the new YouTube Player
+        ytPlayer = new YT.Player('youtubeContainer', {
+          height: '100%',
+          width: '100%',
+          videoId: videoId,
+          playerVars: {
+            'rel': 0,
+            'autoplay': 1
+          },
+          events: {
+            'onError': onPlayerError
+          }
+        });
+      }
+
       function showVideo() {
         defaultMsg.hidden = true;
         audioPlayer.hidden = true;
-        youtubePlayer.hidden = true;
+        ytContainer.hidden = true;
         videoPlayer.hidden = false;
         playerWrapper.classList.remove('audio-mode');
         playerWrapper.classList.add('video-mode');
@@ -257,19 +303,10 @@
       function showAudio() {
         defaultMsg.hidden = true;
         videoPlayer.hidden = true;
-        youtubePlayer.hidden = true;
+        ytContainer.hidden = true;
         audioPlayer.hidden = false;
         playerWrapper.classList.remove('video-mode');
         playerWrapper.classList.add('audio-mode');
-      }
-
-      function showYouTube() {
-        defaultMsg.hidden = true;
-        videoPlayer.hidden = true;
-        audioPlayer.hidden = true;
-        youtubePlayer.hidden = false;
-        playerWrapper.classList.remove('audio-mode');
-        playerWrapper.classList.add('video-mode');
       }
 
       function guessDirectType(url) {
@@ -286,18 +323,24 @@
           return;
         }
 
-        // Check for YouTube first
+        // 1. Handle YouTube
         const ytId = getYouTubeId(url);
         if (ytId) {
-          // Use the embed format and REMOVE any extra parameters like &t=1s
-          const embedUrl = `https://www.youtube.com/embed/${ytId}?rel=0`;
-          showYouTube();
-          youtubePlayer.src = embedUrl;
           sourceLabel.textContent = '📡 YouTube: ' + ytId;
+          // Make sure the API is loaded before trying to create the player
+          if (window.YT && window.YT.Player) {
+            playYouTube(ytId);
+          } else {
+            // If API isn't loaded yet, wait a moment and try again
+            setTimeout(() => {
+              if (window.YT && window.YT.Player) playYouTube(ytId);
+              else resetPlayer('⚠️ Failed to load YouTube API. Please refresh.');
+            }, 1000);
+          }
           return;
         }
 
-        // Validate as direct media URL
+        // 2. Handle Direct Files (using Proxy)
         let parsed;
         try {
           parsed = new URL(url.startsWith('//') ? 'https:' + url : url);
@@ -312,17 +355,20 @@
         }
 
         const type = guessDirectType(url);
-        sourceLabel.textContent = '📡 ' + (url.length > 60 ? url.slice(0, 57) + '…' : url);
+        sourceLabel.textContent = '📡 Proxied: ' + (url.length > 60 ? url.slice(0, 57) + '…' : url);
+
+        // Route through the Vercel proxy to bypass CORS
+        const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`;
 
         if (type === 'audio') {
           showAudio();
-          audioPlayer.src = url;
+          audioPlayer.src = proxyUrl;
           audioPlayer.load();
           const p = audioPlayer.play();
           if (p) p.catch(err => console.warn('Autoplay blocked:', err));
         } else {
           showVideo();
-          videoPlayer.src = url;
+          videoPlayer.src = proxyUrl;
           videoPlayer.load();
           const p = videoPlayer.play();
           if (p) p.catch(err => console.warn('Autoplay blocked:', err));
@@ -330,33 +376,17 @@
       }
 
       loadBtn.addEventListener('click', loadFromInput);
-
       urlInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          loadFromInput();
-        }
+        if (e.key === 'Enter') { e.preventDefault(); loadFromInput(); }
       });
 
       clearBtn.addEventListener('click', () => {
         urlInput.value = '';
         urlInput.focus();
-        resetPlayer('⚡ Paste a link and click <strong>Play</strong>');
+        resetPlayer();
       });
 
-      videoPlayer.addEventListener('error', () => {
-        if (videoPlayer.src && !videoPlayer.hidden) {
-          resetPlayer('⚠️ Could not load video. Check the URL or file format.');
-        }
-      });
-
-      audioPlayer.addEventListener('error', () => {
-        if (audioPlayer.src && !audioPlayer.hidden) {
-          resetPlayer('⚠️ Could not load audio. Check the URL or file format.');
-        }
-      });
-
-      resetPlayer('⚡ Paste a link and click <strong>Play</strong>');
+      resetPlayer();
     })();
   </script>
 </body>
