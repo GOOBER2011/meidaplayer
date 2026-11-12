@@ -72,22 +72,40 @@
     .btn:hover { background: var(--accent-hover); }
     .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
 
-    .player-container { width: 100%; max-width: 1100px; aspect-ratio: 16 / 9; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 2rem; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); }
+    .player-container { width: 100%; max-width: 1100px; aspect-ratio: 16 / 9; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 2rem; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); transition: max-width var(--transition); }
     .player-container iframe { width: 100%; height: 100%; border: 0; position: absolute; top: 0; left: 0; }
     .error-message { color: var(--text-secondary); text-align: center; padding: 2rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
     .error-message svg { width: 48px; height: 48px; color: var(--accent); }
 
-    .public-player-section { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .public-player-main { flex: 1 1 600px; }
-    .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; max-height: 500px; display: flex; flex-direction: column; }
+    /* --- PUBLIC PLAYER SECTION --- */
+    .public-player-section { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; transition: all var(--transition); }
+    .public-player-main { flex: 1 1 600px; width: 100%; transition: all var(--transition); }
+    
+    /* Theater Mode Overrides */
+    .public-player-section.theater { flex-direction: column; }
+    .public-player-section.theater .public-player-main { flex: 1 1 100%; max-width: 1400px; margin: 0 auto; }
+    .public-player-section.theater .public-player-sidebar { max-width: 1400px; width: 100%; margin: 0 auto; max-height: none; height: auto; }
+    .public-player-section.theater .player-container { max-width: 100%; }
+
+    .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; max-height: 500px; display: flex; flex-direction: column; transition: all var(--transition); }
     .public-video-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
     .public-video-meta { display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
     
+    .action-bar { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
+    .back-btn { display: flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--text-secondary); font-weight: 600; font-size: 1rem; transition: color 0.2s; padding: 0.5rem 0; }
+    .back-btn:hover { color: white; }
+    .back-btn svg { width: 20px; height: 20px; }
+    
+    .theater-btn { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; transition: all 0.2s; }
+    .theater-btn:hover { background: var(--bg-hover); }
+    .theater-btn svg { width: 18px; height: 18px; }
+
     .like-btn { display: flex; align-items: center; gap: 6px; background: var(--bg-base); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; color: white; font-weight: 600; transition: all 0.2s; }
     .like-btn:hover { background: var(--bg-hover); }
     .like-btn.liked { color: var(--accent); border-color: var(--accent); background: rgba(0,102,255,0.1); }
     .like-btn svg { width: 18px; height: 18px; }
 
+    .comments-section { display: flex; flex-direction: column; height: 100%; }
     .comments-section h3 { font-size: 1.1rem; margin-bottom: 1rem; }
     .comment-input-wrapper { display: flex; gap: 10px; margin-bottom: 1.5rem; }
     .comment-input { flex: 1; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.8rem; color: white; outline: none; }
@@ -171,15 +189,29 @@
     </div>
 
     <div id="publicView" hidden>
-      <div class="view-header">
-        <div>
-          <h1 class="section-title">Public Feed</h1>
-          <p class="section-subtitle">Watch videos published by everyone</p>
+      <div id="publicGridArea">
+        <div class="view-header">
+          <div>
+            <h1 class="section-title">Public Feed</h1>
+            <p class="section-subtitle">Watch videos published by everyone</p>
+          </div>
         </div>
+        <div class="video-grid" id="publicVideoGrid"></div>
       </div>
       
       <div id="publicSelectedArea" hidden>
-        <div class="public-player-section">
+        <div class="action-bar">
+          <button class="back-btn" id="backToFeedBtn">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Back to Feed
+          </button>
+          <button class="theater-btn" id="theaterBtn">
+            <svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg>
+            Theater Mode
+          </button>
+        </div>
+
+        <div class="public-player-section" id="publicPlayerSection">
           <div class="public-player-main">
             <div class="player-container" style="margin-bottom: 1rem;">
               <div id="publicYoutubeContainer"></div>
@@ -210,8 +242,6 @@
           </div>
         </div>
       </div>
-
-      <div class="video-grid" id="publicVideoGrid"></div>
     </div>
   </div>
 
@@ -261,7 +291,33 @@
     const privateDefaultMsg = document.getElementById('privateDefaultMsg');
     const libraryView = document.getElementById('libraryView');
     const publicView = document.getElementById('publicView');
+    
+    // New Theater & Back Elements
+    const publicGridArea = document.getElementById('publicGridArea');
     const publicSelectedArea = document.getElementById('publicSelectedArea');
+    const publicPlayerSection = document.getElementById('publicPlayerSection');
+    const theaterBtn = document.getElementById('theaterBtn');
+
+    // Back Button Logic
+    document.getElementById('backToFeedBtn').onclick = () => {
+      publicSelectedArea.hidden = true;
+      publicGridArea.hidden = false;
+      if (ytPlayerPublic) ytPlayerPublic.stopVideo();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Theater Mode Logic
+    let isTheater = false;
+    theaterBtn.onclick = () => {
+      isTheater = !isTheater;
+      if (isTheater) {
+        publicPlayerSection.classList.add('theater');
+        theaterBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg> Exit Theater`;
+      } else {
+        publicPlayerSection.classList.remove('theater');
+        theaterBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg> Theater Mode`;
+      }
+    };
 
     function getYouTubeId(url) {
       try {
@@ -310,6 +366,7 @@
 
     async function playPublicVideo(video) {
       currentPublicVideoId = video.id;
+      publicGridArea.hidden = true;
       publicSelectedArea.hidden = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -535,6 +592,10 @@
       libraryView.hidden = true; publicView.hidden = false;
       document.querySelector('[data-view="public"]').classList.add('active');
       document.querySelector('[data-view="library"]').classList.remove('active');
+      
+      // Reset public view state
+      publicSelectedArea.hidden = true;
+      publicGridArea.hidden = false;
       loadPublicVideos();
     };
 
