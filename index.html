@@ -44,6 +44,7 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
+    /* --- SIDEBAR --- */
     .sidebar { width: var(--sidebar-width); background-color: var(--bg-surface); backdrop-filter: blur(20px); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; transition: width var(--transition); overflow: hidden; z-index: 20; }
     .sidebar.collapsed { width: var(--sidebar-collapsed); }
     .sidebar-header { display: flex; align-items: center; padding: 1.5rem; font-size: 1.4rem; font-weight: 800; border-bottom: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; }
@@ -58,11 +59,24 @@
     .nav-item:hover { background-color: var(--bg-hover); color: var(--text-primary); }
     .nav-item.active { background-color: var(--bg-elevated); color: var(--accent); border-left: 3px solid var(--accent); }
 
+    /* --- MAIN CONTENT --- */
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 2rem 3rem; position: relative; }
-    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
     .section-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
     .section-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
 
+    /* --- GLOBAL SEARCH BAR --- */
+    .global-search-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+    .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; max-width: 800px; }
+    .search-icon { position: absolute; left: 1.2rem; color: var(--text-secondary); width: 22px; height: 22px; }
+    .global-search-input { width: 100%; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 0 1rem 0 3.5rem; height: 3.5rem; font-size: 1.05rem; color: white; outline: none; transition: border 0.2s; backdrop-filter: blur(10px); }
+    .global-search-input:focus { border-color: var(--accent); }
+    .search-tabs { display: flex; gap: 1rem; }
+    .search-tab { padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; color: var(--text-secondary); background: transparent; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; border: 1px solid transparent; }
+    .search-tab:hover { color: white; }
+    .search-tab.active { background: var(--bg-surface); color: var(--accent); border-color: var(--border-color); }
+
+    /* --- ADD VIDEO BOX --- */
     .add-video-box { background: var(--bg-surface); backdrop-filter: blur(10px); padding: 1rem; border-radius: 12px; margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; border: 1px solid var(--border-color); }
     .input-wrapper { flex: 1 1 300px; position: relative; display: flex; align-items: center; }
     .input-icon { position: absolute; left: 1rem; color: var(--text-secondary); width: 20px; height: 20px; }
@@ -80,13 +94,10 @@
     /* --- PUBLIC PLAYER SECTION --- */
     .public-player-section { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; transition: all var(--transition); }
     .public-player-main { flex: 1 1 600px; width: 100%; transition: all var(--transition); }
-    
-    /* Theater Mode Overrides */
     .public-player-section.theater { flex-direction: column; }
     .public-player-section.theater .public-player-main { flex: 1 1 100%; max-width: 1400px; margin: 0 auto; }
     .public-player-section.theater .public-player-sidebar { max-width: 1400px; width: 100%; margin: 0 auto; max-height: none; height: auto; }
     .public-player-section.theater .player-container { max-width: 100%; }
-
     .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; max-height: 500px; display: flex; flex-direction: column; transition: all var(--transition); }
     .public-video-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
     .public-video-meta { display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
@@ -95,7 +106,6 @@
     .back-btn { display: flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--text-secondary); font-weight: 600; font-size: 1rem; transition: color 0.2s; padding: 0.5rem 0; }
     .back-btn:hover { color: white; }
     .back-btn svg { width: 20px; height: 20px; }
-    
     .theater-btn { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; transition: all 0.2s; }
     .theater-btn:hover { background: var(--bg-hover); }
     .theater-btn svg { width: 18px; height: 18px; }
@@ -117,6 +127,7 @@
     .comment-author { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
     .comment-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.4; word-break: break-word; }
 
+    /* --- VIDEO GRID & CREATORS --- */
     .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
     .video-card { background: var(--bg-surface); border-radius: 12px; transition: transform var(--transition), border-color var(--transition); position: relative; display: flex; flex-direction: column; border: 1px solid transparent; overflow: hidden; }
     .video-card:hover { transform: translateY(-4px); border-color: var(--border-color); }
@@ -128,6 +139,15 @@
     .video-text { display: flex; flex-direction: column; overflow: hidden; }
     .video-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; cursor: pointer; }
     .video-author { font-size: 0.85rem; color: var(--text-secondary); }
+    
+    /* Creator List */
+    .creators-list { display: flex; flex-direction: column; gap: 1rem; max-width: 600px; }
+    .creator-card { display: flex; align-items: center; gap: 1.5rem; background: var(--bg-surface); padding: 1rem 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
+    .creator-card:hover { background: var(--bg-hover); }
+    .creator-card img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); }
+    .creator-info h3 { font-size: 1.2rem; margin-bottom: 4px; }
+    .creator-info p { color: var(--text-secondary); font-size: 0.9rem; }
+
     .empty-state { color: var(--text-secondary); font-size: 1rem; grid-column: 1 / -1; text-align: center; padding: 4rem; background: var(--bg-surface); border-radius: 12px; border: 1px dashed var(--border-color); }
 
     .loader { border: 3px solid var(--border-color); border-top: 3px solid var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
@@ -158,6 +178,20 @@
   </div>
 
   <div class="main-content">
+    
+    <!-- GLOBAL SEARCH BAR -->
+    <div class="global-search-container">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search videos and creators..." />
+      </div>
+      <div class="search-tabs" id="searchTabs" hidden>
+        <div class="search-tab active" data-tab="videos">Videos</div>
+        <div class="search-tab" data-tab="creators">Creators</div>
+      </div>
+    </div>
+
+    <!-- LIBRARY VIEW -->
     <div id="libraryView">
       <div class="view-header">
         <div>
@@ -183,11 +217,12 @@
         <div id="privateYoutubeContainer" hidden></div>
       </div>
       <div class="view-header" style="margin-top: 1rem; margin-bottom: 1rem;">
-        <h2 class="section-title" style="font-size:1.3rem;">All Private Videos</h2>
+        <h2 class="section-title" style="font-size:1.3rem;" id="libraryTitle">All Private Videos</h2>
       </div>
       <div class="video-grid" id="myVideoGrid"></div>
     </div>
 
+    <!-- PUBLIC VIEW -->
     <div id="publicView" hidden>
       <div id="publicGridArea">
         <div class="view-header">
@@ -243,6 +278,21 @@
         </div>
       </div>
     </div>
+
+    <!-- SEARCH RESULTS VIEW -->
+    <div id="searchView" hidden>
+      <div class="view-header">
+        <div>
+          <h1 class="section-title" id="searchTitle">Search Results</h1>
+          <p class="section-subtitle" id="searchSubtitle">Showing results for ""</p>
+        </div>
+        <button class="btn btn-outline" id="clearSearchBtn" style="height: 2.5rem; padding: 0 1rem; font-size: 0.9rem;">Clear Search</button>
+      </div>
+      
+      <div class="video-grid" id="searchVideoGrid"></div>
+      <div class="creators-list" id="searchCreatorList" hidden></div>
+    </div>
+
   </div>
 
   <script>
@@ -265,57 +315,184 @@
       localStorage.setItem('tubeYouUsername', username);
     }
 
-    // SELF-HEALING: Fix old local data missing youtube_id
     let localVideos = JSON.parse(localStorage.getItem('tubeYouVideos')) || [];
     let dataMigrated = false;
     localVideos = localVideos.map(v => {
-      if (!v.youtube_id && v.id) {
-        v.youtube_id = v.id;
-        dataMigrated = true;
-      }
+      if (!v.youtube_id && v.id) { v.youtube_id = v.id; dataMigrated = true; }
       return v;
     });
     if (dataMigrated) localStorage.setItem('tubeYouVideos', JSON.stringify(localVideos));
 
     let publicVideos = [];
     let currentPublicVideoId = null;
-    
     let ytPlayerPrivate = null;
     let ytPlayerPublic = null;
+
+    // Search State
+    let currentSearchMode = 'videos'; // 'videos' or 'creators'
+    let currentSearchQuery = '';
 
     const urlInput = document.getElementById('urlInput');
     const addBtn = document.getElementById('addBtn');
     const myVideoGrid = document.getElementById('myVideoGrid');
     const publicVideoGrid = document.getElementById('publicVideoGrid');
-    const privateYtContainer = document.getElementById('privateYoutubeContainer');
-    const privateDefaultMsg = document.getElementById('privateDefaultMsg');
     const libraryView = document.getElementById('libraryView');
     const publicView = document.getElementById('publicView');
+    const searchView = document.getElementById('searchView');
     
-    // New Theater & Back Elements
-    const publicGridArea = document.getElementById('publicGridArea');
-    const publicSelectedArea = document.getElementById('publicSelectedArea');
-    const publicPlayerSection = document.getElementById('publicPlayerSection');
-    const theaterBtn = document.getElementById('theaterBtn');
+    const globalSearchInput = document.getElementById('globalSearchInput');
+    const searchTabs = document.getElementById('searchTabs');
+    const searchVideoGrid = document.getElementById('searchVideoGrid');
+    const searchCreatorList = document.getElementById('searchCreatorList');
 
-    // Back Button Logic
+    // --- SEARCH LOGIC ---
+    globalSearchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (query.length > 0) {
+        searchTabs.hidden = false;
+        showSearchView(query);
+      } else {
+        searchTabs.hidden = true;
+        hideSearchView();
+      }
+    });
+
+    document.querySelectorAll('.search-tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentSearchMode = tab.dataset.tab;
+        showSearchView(currentSearchQuery);
+      };
+    });
+
+    document.getElementById('clearSearchBtn').onclick = () => {
+      globalSearchInput.value = '';
+      searchTabs.hidden = true;
+      hideSearchView();
+    };
+
+    function hideSearchView() {
+      searchView.hidden = true;
+      const activeNav = document.querySelector('.nav-item.active');
+      if (activeNav) activeNav.click();
+    }
+
+    function showSearchView(query) {
+      currentSearchQuery = query;
+      libraryView.hidden = true;
+      publicView.hidden = true;
+      searchView.hidden = false;
+      
+      document.getElementById('searchSubtitle').innerText = `Showing results for "${query}"`;
+      
+      const allVideos = [...localVideos, ...publicVideos];
+      
+      if (currentSearchMode === 'videos') {
+        searchVideoGrid.hidden = false;
+        searchCreatorList.hidden = true;
+        
+        const results = allVideos.filter(v => v.title.toLowerCase().includes(query) || v.author.toLowerCase().includes(query));
+        
+        searchVideoGrid.innerHTML = '';
+        if (results.length === 0) {
+          searchVideoGrid.innerHTML = '<div class="empty-state">No videos found matching your search.</div>';
+        } else {
+          results.forEach(video => {
+            // We check if it's public to know which player to use
+            const isPublic = publicVideos.some(pv => pv.youtube_id === video.youtube_id);
+            const card = createPublicCard(video); // Re-use public card style for search results
+            card.onclick = () => {
+              if (isPublic) {
+                // Find the full public object (with .id)
+                const fullPubVideo = publicVideos.find(pv => pv.youtube_id === video.youtube_id);
+                switchViewToPublic();
+                playPublicVideo(fullPubVideo);
+              } else {
+                switchViewToLibrary();
+                playPrivateVideo(video.youtube_id);
+              }
+            };
+            searchVideoGrid.appendChild(card);
+          });
+        }
+      } else {
+        searchVideoGrid.hidden = true;
+        searchCreatorList.hidden = false;
+        
+        // Find unique creators
+        const creatorMap = new Map();
+        allVideos.forEach(v => {
+          if (v.author.toLowerCase().includes(query)) {
+            if (!creatorMap.has(v.author)) {
+              creatorMap.set(v.author, v);
+            }
+          }
+        });
+
+        const creators = Array.from(creatorMap.values());
+        searchCreatorList.innerHTML = '';
+        
+        if (creators.length === 0) {
+          searchCreatorList.innerHTML = '<div class="empty-state">No creators found matching your search.</div>';
+        } else {
+          creators.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'creator-card';
+            div.innerHTML = `
+              <img src="${c.avatar}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.author)}&background=0c1322&color=0066ff'" />
+              <div class="creator-info">
+                <h3>${c.author}</h3>
+                <p>View creator's videos</p>
+              </div>
+            `;
+            div.onclick = () => {
+              currentSearchMode = 'videos';
+              document.querySelector('[data-tab="videos"]').click();
+              globalSearchInput.value = c.author;
+              showSearchView(c.author.toLowerCase());
+            };
+            searchCreatorList.appendChild(div);
+          });
+        }
+      }
+    }
+
+    function switchViewToLibrary() {
+      libraryView.hidden = false; publicView.hidden = true; searchView.hidden = true;
+      document.querySelector('[data-view="library"]').classList.add('active');
+      document.querySelector('[data-view="public"]').classList.remove('active');
+    }
+
+    function switchViewToPublic() {
+      libraryView.hidden = true; publicView.hidden = false; searchView.hidden = true;
+      document.querySelector('[data-view="public"]').classList.add('active');
+      document.querySelector('[data-view="library"]').classList.remove('active');
+      
+      document.getElementById('publicGridArea').hidden = true;
+      document.getElementById('publicSelectedArea').hidden = false;
+    }
+
+    // --- EXISTING APP LOGIC ---
+
     document.getElementById('backToFeedBtn').onclick = () => {
-      publicSelectedArea.hidden = true;
-      publicGridArea.hidden = false;
+      document.getElementById('publicSelectedArea').hidden = true;
+      document.getElementById('publicGridArea').hidden = false;
       if (ytPlayerPublic) ytPlayerPublic.stopVideo();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Theater Mode Logic
     let isTheater = false;
-    theaterBtn.onclick = () => {
+    document.getElementById('theaterBtn').onclick = () => {
       isTheater = !isTheater;
+      const section = document.getElementById('publicPlayerSection');
+      const btn = document.getElementById('theaterBtn');
       if (isTheater) {
-        publicPlayerSection.classList.add('theater');
-        theaterBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg> Exit Theater`;
+        section.classList.add('theater');
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg> Exit Theater`;
       } else {
-        publicPlayerSection.classList.remove('theater');
-        theaterBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg> Theater Mode`;
+        section.classList.remove('theater');
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V6h14v12z"/></svg> Theater Mode`;
       }
     };
 
@@ -341,35 +518,31 @@
         }
       } catch (e) {}
       return {
-        youtube_id: ytId, 
-        title: noembedData.title, 
-        author: noembedData.author_name,
+        youtube_id: ytId, title: noembedData.title, author: noembedData.author_name,
         thumbnail: noembedData.thumbnail_url || `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`,
         avatar: authorAvatar
       };
     }
 
-    function onPlayerError() {
-      alert('This video is not allowed to be played by the creator.');
-    }
+    function onPlayerError() { alert('This video is not allowed to be played by the creator.'); }
 
     function playPrivateVideo(videoId) {
-      privateDefaultMsg.hidden = true;
-      privateYtContainer.hidden = false;
+      document.getElementById('privateDefaultMsg').hidden = true;
+      document.getElementById('privateYoutubeContainer').hidden = false;
       if (window.YT && window.YT.Player) {
         if (ytPlayerPrivate) ytPlayerPrivate.loadVideoById(videoId);
         else ytPlayerPrivate = new YT.Player('privateYoutubeContainer', {
           height: '100%', width: '100%', videoId: videoId, playerVars: { 'rel': 0, 'autoplay': 1 }, events: { 'onError': onPlayerError }
         });
       } else setTimeout(() => playPrivateVideo(videoId), 500);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function playPublicVideo(video) {
       currentPublicVideoId = video.id;
-      publicGridArea.hidden = true;
-      publicSelectedArea.hidden = false;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
+      document.getElementById('publicGridArea').hidden = true;
+      document.getElementById('publicSelectedArea').hidden = false;
+      
       document.getElementById('pubTitle').innerText = video.title;
       document.getElementById('pubAuthorName').innerText = video.author;
       document.getElementById('pubAuthorAvatar').src = video.avatar;
@@ -388,6 +561,7 @@
       document.getElementById('pubViews').innerText = video.views + 1;
 
       loadPublicInteractions(video.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function loadPublicVideos() {
@@ -395,7 +569,6 @@
       const { data, error } = await db.from('videos').select('*').order('created_at', { ascending: false });
       
       if (error) {
-        console.error(error);
         publicVideoGrid.innerHTML = '<div class="empty-state">Failed to load public videos.</div>';
         return;
       }
@@ -443,12 +616,8 @@
     document.getElementById('pubLikeBtn').onclick = async () => {
       if (!currentPublicVideoId) return;
       const isLiked = document.getElementById('pubLikeBtn').classList.contains('liked');
-      
-      if (isLiked) {
-        await db.from('likes').delete().eq('video_id', currentPublicVideoId).eq('session_id', sessionId);
-      } else {
-        await db.from('likes').insert({ video_id: currentPublicVideoId, session_id: sessionId });
-      }
+      if (isLiked) await db.from('likes').delete().eq('video_id', currentPublicVideoId).eq('session_id', sessionId);
+      else await db.from('likes').insert({ video_id: currentPublicVideoId, session_id: sessionId });
       loadPublicInteractions(currentPublicVideoId);
     };
 
@@ -456,15 +625,8 @@
       const input = document.getElementById('pubCommentInput');
       const text = input.value.trim();
       if (!text || !currentPublicVideoId) return;
-
-      const { error } = await db.from('comments').insert({
-        video_id: currentPublicVideoId,
-        author: username,
-        text: text
-      });
-      
-      if (error) alert("Error posting comment: " + error.message);
-      
+      const { error } = await db.from('comments').insert({ video_id: currentPublicVideoId, author: username, text: text });
+      if (error) alert("Error: " + error.message);
       input.value = '';
       loadPublicInteractions(currentPublicVideoId);
     };
@@ -488,10 +650,7 @@
         </div>
       `;
       
-      card.querySelector('.thumbnail-container').onclick = () => {
-        playPrivateVideo(video.youtube_id);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+      card.querySelector('.thumbnail-container').onclick = () => playPrivateVideo(video.youtube_id);
       
       card.querySelector(`#pubBtn_${video.youtube_id}`).onclick = async (e) => {
         e.stopPropagation();
@@ -499,31 +658,18 @@
         btn.innerText = "Publishing...";
         
         const { data: existing } = await db.from('videos').select('id').eq('youtube_id', video.youtube_id);
-        if (existing && existing.length > 0) {
-          btn.innerText = "Already Public";
-          return;
-        }
+        if (existing && existing.length > 0) { btn.innerText = "Already Public"; return; }
 
         const { error } = await db.from('videos').insert({
-          youtube_id: video.youtube_id,
-          title: video.title,
-          author: video.author,
-          thumbnail: video.thumbnail,
-          avatar: video.avatar
+          youtube_id: video.youtube_id, title: video.title, author: video.author, thumbnail: video.thumbnail, avatar: video.avatar
         });
 
-        if (error) {
-          console.error("Supabase Error:", error);
-          alert("Failed to publish: " + error.message); 
-          btn.innerText = "Publish Publicly";
-        } else {
-          btn.innerText = "Published!";
-          btn.style.background = "var(--bg-hover)";
-          btn.style.color = "var(--accent)";
+        if (error) { alert("Failed to publish: " + error.message); btn.innerText = "Publish Publicly"; } 
+        else {
+          btn.innerText = "Published!"; btn.style.background = "var(--bg-hover)"; btn.style.color = "var(--accent)";
           loadPublicVideos();
         }
       };
-      
       return card;
     }
 
@@ -538,7 +684,7 @@
           <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=0c1322&color=0066ff'" />
           <div class="video-text">
             <div class="video-title">${video.title}</div>
-            <div class="video-author">${video.author} • ${video.views} views</div>
+            <div class="video-author">${video.author} ${video.views !== undefined ? '• ' + video.views + ' views' : ''}</div>
           </div>
         </div>
       `;
@@ -556,18 +702,15 @@
       addBtn.innerText = 'Fetching...';
       try {
         const newVideo = await fetchVideoMetadata(ytId);
-        
-        if (localVideos.some(v => v.youtube_id === ytId)) {
-           alert('Already saved locally!');
-        } else {
+        if (localVideos.some(v => v.youtube_id === ytId)) alert('Already saved locally!');
+        else {
            localVideos.unshift(newVideo);
            localStorage.setItem('tubeYouVideos', JSON.stringify(localVideos));
            renderLocalVideos();
         }
         urlInput.value = '';
-      } catch (err) { 
-        alert('Failed to fetch video. It may be private or restricted.'); 
-      } finally {
+      } catch (err) { alert('Failed to fetch video.'); } 
+      finally {
         addBtn.disabled = false;
         addBtn.innerHTML = `<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Save Video`;
       }
@@ -583,19 +726,17 @@
     }
 
     document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+    
     document.querySelector('[data-view="library"]').onclick = () => {
-      libraryView.hidden = false; publicView.hidden = true;
-      document.querySelector('[data-view="library"]').classList.add('active');
-      document.querySelector('[data-view="public"]').classList.remove('active');
+      if (globalSearchInput.value) { globalSearchInput.value = ''; searchTabs.hidden = true; }
+      switchViewToLibrary();
     };
+    
     document.querySelector('[data-view="public"]').onclick = () => {
-      libraryView.hidden = true; publicView.hidden = false;
-      document.querySelector('[data-view="public"]').classList.add('active');
-      document.querySelector('[data-view="library"]').classList.remove('active');
-      
-      // Reset public view state
-      publicSelectedArea.hidden = true;
-      publicGridArea.hidden = false;
+      if (globalSearchInput.value) { globalSearchInput.value = ''; searchTabs.hidden = true; }
+      switchViewToPublic();
+      document.getElementById('publicSelectedArea').hidden = true;
+      document.getElementById('publicGridArea').hidden = false;
       loadPublicVideos();
     };
 
