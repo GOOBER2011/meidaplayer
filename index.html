@@ -68,7 +68,7 @@
     .sidebar.collapsed .user-mini { justify-content: center; padding: 0.75rem 0; }
     .user-mini:hover { background: var(--bg-hover); }
     .user-mini img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); flex-shrink: 0; }
-    .user-mini .nav-text { font-size: 0.8rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-mini .nav-text { font-size: 0.8rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
 
     /* --- MAIN CONTENT --- */
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 1.5rem 2rem; position: relative; }
@@ -108,15 +108,24 @@
     .public-player-section.theater .player-container { max-width: 100%; }
     .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; max-height: 500px; display: flex; flex-direction: column; transition: all var(--transition); }
     
-    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: center; }
+    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+    
+    /* Delete Button (Trash Can) */
+    .delete-icon-btn { background: transparent; color: var(--text-secondary); padding: 4px; border-radius: 4px; transition: all 0.2s; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .delete-icon-btn:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .delete-icon-btn svg { width: 18px; height: 18px; }
+
     .public-video-meta { display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.75rem; }
     
     .meta-left { display: flex; flex-direction: column; gap: 8px; }
     .meta-row { display: flex; align-items: center; gap: 8px; }
     .meta-row img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); }
-    .clickable-user { cursor: pointer; font-weight: 600; color: var(--text-primary); transition: color 0.2s; }
+    .clickable-user { cursor: pointer; font-weight: 600; color: var(--text-primary); transition: color 0.2s; display: flex; align-items: center; gap: 4px; }
     .clickable-user:hover { color: var(--text-secondary); }
     .meta-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Crown Icon */
+    .crown-icon { width: 14px; height: 14px; color: #ffffff; display: inline-block; vertical-align: middle; }
 
     .action-bar { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; align-items: center; }
     .back-btn { display: flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--text-secondary); font-weight: 500; font-size: 0.85rem; transition: color 0.2s; padding: 0.25rem 0; }
@@ -146,7 +155,7 @@
     .comment { display: flex; gap: 8px; }
     .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-hover); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.75rem; flex-shrink: 0; object-fit: cover; }
     .comment-content { background: var(--bg-base); padding: 0.6rem; border-radius: 6px; flex: 1; border: 1px solid var(--border-color); }
-    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; display: flex; justify-content: space-between; }
+    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
     .comment-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; word-break: break-word; }
     .comment-img { max-width: 100%; border-radius: 4px; margin-top: 0.5rem; cursor: pointer; border: 1px solid var(--border-color); }
     .reply-btn { font-size: 0.7rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; padding: 0; margin-top: 4px; text-decoration: underline; }
@@ -167,12 +176,12 @@
     .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-elevated); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; }
     .video-text { display: flex; flex-direction: column; overflow: hidden; }
     .video-title { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
-    .video-author { font-size: 0.8rem; color: var(--text-secondary); }
+    .video-author { font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;}
     
     /* --- PROFILE VIEW --- */
     .profile-header { display: flex; gap: 1.5rem; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; flex-wrap: wrap; }
     .profile-pfp { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); border: 2px solid var(--border-color); }
-    .profile-info h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.5px; }
+    .profile-info h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
     .profile-bio { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; max-width: 500px; line-height: 1.4; }
     .profile-stats { display: flex; gap: 1.5rem; font-weight: 500; color: var(--text-secondary); font-size: 0.85rem; align-items: center; }
     .stat-item { display: flex; align-items: center; gap: 6px; }
@@ -313,7 +322,9 @@
             </div>
             <h2 class="public-video-title" id="pubTitle">
               <span id="pubTitleText"></span>
-              <button class="btn" style="background:var(--danger); height:1.8rem; font-size:0.75rem; display:none;" id="adminDeleteBtn">Delete Video</button>
+              <button class="delete-icon-btn" id="adminDeleteBtn" style="display:none;" title="Admin Delete">
+                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+              </button>
             </h2>
             <div class="public-video-meta">
               <div class="meta-left">
@@ -408,7 +419,9 @@
             </div>
             <h2 class="public-video-title" id="profTitle">
               <span id="profTitleText"></span>
-              <button class="btn" style="background:var(--danger); height:1.8rem; font-size:0.75rem;" id="ownerDeleteBtn">Delete Video</button>
+              <button class="delete-icon-btn" id="ownerDeleteBtn" style="display:none;" title="Remove from Channel">
+                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+              </button>
             </h2>
             <div class="public-video-meta">
               <div class="meta-left">
@@ -606,6 +619,9 @@
 
     let isAdmin = localStorage.getItem('tubeYouAdmin') === 'true';
 
+    // Crown SVG
+    const crownSVG = `<svg class="crown-icon" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>`;
+
     // Settings state
     let settings = JSON.parse(localStorage.getItem('tubeYouSettings')) || {
       autoplay: true, mute: false, theater: false
@@ -640,6 +656,7 @@
         alert('Admin access granted. You can now delete any public video.');
         document.getElementById('adminCodeInput').value = '';
         if(currentPublicVideoId) document.getElementById('adminDeleteBtn').style.display = 'block';
+        updateSidebarUser();
       } else {
         alert('Invalid code.');
       }
@@ -701,11 +718,12 @@
     }
 
     function updateSidebarUser() {
+      const nameEl = document.getElementById('sidebarUsername');
       if (currentUser && currentProfile) {
-        document.getElementById('sidebarUsername').innerText = currentProfile.username;
+        nameEl.innerHTML = currentProfile.username + (isAdmin ? crownSVG : '');
         document.getElementById('sidebarPfp').src = currentProfile.avatar_url || `https://ui-avatars.com/api/?name=${currentProfile.username}&background=18181b&color=ffffff`;
       } else {
-        document.getElementById('sidebarUsername').innerText = 'Log In / Sign Up';
+        nameEl.innerText = 'Log In / Sign Up';
         document.getElementById('sidebarPfp').src = `https://ui-avatars.com/api/?name=Guest&background=18181b&color=ffffff`;
       }
     }
@@ -895,12 +913,14 @@
         const threadDiv = document.createElement('div');
         threadDiv.className = 'comment-thread';
         
+        const isCommentAdmin = c.author === currentProfile?.username && isAdmin;
+
         // Root Comment
         let html = `
           <div class="comment">
             <img src="${c.avatar_url || `https://ui-avatars.com/api/?name=${c.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
             <div class="comment-content">
-              <div class="comment-author">${c.author}</div>
+              <div class="comment-author">${c.author} ${isCommentAdmin ? crownSVG : ''}</div>
               <div class="comment-text">${c.text}</div>
               ${c.image_url ? `<img src="${c.image_url}" class="comment-img" onclick="window.open('${c.image_url}')" />` : ''}
               <button class="reply-btn" onclick="startReply('${type}', '${c.id}', '${c.author}')">Reply</button>
@@ -913,11 +933,12 @@
         if (commentReplies.length > 0) {
           html += `<div class="replies-container">`;
           commentReplies.forEach(r => {
+            const isReplyAdmin = r.author === currentProfile?.username && isAdmin;
             html += `
               <div class="comment">
                 <img src="${r.avatar_url || `https://ui-avatars.com/api/?name=${r.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
                 <div class="comment-content">
-                  <div class="comment-author">${r.author}</div>
+                  <div class="comment-author">${r.author} ${isReplyAdmin ? crownSVG : ''}</div>
                   <div class="comment-text">${r.text}</div>
                   ${r.image_url ? `<img src="${r.image_url}" class="comment-img" onclick="window.open('${r.image_url}')" />` : ''}
                 </div>
@@ -965,8 +986,10 @@
         return;
       }
 
+      const isProfileAdmin = targetId === (currentUser ? currentUser.id : null) && isAdmin;
+
       document.getElementById('profileViewPfp').src = profile.avatar_url || `https://ui-avatars.com/api/?name=${profile.username}&background=18181b&color=ffffff`;
-      document.getElementById('profileViewName').innerText = profile.username;
+      document.getElementById('profileViewName').innerHTML = profile.username + (isProfileAdmin ? ` ${crownSVG}` : '');
       document.getElementById('profileViewNameSpan').innerText = profile.username;
       document.getElementById('profileViewBio').innerText = profile.bio || 'No bio yet.';
 
@@ -1027,7 +1050,7 @@
       
       // Show delete button only if it's your own profile
       if (currentUser && currentProfileId === currentUser.id) {
-        document.getElementById('ownerDeleteBtn').style.display = 'block';
+        document.getElementById('ownerDeleteBtn').style.display = 'flex';
       } else {
         document.getElementById('ownerDeleteBtn').style.display = 'none';
       }
@@ -1140,13 +1163,16 @@
       document.getElementById('pubOrigAvatar').src = video.avatar;
       document.getElementById('pubOrigName').innerText = video.author;
       document.getElementById('pubPostAvatar').src = video.publisher_avatar || `https://ui-avatars.com/api/?name=${video.publisher_name || 'Unknown'}&background=18181b&color=ffffff`;
-      document.getElementById('pubPostName').innerText = video.publisher_name || 'Unknown User';
+      
+      const isPosterAdmin = video.publisher_name === currentProfile?.username && isAdmin;
+      document.getElementById('pubPostName').innerHTML = (video.publisher_name || 'Unknown User') + (isPosterAdmin ? ` ${crownSVG}` : '');
+      
       document.getElementById('pubViews').innerText = video.views;
       document.getElementById('pubLikeCount').innerText = '...';
       document.getElementById('pubCommentList').innerHTML = '<div class="loader"></div>';
       
       // Admin Check
-      if (isAdmin) document.getElementById('adminDeleteBtn').style.display = 'block';
+      if (isAdmin) document.getElementById('adminDeleteBtn').style.display = 'flex';
       else document.getElementById('adminDeleteBtn').style.display = 'none';
 
       if (window.YT && window.YT.Player) {
