@@ -7,11 +7,8 @@
   
   <!-- ============================================================== -->
   <!-- 👇 PASTE YOUR IMAGE LINK HERE 👇                               -->
-  <!-- Replace the link below with the direct URL to your image.      -->
-  <!-- Example: https://postimg.cc/gxrPTcqg                     -->
-  <!-- ============================================================== -->
   <link rel="icon" type="image/png" href="https://ui-avatars.com/api/?name=TY&background=000000&color=ffffff&bold=true">
-  
+  <!-- ============================================================== -->
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,12 +81,29 @@
     .section-title { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.5px; }
     .section-subtitle { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
 
-    /* --- SEARCH BAR --- */
-    .global-search-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-    .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; max-width: 600px; }
+    /* --- TOP BAR (Search & Notifications) --- */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
+    .global-search-container { flex: 1; max-width: 600px; }
+    .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
     .search-icon { position: absolute; left: 1rem; color: var(--text-secondary); width: 16px; height: 16px; }
     .global-search-input { width: 100%; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 1rem 0 2.5rem; height: 2.5rem; font-size: 0.85rem; color: white; outline: none; transition: border 0.2s; }
     .global-search-input:focus { border-color: var(--text-secondary); }
+
+    /* Notification Bell */
+    .notif-container { position: relative; }
+    .notif-btn { background: var(--bg-surface); border: 1px solid var(--border-color); width: 2.5rem; height: 2.5rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all 0.2s; }
+    .notif-btn:hover { background: var(--bg-hover); color: white; }
+    .notif-btn svg { width: 20px; height: 20px; }
+    .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-base); display: none; }
+    
+    .notif-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: 320px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; max-height: 400px; overflow-y: auto; display: none; flex-direction: column; }
+    .notif-dropdown.active { display: flex; }
+    .notif-header { padding: 1rem; border-bottom: 1px solid var(--border-color); font-weight: 600; font-size: 0.9rem; }
+    .notif-item { padding: 1rem; border-bottom: 1px solid var(--border-color); }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item h4 { font-size: 0.85rem; margin-bottom: 4px; color: var(--accent); }
+    .notif-item p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+    .notif-date { font-size: 0.7rem; color: var(--text-secondary); margin-top: 6px; display: block; }
 
     /* --- ADD VIDEO BOX --- */
     .add-video-box { background: var(--bg-surface); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; border: 1px solid var(--border-color); }
@@ -118,7 +132,6 @@
     
     .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
     
-    /* Delete Button (Trash Can) */
     .delete-icon-btn { background: transparent; color: var(--text-secondary); padding: 4px; border-radius: 4px; transition: all 0.2s; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .delete-icon-btn:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
     .delete-icon-btn svg { width: 18px; height: 18px; }
@@ -132,7 +145,6 @@
     .clickable-user:hover { color: var(--text-secondary); }
     .meta-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* Crown Icon */
     .crown-icon { width: 14px; height: 14px; color: #ffffff; display: inline-block; vertical-align: middle; }
 
     .action-bar { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; align-items: center; }
@@ -163,7 +175,16 @@
     .comment { display: flex; gap: 8px; }
     .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-hover); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.75rem; flex-shrink: 0; object-fit: cover; }
     .comment-content { background: var(--bg-base); padding: 0.6rem; border-radius: 6px; flex: 1; border: 1px solid var(--border-color); }
-    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+    
+    .comment-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
+    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 4px; }
+    
+    /* Comment Like Button */
+    .comment-like-btn { display: flex; align-items: center; gap: 4px; background: transparent; color: var(--text-secondary); font-size: 0.7rem; transition: color 0.2s; }
+    .comment-like-btn:hover { color: white; }
+    .comment-like-btn.liked { color: var(--danger); }
+    .comment-like-btn svg { width: 12px; height: 12px; fill: currentColor; }
+
     .comment-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; word-break: break-word; }
     .comment-img { max-width: 100%; border-radius: 4px; margin-top: 0.5rem; cursor: pointer; border: 1px solid var(--border-color); }
     .reply-btn { font-size: 0.7rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; padding: 0; margin-top: 4px; text-decoration: underline; }
@@ -180,6 +201,10 @@
     .thumbnail-container { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; }
     .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition); }
     .video-card:hover .thumbnail-container img { transform: scale(1.02); }
+    
+    /* Thumbnail Metadata Overlay */
+    .thumb-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 0.5rem 0.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.7rem; font-weight: 500; color: #ddd; pointer-events: none; }
+
     .video-info { display: flex; gap: 10px; padding: 0.75rem; }
     .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-elevated); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; }
     .video-text { display: flex; flex-direction: column; overflow: hidden; }
@@ -271,11 +296,25 @@
 
   <div class="main-content">
     
-    <!-- SEARCH BAR -->
-    <div class="global-search-container">
-      <div class="search-input-wrapper">
-        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search videos..." />
+    <!-- TOP BAR (SEARCH & NOTIFICATIONS) -->
+    <div class="top-bar">
+      <div class="global-search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search videos..." />
+        </div>
+      </div>
+      
+      <!-- NOTIFICATIONS -->
+      <div class="notif-container">
+        <button class="notif-btn" id="notifBtn">
+          <div class="notif-dot" id="notifDot"></div>
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+          <div class="notif-header">Admin Updates</div>
+          <div id="notifList"></div>
+        </div>
       </div>
     </div>
 
@@ -515,9 +554,9 @@
         </div>
       </div>
 
-      <div class="settings-group">
+      <div class="settings-group" id="adminSettingsGroup">
         <h3>Admin Access</h3>
-        <div class="setting-row">
+        <div class="setting-row" id="adminCodeRow">
           <div class="setting-info">
             <h4>Enter Secret Code</h4>
             <p>Unlock administrator privileges.</p>
@@ -526,6 +565,14 @@
             <input type="password" id="adminCodeInput" class="modal-input" style="margin:0; width:120px; padding:0.4rem; height:2rem;" placeholder="Code..." />
             <button class="btn" style="height:2rem; font-size:0.8rem;" onclick="verifyAdmin()">Verify</button>
           </div>
+        </div>
+        
+        <!-- Admin Only Tools -->
+        <div id="adminTools" style="display:none; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Post Update Log</h4>
+          <input type="text" id="notifTitleInput" class="modal-input" placeholder="Update Title (e.g., New Feature!)" style="margin-bottom: 0.5rem;" />
+          <textarea id="notifMsgInput" class="modal-input" placeholder="Write the update message here..." rows="3" style="resize: none; margin-bottom: 0.5rem;"></textarea>
+          <button class="btn" style="width: 100%;" onclick="postNotification()">Broadcast Update</button>
         </div>
       </div>
 
@@ -655,6 +702,73 @@
       }
     }
 
+    // --- NOTIFICATIONS ---
+    const notifBtn = document.getElementById('notifBtn');
+    const notifDropdown = document.getElementById('notifDropdown');
+    const notifDot = document.getElementById('notifDot');
+    let hasUnreadNotifs = false;
+
+    notifBtn.onclick = () => {
+      notifDropdown.classList.toggle('active');
+      if (notifDropdown.classList.contains('active')) {
+        notifDot.style.display = 'none';
+        hasUnreadNotifs = false;
+      }
+    };
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
+        notifDropdown.classList.remove('active');
+      }
+    });
+
+    async function loadNotifications() {
+      const { data, error } = await db.from('notifications').select('*').order('created_at', { ascending: false }).limit(10);
+      if (error) return;
+      
+      const list = document.getElementById('notifList');
+      list.innerHTML = '';
+      
+      if (data.length === 0) {
+        list.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.8rem;">No updates yet.</div>';
+        return;
+      }
+
+      data.forEach(n => {
+        const date = new Date(n.created_at).toLocaleDateString();
+        list.innerHTML += `
+          <div class="notif-item">
+            <h4>${n.title}</h4>
+            <p>${n.message}</p>
+            <span class="notif-date">${date}</span>
+          </div>
+        `;
+      });
+
+      // Show dot if they haven't been checked in this session
+      if (!hasUnreadNotifs) {
+        notifDot.style.display = 'block';
+        hasUnreadNotifs = true;
+      }
+    }
+
+    async function postNotification() {
+      if (!isAdmin) return;
+      const title = document.getElementById('notifTitleInput').value;
+      const msg = document.getElementById('notifMsgInput').value;
+      if (!title || !msg) return alert('Fill out both fields.');
+
+      const { error } = await db.from('notifications').insert({ title, message: msg });
+      if (error) alert(error.message);
+      else {
+        alert('Update broadcasted!');
+        document.getElementById('notifTitleInput').value = '';
+        document.getElementById('notifMsgInput').value = '';
+        loadNotifications();
+      }
+    }
+
     // --- SEARCH LOGIC ---
     const globalSearchInput = document.getElementById('globalSearchInput');
     
@@ -698,7 +812,6 @@
         return;
       }
       
-      // Remove duplicates based on youtube_id
       const uniqueResults = Array.from(new Map(results.map(v => [v.youtube_id, v])).values());
       
       uniqueResults.forEach(video => {
@@ -726,13 +839,19 @@
       if (code === 'googoogaga') {
         isAdmin = true;
         localStorage.setItem('tubeYouAdmin', 'true');
-        alert('Admin access granted. You can now delete any public video.');
+        alert('Admin access granted.');
         document.getElementById('adminCodeInput').value = '';
-        if(currentPublicVideoId) document.getElementById('adminDeleteBtn').style.display = 'block';
+        document.getElementById('adminCodeRow').style.display = 'none';
+        document.getElementById('adminTools').style.display = 'block';
         updateSidebarUser();
       } else {
         alert('Invalid code.');
       }
+    }
+
+    if (isAdmin) {
+      document.getElementById('adminCodeRow').style.display = 'none';
+      document.getElementById('adminTools').style.display = 'block';
     }
 
     document.getElementById('adminDeleteBtn').onclick = async () => {
@@ -756,7 +875,7 @@
         if (error) alert("Failed to delete: " + error.message);
         else {
           alert('Video removed from your channel.');
-          goToProfile(currentProfileId); // Refresh profile
+          goToProfile(currentProfileId); 
         }
       }
     };
@@ -970,6 +1089,31 @@
     document.getElementById('pubCommentBtn').onclick = () => postComment('pub', currentPublicVideoId);
     document.getElementById('profCommentBtn').onclick = () => postComment('prof', currentProfileVideoId);
 
+    // Comment Likes Logic
+    const likedComments = JSON.parse(localStorage.getItem('tubeYouLikedComments')) || {};
+
+    async function toggleCommentLike(commentId, type, videoId, currentLikes) {
+      if (!currentUser) return alert('Please log in to like comments.');
+      
+      const isLiked = likedComments[commentId];
+      let newCount = currentLikes || 0;
+      
+      if (isLiked) {
+        newCount--;
+        delete likedComments[commentId];
+      } else {
+        newCount++;
+        likedComments[commentId] = true;
+      }
+      
+      localStorage.setItem('tubeYouLikedComments', JSON.stringify(likedComments));
+      
+      await db.from('comments').update({ likes: newCount }).eq('id', commentId);
+      
+      if (type === 'pub') loadPublicInteractions(videoId);
+      else loadProfileInteractions(videoId);
+    }
+
     function renderComments(comments, containerId, type) {
       const list = document.getElementById(containerId);
       list.innerHTML = '';
@@ -978,7 +1122,6 @@
         return;
       }
 
-      // Organize into threads
       const rootComments = comments.filter(c => !c.parent_id);
       const replies = comments.filter(c => c.parent_id);
 
@@ -987,13 +1130,21 @@
         threadDiv.className = 'comment-thread';
         
         const isCommentAdmin = c.author === currentProfile?.username && isAdmin;
+        const isLiked = likedComments[c.id] ? 'liked' : '';
+        const likeCount = c.likes || 0;
+        const videoId = type === 'pub' ? currentPublicVideoId : currentProfileVideoId;
 
-        // Root Comment
         let html = `
           <div class="comment">
             <img src="${c.avatar_url || `https://ui-avatars.com/api/?name=${c.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
             <div class="comment-content">
-              <div class="comment-author">${c.author} ${isCommentAdmin ? crownSVG : ''}</div>
+              <div class="comment-header">
+                <div class="comment-author">${c.author} ${isCommentAdmin ? crownSVG : ''}</div>
+                <button class="comment-like-btn ${isLiked}" onclick="toggleCommentLike('${c.id}', '${type}', '${videoId}', ${likeCount})">
+                  <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                  ${likeCount > 0 ? likeCount : ''}
+                </button>
+              </div>
               <div class="comment-text">${c.text}</div>
               ${c.image_url ? `<img src="${c.image_url}" class="comment-img" onclick="window.open('${c.image_url}')" />` : ''}
               <button class="reply-btn" onclick="startReply('${type}', '${c.id}', '${c.author}')">Reply</button>
@@ -1001,17 +1152,24 @@
           </div>
         `;
         
-        // Replies
         const commentReplies = replies.filter(r => r.parent_id === c.id);
         if (commentReplies.length > 0) {
           html += `<div class="replies-container">`;
           commentReplies.forEach(r => {
             const isReplyAdmin = r.author === currentProfile?.username && isAdmin;
+            const rIsLiked = likedComments[r.id] ? 'liked' : '';
+            const rLikeCount = r.likes || 0;
             html += `
               <div class="comment">
                 <img src="${r.avatar_url || `https://ui-avatars.com/api/?name=${r.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
                 <div class="comment-content">
-                  <div class="comment-author">${r.author} ${isReplyAdmin ? crownSVG : ''}</div>
+                  <div class="comment-header">
+                    <div class="comment-author">${r.author} ${isReplyAdmin ? crownSVG : ''}</div>
+                    <button class="comment-like-btn ${rIsLiked}" onclick="toggleCommentLike('${r.id}', '${type}', '${videoId}', ${rLikeCount})">
+                      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                      ${rLikeCount > 0 ? rLikeCount : ''}
+                    </button>
+                  </div>
                   <div class="comment-text">${r.text}</div>
                   ${r.image_url ? `<img src="${r.image_url}" class="comment-img" onclick="window.open('${r.image_url}')" />` : ''}
                 </div>
@@ -1092,9 +1250,19 @@
     function createProfileCard(video) {
       const card = document.createElement('div');
       card.className = 'video-card';
+      
+      let timeAgo = 'Just now';
+      if(video.created_at) {
+         const diff = Math.floor((new Date() - new Date(video.created_at)) / 1000);
+         if(diff > 86400) timeAgo = Math.floor(diff/86400) + 'd ago';
+         else if(diff > 3600) timeAgo = Math.floor(diff/3600) + 'h ago';
+         else if(diff > 60) timeAgo = Math.floor(diff/60) + 'm ago';
+      }
+
       card.innerHTML = `
         <div class="thumbnail-container">
           <img src="${video.thumbnail}" alt="Thumbnail" loading="lazy" />
+          <div class="thumb-overlay"><span>${timeAgo}</span><span>${video.views} views</span></div>
         </div>
         <div class="video-info">
           <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=18181b&color=ffffff'" />
@@ -1121,7 +1289,6 @@
       document.getElementById('profLikeCount').innerText = '...';
       document.getElementById('profCommentList').innerHTML = '<div class="loader"></div>';
       
-      // Show delete button only if it's your own profile
       if (currentUser && currentProfileId === currentUser.id) {
         document.getElementById('ownerDeleteBtn').style.display = 'flex';
       } else {
@@ -1244,7 +1411,6 @@
       document.getElementById('pubLikeCount').innerText = '...';
       document.getElementById('pubCommentList').innerHTML = '<div class="loader"></div>';
       
-      // Admin Check
       if (isAdmin) document.getElementById('adminDeleteBtn').style.display = 'flex';
       else document.getElementById('adminDeleteBtn').style.display = 'none';
 
@@ -1351,9 +1517,19 @@
     function createPublicCard(video) {
       const card = document.createElement('div');
       card.className = 'video-card';
+      
+      let timeAgo = 'Just now';
+      if(video.created_at) {
+         const diff = Math.floor((new Date() - new Date(video.created_at)) / 1000);
+         if(diff > 86400) timeAgo = Math.floor(diff/86400) + 'd ago';
+         else if(diff > 3600) timeAgo = Math.floor(diff/3600) + 'h ago';
+         else if(diff > 60) timeAgo = Math.floor(diff/60) + 'm ago';
+      }
+
       card.innerHTML = `
         <div class="thumbnail-container">
           <img src="${video.thumbnail}" alt="Thumbnail" loading="lazy" />
+          <div class="thumb-overlay"><span>${timeAgo}</span><span>${video.views} views</span></div>
         </div>
         <div class="video-info">
           <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=18181b&color=ffffff'" />
@@ -1475,6 +1651,7 @@
     }
 
     renderLocalVideos();
+    loadNotifications();
   </script>
 </body>
 </html>
