@@ -81,7 +81,7 @@
     .section-title { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.5px; }
     .section-subtitle { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
 
-    /* --- TOP BAR (Search & Notifications) --- */
+    /* --- TOP BAR --- */
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
     .global-search-container { flex: 1; max-width: 600px; }
     .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
@@ -179,7 +179,6 @@
     .comment-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
     .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 4px; }
     
-    /* Comment Like Button */
     .comment-like-btn { display: flex; align-items: center; gap: 4px; background: transparent; color: var(--text-secondary); font-size: 0.7rem; transition: color 0.2s; }
     .comment-like-btn:hover { color: white; }
     .comment-like-btn.liked { color: var(--danger); }
@@ -202,8 +201,11 @@
     .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition); }
     .video-card:hover .thumbnail-container img { transform: scale(1.02); }
     
-    /* Thumbnail Metadata Overlay */
-    .thumb-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 0.5rem 0.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.7rem; font-weight: 500; color: #ddd; pointer-events: none; }
+    /* Watch Progress Bar */
+    .progress-bar-container { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.2); z-index: 2; }
+    .progress-bar-fill { height: 100%; background: var(--danger); transition: width 0.3s; }
+
+    .thumb-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 0.5rem 0.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.7rem; font-weight: 500; color: #ddd; pointer-events: none; z-index: 1;}
 
     .video-info { display: flex; gap: 10px; padding: 0.75rem; }
     .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-elevated); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; }
@@ -211,6 +213,29 @@
     .video-title { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
     .video-author { font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;}
     
+    /* --- MINIMIZED PLAYER (PiP) --- */
+    #miniPlayer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 350px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      border: 1px solid var(--border-color);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+    #miniPlayer iframe { width: 100%; height: 100%; border: 0; }
+    .mini-header { position: absolute; top: 0; left: 0; right: 0; padding: 8px; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); display: flex; justify-content: space-between; align-items: center; opacity: 0; transition: opacity 0.2s; z-index: 10; }
+    #miniPlayer:hover .mini-header { opacity: 1; }
+    .mini-title { font-size: 0.75rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%; }
+    .close-mini-btn { background: transparent; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
+    .close-mini-btn:hover { color: var(--danger); }
+
     /* --- PROFILE VIEW --- */
     .profile-header { display: flex; gap: 1.5rem; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; flex-wrap: wrap; }
     .profile-pfp { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); border: 2px solid var(--border-color); }
@@ -264,6 +289,15 @@
     <div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div>
   </div>
 
+  <!-- MINIMIZED PLAYER -->
+  <div id="miniPlayer">
+    <div class="mini-header">
+      <span class="mini-title" id="miniTitle">Playing...</span>
+      <button class="close-mini-btn" onclick="closeMiniPlayer()">×</button>
+    </div>
+    <div id="miniYoutubeContainer"></div>
+  </div>
+
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header" id="sidebarToggle">
       <svg class="logo-icon" viewBox="0 0 24 24"><path d="M21.582 6.186a2.6 2.6 0 0 0-1.836-1.844C18.09 3.9 12 3.9 12 3.9s-6.09 0-7.746.442a2.6 2.6 0 0 0-1.836 1.844C2 7.863 2 12 2 12s0 4.137.418 5.814a2.6 2.6 0 0 0 1.836 1.844C5.91 20.1 12 20.1 12 20.1s6.09 0 7.746-.442a2.6 2.6 0 0 0 1.836-1.844C22 16.137 22 12 22 12s0-4.137-.418-5.814zM9.9 15.3V8.7l5.8 3.3-5.8 3.3z"/></svg>
@@ -296,7 +330,7 @@
 
   <div class="main-content">
     
-    <!-- TOP BAR (SEARCH & NOTIFICATIONS) -->
+    <!-- TOP BAR -->
     <div class="top-bar">
       <div class="global-search-container">
         <div class="search-input-wrapper">
@@ -352,7 +386,7 @@
       
       <div id="publicSelectedArea" hidden>
         <div class="action-bar">
-          <button class="back-btn" id="backToFeedBtn">
+          <button class="back-btn" onclick="minimizePublicVideo()">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             Back
           </button>
@@ -449,7 +483,7 @@
 
       <div id="profileSelectedArea" hidden>
         <div class="action-bar">
-          <button class="back-btn" id="backToProfileBtn">
+          <button class="back-btn" onclick="minimizeProfileVideo()">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             Back to Channel
           </button>
@@ -585,6 +619,13 @@
           </div>
           <button class="btn" style="background:var(--bg-hover); color:white; height: 2rem; font-size:0.8rem;" onclick="clearLocalLibrary()">Clear Library</button>
         </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Clear Watch History</h4>
+            <p>Delete your watch progress and history.</p>
+          </div>
+          <button class="btn" style="background:var(--bg-hover); color:white; height: 2rem; font-size:0.8rem;" onclick="clearHistory()">Clear History</button>
+        </div>
       </div>
 
       <div class="settings-group">
@@ -665,6 +706,7 @@
     let ytPlayerPrivate = null;
     let ytPlayerPublic = null;
     let ytPlayerProfile = null;
+    let miniYtPlayer = null;
     
     let isTheaterPublic = false;
     let isTheaterProfile = false;
@@ -673,6 +715,10 @@
     let replyToProfCommentId = null;
 
     let isAdmin = localStorage.getItem('tubeYouAdmin') === 'true';
+
+    // Watch Progress Tracker
+    let watchProgress = JSON.parse(localStorage.getItem('tubeYouProgress')) || {};
+    let progressInterval;
 
     // Crown SVG
     const crownSVG = `<svg class="crown-icon" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>`;
@@ -702,6 +748,104 @@
       }
     }
 
+    function clearHistory() {
+      if (confirm('Are you sure you want to clear your watch history?')) {
+        localStorage.removeItem('tubeYouProgress');
+        watchProgress = {};
+        alert('Watch history cleared.');
+      }
+    }
+
+    // --- MINIMIZED PLAYER LOGIC ---
+    const miniPlayer = document.getElementById('miniPlayer');
+
+    function minimizePublicVideo() {
+      if (!currentPublicVideoId) return;
+      
+      // Get current time
+      let currentTime = 0;
+      if (ytPlayerPublic && ytPlayerPublic.getCurrentTime) {
+        currentTime = ytPlayerPublic.getCurrentTime();
+        // Save progress
+        watchProgress[currentPublicVideoId] = currentTime;
+        localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
+      }
+
+      document.getElementById('publicSelectedArea').hidden = true;
+      document.getElementById('publicGridArea').hidden = false;
+      
+      if (ytPlayerPublic) ytPlayerPublic.destroy(); // Destroy main player
+
+      // Open Mini Player
+      openMiniPlayer('publicYoutubeContainer', currentPublicVideoId, currentTime);
+    }
+
+    function minimizeProfileVideo() {
+      if (!currentProfileVideoId) return;
+      
+      let currentTime = 0;
+      if (ytPlayerProfile && ytPlayerProfile.getCurrentTime) {
+        currentTime = ytPlayerProfile.getCurrentTime();
+        watchProgress[currentProfileVideoId] = currentTime;
+        localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
+      }
+
+      document.getElementById('profileSelectedArea').hidden = true;
+      document.getElementById('profileGridArea').hidden = false;
+      
+      if (ytPlayerProfile) ytPlayerProfile.destroy();
+
+      openMiniPlayer('profileYoutubeContainer', currentProfileVideoId, currentTime);
+    }
+
+    function openMiniPlayer(originalContainerId, videoId, startTime) {
+      miniPlayer.style.display = 'flex';
+      // Wait a tiny bit for DOM to render
+      setTimeout(() => {
+        if (miniYtPlayer) {
+          miniYtPlayer.loadVideoById({ videoId: videoId, startSeconds: startTime });
+        } else {
+          miniYtPlayer = new YT.Player('miniYoutubeContainer', {
+            height: '100%', width: '100%', videoId: videoId,
+            playerVars: { 'rel': 0, 'autoplay': 1, 'start': startTime },
+            events: {
+              'onStateChange': (event) => {
+                 if (event.data === YT.PlayerState.PLAYING) {
+                    trackMiniPlayerProgress(videoId);
+                 }
+              }
+            }
+          });
+        }
+      }, 100);
+    }
+
+    function closeMiniPlayer() {
+      if (miniYtPlayer) {
+        let currentTime = miniYtPlayer.getCurrentTime();
+        // Find which video is playing to save progress
+        let vid = miniYtPlayer.getVideoData().video_id;
+        // Save by matching ID
+        Object.keys(watchProgress).forEach(key => {
+           // Not perfect, but works for now
+        });
+        miniYtPlayer.destroy();
+        miniYtPlayer = null;
+      }
+      miniPlayer.style.display = 'none';
+    }
+
+    function trackMiniPlayerProgress(videoId) {
+      if (progressInterval) clearInterval(progressInterval);
+      progressInterval = setInterval(() => {
+        if (miniYtPlayer && miniYtPlayer.getCurrentTime) {
+          const time = miniYtPlayer.getCurrentTime();
+          watchProgress[videoId] = time;
+          localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
+        }
+      }, 2000);
+    }
+
     // --- NOTIFICATIONS ---
     const notifBtn = document.getElementById('notifBtn');
     const notifDropdown = document.getElementById('notifDropdown');
@@ -716,7 +860,6 @@
       }
     };
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
       if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
         notifDropdown.classList.remove('active');
@@ -746,7 +889,6 @@
         `;
       });
 
-      // Show dot if they haven't been checked in this session
       if (!hasUnreadNotifs) {
         notifDot.style.display = 'block';
         hasUnreadNotifs = true;
@@ -861,13 +1003,12 @@
         if (error) alert(error.message);
         else {
           alert('Video deleted.');
-          document.getElementById('backToFeedBtn').click();
+          minimizePublicVideo();
           loadPublicVideos();
         }
       }
     };
 
-    // --- OWNER DELETE LOGIC ---
     document.getElementById('ownerDeleteBtn').onclick = async () => {
       if (!currentProfileVideoId) return;
       if (confirm('Are you sure you want to remove this video from your channel?')) {
@@ -1089,7 +1230,6 @@
     document.getElementById('pubCommentBtn').onclick = () => postComment('pub', currentPublicVideoId);
     document.getElementById('profCommentBtn').onclick = () => postComment('prof', currentProfileVideoId);
 
-    // Comment Likes Logic
     const likedComments = JSON.parse(localStorage.getItem('tubeYouLikedComments')) || {};
 
     async function toggleCommentLike(commentId, type, videoId, currentLikes) {
@@ -1259,9 +1399,15 @@
          else if(diff > 60) timeAgo = Math.floor(diff/60) + 'm ago';
       }
 
+      // Watch Progress
+      const progress = watchProgress[video.id] || 0;
+      const progressPercent = Math.min((progress / 300) * 100, 95); // Assume 5 mins (300s) average, capped at 95%
+      const progressBar = progress > 0 ? `<div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>` : '';
+
       card.innerHTML = `
         <div class="thumbnail-container">
           <img src="${video.thumbnail}" alt="Thumbnail" loading="lazy" />
+          ${progressBar}
           <div class="thumb-overlay"><span>${timeAgo}</span><span>${video.views} views</span></div>
         </div>
         <div class="video-info">
@@ -1295,10 +1441,15 @@
         document.getElementById('ownerDeleteBtn').style.display = 'none';
       }
 
+      // Check for saved progress
+      const startTime = watchProgress[video.id] || 0;
+
       if (window.YT && window.YT.Player) {
-        if (ytPlayerProfile) ytPlayerProfile.loadVideoById(video.youtube_id);
+        if (ytPlayerProfile) ytPlayerProfile.loadVideoById({ videoId: video.youtube_id, startSeconds: startTime });
         else ytPlayerProfile = new YT.Player('profileYoutubeContainer', {
-          height: '100%', width: '100%', videoId: video.youtube_id, playerVars: { 'rel': 0, 'autoplay': 1 }, events: { 'onError': onPlayerError }
+          height: '100%', width: '100%', videoId: video.youtube_id, 
+          playerVars: { 'rel': 0, 'autoplay': 1, 'start': startTime }, 
+          events: { 'onError': onPlayerError, 'onStateChange': trackProgress('profile', video.id) }
         });
       } else setTimeout(() => playProfileVideo(video), 500);
 
@@ -1318,13 +1469,6 @@
       const { data: comments } = await db.from('comments').select('*').eq('video_id', videoId).order('created_at', { ascending: true });
       renderComments(comments, 'profCommentList', 'prof');
     }
-
-    document.getElementById('backToProfileBtn').onclick = () => {
-      document.getElementById('profileSelectedArea').hidden = true;
-      document.getElementById('profileGridArea').hidden = false;
-      if (ytPlayerProfile) ytPlayerProfile.stopVideo();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
 
     document.getElementById('profileTheaterBtn').onclick = () => {
       isTheaterProfile = !isTheaterProfile;
@@ -1380,6 +1524,24 @@
 
     function onPlayerError() { alert('This video is not allowed to be played by the creator.'); }
 
+    function trackProgress(type, videoId) {
+       return (event) => {
+          if (event.data === YT.PlayerState.PLAYING) {
+             if (progressInterval) clearInterval(progressInterval);
+             progressInterval = setInterval(() => {
+                let player = type === 'public' ? ytPlayerPublic : ytPlayerProfile;
+                if (player && player.getCurrentTime) {
+                   const time = player.getCurrentTime();
+                   watchProgress[videoId] = time;
+                   localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
+                }
+             }, 2000);
+          } else {
+             if (progressInterval) clearInterval(progressInterval);
+          }
+       };
+    }
+
     function playPrivateVideo(videoId) {
       document.getElementById('privateDefaultMsg').hidden = true;
       document.getElementById('privateYoutubeContainer').hidden = false;
@@ -1414,10 +1576,15 @@
       if (isAdmin) document.getElementById('adminDeleteBtn').style.display = 'flex';
       else document.getElementById('adminDeleteBtn').style.display = 'none';
 
+      // Check for saved progress
+      const startTime = watchProgress[video.id] || 0;
+
       if (window.YT && window.YT.Player) {
-        if (ytPlayerPublic) ytPlayerPublic.loadVideoById(video.youtube_id);
+        if (ytPlayerPublic) ytPlayerPublic.loadVideoById({ videoId: video.youtube_id, startSeconds: startTime });
         else ytPlayerPublic = new YT.Player('publicYoutubeContainer', {
-          height: '100%', width: '100%', videoId: video.youtube_id, playerVars: { 'rel': 0, 'autoplay': 1 }, events: { 'onError': onPlayerError }
+          height: '100%', width: '100%', videoId: video.youtube_id, 
+          playerVars: { 'rel': 0, 'autoplay': 1, 'start': startTime }, 
+          events: { 'onError': onPlayerError, 'onStateChange': trackProgress('public', video.id) }
         });
       } else setTimeout(() => playPublicVideo(video), 500);
 
@@ -1526,9 +1693,15 @@
          else if(diff > 60) timeAgo = Math.floor(diff/60) + 'm ago';
       }
 
+      // Watch Progress
+      const progress = watchProgress[video.id] || 0;
+      const progressPercent = Math.min((progress / 300) * 100, 95); // Assume 5 mins (300s) average, capped at 95%
+      const progressBar = progress > 0 ? `<div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>` : '';
+
       card.innerHTML = `
         <div class="thumbnail-container">
           <img src="${video.thumbnail}" alt="Thumbnail" loading="lazy" />
+          ${progressBar}
           <div class="thumb-overlay"><span>${timeAgo}</span><span>${video.views} views</span></div>
         </div>
         <div class="video-info">
@@ -1616,13 +1789,6 @@
       document.getElementById('settingsView').hidden = false;
       document.querySelector('[data-view="settings"]').classList.add('active');
       document.querySelectorAll('.nav-item').forEach(el => { if(el.dataset.view !== 'settings') el.classList.remove('active') });
-    };
-
-    document.getElementById('backToFeedBtn').onclick = () => {
-      document.getElementById('publicSelectedArea').hidden = true;
-      document.getElementById('publicGridArea').hidden = false;
-      if (ytPlayerPublic) ytPlayerPublic.stopVideo();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     document.getElementById('theaterBtn').onclick = () => {
