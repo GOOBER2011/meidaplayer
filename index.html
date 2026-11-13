@@ -417,10 +417,8 @@
     let ytPlayerPrivate = null;
     let ytPlayerPublic = null;
     let isTheater = false;
-    let currentSearchMode = 'videos';
 
     // --- AUTHENTICATION ---
-    // Listen for auth state changes (Login, Logout, Page Reload)
     db.auth.onAuthStateChange(async (event, session) => {
       if (session) {
         currentUser = session.user;
@@ -434,18 +432,21 @@
 
     async function fetchProfile() {
       if (!currentUser) return;
-      // Add a slight retry mechanism in case the profile row is still being created on signup
+      
       const { data, error } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+      
       if (data) {
         currentProfile = data;
-      } else if (error && error.code === 'PGRST116') { // Profile doesn't exist yet
-        // Fallback for users who signed up before the profile table existed
-        const fallbackName = currentUser.email.split('@')[0];
-        const defaultAvatar = `https://ui-avatars.com/api/?name=${fallbackName}&background=0c1322&color=0066ff&bold=true`;
-        const { data: newProfile } = await db.from('profiles').insert({
-          id: currentUser.id, username: fallbackName, avatar_url: defaultAvatar
-        }).select().single();
-        currentProfile = newProfile;
+        updateSidebarUser();
+      } else {
+        // If it fails (e.g. just signed up), wait 1 second and try again
+        setTimeout(async () => {
+          const { data: retryData } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+          if (retryData) {
+            currentProfile = retryData;
+            updateSidebarUser();
+          }
+        }, 1000);
       }
     }
 
@@ -464,8 +465,8 @@
       if (!currentUser) {
         document.getElementById('authModal').classList.add('active');
       } else {
-        document.getElementById('editUsername').value = currentProfile.username;
-        document.getElementById('editBio').value = currentProfile.bio || '';
+        document.getElementById('editUsername').value = currentProfile ? currentProfile.username : '';
+        document.getElementById('editBio').value = currentProfile ? (currentProfile.bio || '') : '';
         document.getElementById('profileModal').classList.add('active');
       }
     }
@@ -492,13 +493,17 @@
 
       if (isSignUpMode) {
         if (!username) { alert('Username required'); btn.innerText = 'Create Account'; btn.disabled = false; return; }
-        const { data, error } = await db.auth.signUp({ email, password });
+        
+        // Pass username in metadata so the SQL trigger can grab it automatically
+        const { data, error } = await db.auth.signUp({ 
+          email, 
+          password,
+          options: { data: { username: username } }
+        });
+        
         if (error) { alert(error.message); btn.innerText = 'Create Account'; btn.disabled = false; return; }
         
-        const defaultAvatar = `https://ui-avatars.com/api/?name=${username}&background=0c1322&color=0066ff&bold=true`;
-        await db.from('profiles').insert({ id: data.user.id, username: username, avatar_url: defaultAvatar });
-        currentUser = data.user;
-        await fetchProfile();
+        setTimeout(fetchProfile, 1000);
       } else {
         const { data, error } = await db.auth.signInWithPassword({ email, password });
         if (error) { alert(error.message); btn.innerText = 'Log In'; btn.disabled = false; return; }
@@ -511,12 +516,10 @@
       btn.innerText = isSignUpMode ? 'Create Account' : 'Log In';
       btn.disabled = false;
       
-      // Clear forms
       document.getElementById('authEmail').value = '';
       document.getElementById('authPassword').value = '';
       document.getElementById('authUsername').value = '';
       
-      // Refresh public videos if open
       if (!document.getElementById('publicView').hidden) loadPublicVideos();
     }
 
@@ -526,8 +529,6 @@
       currentProfile = null;
       updateSidebarUser();
       closeProfileModal();
-      
-      // Go to library
       document.querySelector('[data-view="library"]').click();
     }
 
@@ -541,7 +542,7 @@
       
       btn.innerText = 'Saving...';
       btn.disabled = true;
-      let avatarUrl = currentProfile.avatar_url;
+      let avatarUrl = currentProfile ? currentProfile.avatar_url : '';
 
       if (file) {
         const fileExt = file.name.split('.').pop();
@@ -564,7 +565,6 @@
         await fetchProfile();
         updateSidebarUser();
         closeProfileModal();
-        // Refresh profile view if open
         if (!document.getElementById('profileView').hidden) goToProfile(currentUser.id);
       }
       btn.innerText = 'Save Changes';
@@ -582,7 +582,6 @@
       document.getElementById('searchView').hidden = true;
       document.getElementById('profileView').hidden = false;
 
-      // Update active nav
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if (targetId === (currentUser ? currentUser.id : null)) {
         document.querySelector('[data-view="profile"]').classList.add('active');
@@ -593,7 +592,11 @@
       document.getElementById('profileVideoGrid').innerHTML = '<div class="loader"></div>';
 
       const { data: profile } = await db.from('profiles').select('*').eq('id', targetId).single();
-      if (!profile) return alert('Profile not found.');
+      if (!profile) {
+        document.getElementById('profileViewName').innerText = 'Profile Not Found';
+        document.getElementById('profileVideoGrid').innerHTML = '<div class="empty-state">This user has not set up their profile yet.</div>';
+        return;
+      }
 
       document.getElementById('profileViewPfp').src = profile.avatar_url || `https://ui-avatars.com/api/?name=${profile.username}&background=0c1322&color=0066ff`;
       document.getElementById('profileViewName').innerText = profile.username;
@@ -719,7 +722,6 @@
     async function loadPublicInteractions(videoId) {
       const { data: likes } = await db.from('likes').select('*').eq('video_id', videoId);
       const likeCount = likes ? likes.length : 0;
-      // Session ID is unique per browser to track if they liked
       const sessionId = localStorage.getItem('tubeYouSessionId');
       const hasLiked = likes ? likes.some(l => l.session_id === sessionId) : false;
       
@@ -934,7 +936,6 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
 
-    // Generate Session ID for likes if it doesn't exist
     if (!localStorage.getItem('tubeYouSessionId')) {
       localStorage.setItem('tubeYouSessionId', crypto.randomUUID());
     }
