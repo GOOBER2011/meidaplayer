@@ -5,186 +5,197 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TubeYou</title>
   
+  <!-- Import formal geometric font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
-      --bg-base: #030509;
-      --bg-surface: rgba(10, 15, 25, 0.85);
-      --bg-elevated: #0c1322;
-      --bg-hover: #15223b;
+      --bg-base: #000000;
+      --bg-surface: #09090b;
+      --bg-elevated: #18181b;
+      --bg-hover: #27272a;
       --text-primary: #ffffff;
-      --text-secondary: #8899bb;
-      --accent: #0066ff;
-      --accent-hover: #3388ff;
-      --border-color: rgba(26, 42, 74, 0.6);
-      --danger: #ff3333;
-      --sidebar-width: 260px;
-      --sidebar-collapsed: 80px;
-      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --text-secondary: #a1a1aa;
+      --accent: #ffffff;
+      --accent-hover: #d4d4d8;
+      --border-color: #27272a;
+      --danger: #ef4444;
+      --sidebar-width: 220px;
+      --sidebar-collapsed: 64px;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* --- MONOCHROME AURORA --- */
     @keyframes auroraMove {
       0% { transform: translate(-10%, -10%) scale(1); }
       50% { transform: translate(10%, 10%) scale(1.2); }
       100% { transform: translate(-10%, -10%) scale(1); }
     }
     .aurora-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background-color: var(--bg-base); overflow: hidden; transition: opacity 0.5s ease; }
-    .aurora-bg.disabled { opacity: 0; }
-    .aurora-blob { position: absolute; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(0,102,255,0.12) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(60px); animation: auroraMove 15s infinite alternate ease-in-out; }
-    .aurora-blob:nth-child(2) { top: 20%; left: 50%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,51,153,0.15) 0%, rgba(0,0,0,0) 70%); animation-duration: 20s; animation-direction: alternate-reverse; }
-    .aurora-blob:nth-child(3) { top: 60%; left: 10%; width: 70vw; height: 70vw; background: radial-gradient(circle, rgba(0,170,255,0.08) 0%, rgba(0,0,0,0) 70%); animation-duration: 25s; animation-delay: -5s; }
+    .aurora-blob { position: absolute; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(60px); animation: auroraMove 15s infinite alternate ease-in-out; }
+    .aurora-blob:nth-child(2) { top: 20%; left: 50%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%); animation-duration: 20s; animation-direction: alternate-reverse; }
+    .aurora-blob:nth-child(3) { top: 60%; left: 10%; width: 70vw; height: 70vw; background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 70%); animation-duration: 25s; animation-delay: -5s; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif; }
     body { background-color: var(--bg-base); color: var(--text-primary); display: flex; height: 100vh; overflow: hidden; }
     svg { fill: currentColor; display: block; }
     [hidden] { display: none !important; }
     button { font-family: inherit; cursor: pointer; border: none; outline: none; }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 
     /* --- SIDEBAR --- */
-    .sidebar { width: var(--sidebar-width); background-color: var(--bg-surface); backdrop-filter: blur(20px); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; transition: width var(--transition); overflow: hidden; z-index: 20; }
+    .sidebar { width: var(--sidebar-width); background-color: var(--bg-surface); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; transition: width var(--transition); overflow: hidden; z-index: 20; }
     .sidebar.collapsed { width: var(--sidebar-collapsed); }
-    .sidebar-header { display: flex; align-items: center; padding: 1.5rem; font-size: 1.4rem; font-weight: 800; border-bottom: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; }
-    .sidebar.collapsed .sidebar-header { justify-content: center; padding: 1.5rem 0; }
+    .sidebar-header { display: flex; align-items: center; padding: 1rem 1.25rem; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; letter-spacing: -0.5px; }
+    .sidebar.collapsed .sidebar-header { justify-content: center; padding: 1rem 0; }
     .sidebar.collapsed .nav-text { display: none; }
-    .logo-icon { color: var(--accent); margin-right: 12px; width: 28px; height: 28px; flex-shrink: 0; }
+    .logo-icon { color: var(--text-primary); margin-right: 10px; width: 24px; height: 24px; flex-shrink: 0; }
     .sidebar.collapsed .logo-icon { margin-right: 0; }
-    .nav-section { padding: 1rem 0; display: flex; flex-direction: column; gap: 4px; flex: 1; }
-    .nav-item { padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 1.2rem; cursor: pointer; color: var(--text-secondary); transition: all var(--transition); font-size: 0.95rem; font-weight: 600; border-left: 3px solid transparent; white-space: nowrap; }
-    .sidebar.collapsed .nav-item { justify-content: center; padding: 0.8rem 0; border-left: none; border-radius: 8px; margin: 0 10px; }
-    .nav-item svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .nav-section { padding: 0.75rem 0; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .nav-item { padding: 0.6rem 1.25rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; color: var(--text-secondary); transition: all var(--transition); font-size: 0.85rem; font-weight: 500; border-left: 2px solid transparent; white-space: nowrap; }
+    .sidebar.collapsed .nav-item { justify-content: center; padding: 0.6rem 0; border-left: none; border-radius: 6px; margin: 0 8px; }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
     .nav-item:hover { background-color: var(--bg-hover); color: var(--text-primary); }
-    .nav-item.active { background-color: var(--bg-elevated); color: var(--accent); border-left: 3px solid var(--accent); }
+    .nav-item.active { background-color: var(--bg-elevated); color: var(--accent); border-left: 2px solid var(--accent); }
     
-    /* User Mini Profile in Sidebar */
-    .user-mini { margin-top: auto; padding: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; }
+    /* User Mini Profile */
+    .user-mini { padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; }
+    .sidebar.collapsed .user-mini { justify-content: center; padding: 0.75rem 0; }
     .user-mini:hover { background: var(--bg-hover); }
-    .user-mini img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); }
-    .user-mini .nav-text { font-size: 0.9rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-mini img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); flex-shrink: 0; }
+    .user-mini .nav-text { font-size: 0.8rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* --- MAIN CONTENT --- */
-    .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 2rem 3rem; position: relative; }
-    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-    .section-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
-    .section-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 1.5rem 2rem; position: relative; }
+    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
+    .section-title { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.5px; }
+    .section-subtitle { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
 
     /* --- SEARCH BAR --- */
-    .global-search-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-    .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; max-width: 800px; }
-    .search-icon { position: absolute; left: 1.2rem; color: var(--text-secondary); width: 22px; height: 22px; }
-    .global-search-input { width: 100%; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 0 1rem 0 3.5rem; height: 3.5rem; font-size: 1.05rem; color: white; outline: none; transition: border 0.2s; backdrop-filter: blur(10px); }
-    .global-search-input:focus { border-color: var(--accent); }
+    .global-search-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; max-width: 600px; }
+    .search-icon { position: absolute; left: 1rem; color: var(--text-secondary); width: 16px; height: 16px; }
+    .global-search-input { width: 100%; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 1rem 0 2.5rem; height: 2.5rem; font-size: 0.85rem; color: white; outline: none; transition: border 0.2s; }
+    .global-search-input:focus { border-color: var(--text-secondary); }
 
     /* --- ADD VIDEO BOX --- */
-    .add-video-box { background: var(--bg-surface); backdrop-filter: blur(10px); padding: 1rem; border-radius: 12px; margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; border: 1px solid var(--border-color); }
-    .input-wrapper { flex: 1 1 300px; position: relative; display: flex; align-items: center; }
-    .input-icon { position: absolute; left: 1rem; color: var(--text-secondary); width: 20px; height: 20px; }
-    .url-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 8px; padding: 0 1rem 0 3rem; height: 3rem; font-size: 0.95rem; color: white; outline: none; }
-    .url-input:focus { border-color: var(--accent); }
-    .btn { background: var(--accent); border-radius: 8px; padding: 0 1.5rem; height: 3rem; font-size: 0.95rem; font-weight: 600; color: white; transition: background var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .add-video-box { background: var(--bg-surface); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; border: 1px solid var(--border-color); }
+    .input-wrapper { flex: 1 1 250px; position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 0.75rem; color: var(--text-secondary); width: 16px; height: 16px; }
+    .url-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 0.75rem 0 2.25rem; height: 2.25rem; font-size: 0.85rem; color: white; outline: none; }
+    .url-input:focus { border-color: var(--text-secondary); }
+    
+    .btn { background: var(--accent); border-radius: 6px; padding: 0 1rem; height: 2.25rem; font-size: 0.85rem; font-weight: 600; color: #000000; transition: background var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
     .btn:hover { background: var(--accent-hover); }
-    .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+    .btn:disabled { background: var(--bg-hover); color: var(--text-secondary); cursor: not-allowed; }
     .btn-outline { background: transparent; border: 1px solid var(--border-color); color: white; }
     .btn-outline:hover { background: var(--bg-hover); }
 
-    .player-container { width: 100%; max-width: 1100px; aspect-ratio: 16 / 9; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 2rem; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); transition: max-width var(--transition); }
+    .player-container { width: 100%; max-width: 900px; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); transition: max-width var(--transition); }
     .player-container iframe { width: 100%; height: 100%; border: 0; position: absolute; top: 0; left: 0; }
     
     /* --- PUBLIC PLAYER SECTION --- */
-    .public-player-section { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; transition: all var(--transition); }
-    .public-player-main { flex: 1 1 600px; width: 100%; transition: all var(--transition); }
+    .public-player-section { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; transition: all var(--transition); }
+    .public-player-main { flex: 1 1 500px; width: 100%; transition: all var(--transition); }
     .public-player-section.theater { flex-direction: column; }
-    .public-player-section.theater .public-player-main { flex: 1 1 100%; max-width: 1400px; margin: 0 auto; }
-    .public-player-section.theater .public-player-sidebar { max-width: 1400px; width: 100%; margin: 0 auto; max-height: none; height: auto; }
+    .public-player-section.theater .public-player-main { flex: 1 1 100%; max-width: 1200px; margin: 0 auto; }
+    .public-player-section.theater .public-player-sidebar { max-width: 1200px; width: 100%; margin: 0 auto; max-height: none; height: auto; }
     .public-player-section.theater .player-container { max-width: 100%; }
-    .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; max-height: 500px; display: flex; flex-direction: column; transition: all var(--transition); }
+    .public-player-sidebar { flex: 1 1 250px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; max-height: 400px; display: flex; flex-direction: column; transition: all var(--transition); }
     
-    .public-video-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .public-video-meta { display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 1rem; }
+    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .public-video-meta { display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.75rem; }
     
-    .meta-left { display: flex; flex-direction: column; gap: 10px; }
-    .meta-row { display: flex; align-items: center; gap: 10px; }
-    .meta-row img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); }
+    .meta-left { display: flex; flex-direction: column; gap: 8px; }
+    .meta-row { display: flex; align-items: center; gap: 8px; }
+    .meta-row img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); }
     .clickable-user { cursor: pointer; font-weight: 600; color: var(--text-primary); transition: color 0.2s; }
-    .clickable-user:hover { color: var(--accent); }
-    .meta-label { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .clickable-user:hover { color: var(--text-secondary); }
+    .meta-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .action-bar { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
-    .back-btn { display: flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--text-secondary); font-weight: 600; font-size: 1rem; transition: color 0.2s; padding: 0.5rem 0; }
+    .action-bar { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; align-items: center; }
+    .back-btn { display: flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--text-secondary); font-weight: 500; font-size: 0.85rem; transition: color 0.2s; padding: 0.25rem 0; }
     .back-btn:hover { color: white; }
-    .back-btn svg { width: 20px; height: 20px; }
-    .theater-btn { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; transition: all 0.2s; }
+    .back-btn svg { width: 16px; height: 16px; }
+    .theater-btn { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: white; padding: 0.4rem 0.75rem; border-radius: 6px; font-weight: 500; font-size: 0.8rem; transition: all 0.2s; }
     .theater-btn:hover { background: var(--bg-hover); }
-    .theater-btn svg { width: 18px; height: 18px; }
+    .theater-btn svg { width: 14px; height: 14px; }
 
-    .like-btn { display: flex; align-items: center; gap: 6px; background: var(--bg-base); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; color: white; font-weight: 600; transition: all 0.2s; }
+    .like-btn { display: flex; align-items: center; gap: 6px; background: var(--bg-base); border: 1px solid var(--border-color); padding: 0.4rem 0.75rem; border-radius: 16px; color: white; font-weight: 500; font-size: 0.8rem; transition: all 0.2s; }
     .like-btn:hover { background: var(--bg-hover); }
-    .like-btn.liked { color: var(--accent); border-color: var(--accent); background: rgba(0,102,255,0.1); }
-    .like-btn svg { width: 18px; height: 18px; }
+    .like-btn.liked { color: var(--text-primary); border-color: var(--text-primary); background: var(--bg-elevated); }
+    .like-btn svg { width: 14px; height: 14px; }
 
     .comments-section { display: flex; flex-direction: column; height: 100%; }
-    .comments-section h3 { font-size: 1.1rem; margin-bottom: 1rem; }
-    .comment-input-wrapper { display: flex; gap: 10px; margin-bottom: 1.5rem; }
-    .comment-input { flex: 1; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.8rem; color: white; outline: none; }
-    .comment-input:focus { border-color: var(--accent); }
-    .comment-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-right: 5px; }
-    .comment { display: flex; gap: 10px; }
-    .comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
-    .comment-content { background: var(--bg-base); padding: 0.8rem; border-radius: 8px; flex: 1; }
-    .comment-author { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
-    .comment-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.4; word-break: break-word; }
+    .comments-section h3 { font-size: 0.9rem; margin-bottom: 0.75rem; font-weight: 600; }
+    .comment-input-wrapper { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .comment-input { flex: 1; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem; color: white; outline: none; font-size: 0.8rem; }
+    .comment-input:focus { border-color: var(--text-secondary); }
+    .comment-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 4px; }
+    .comment { display: flex; gap: 8px; }
+    .comment-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--bg-hover); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.7rem; flex-shrink: 0; }
+    .comment-content { background: var(--bg-base); padding: 0.6rem; border-radius: 6px; flex: 1; border: 1px solid var(--border-color); }
+    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+    .comment-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; word-break: break-word; }
 
     /* --- VIDEO GRID --- */
-    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-    .video-card { background: var(--bg-surface); border-radius: 12px; transition: transform var(--transition), border-color var(--transition); position: relative; display: flex; flex-direction: column; border: 1px solid transparent; overflow: hidden; cursor: pointer; }
-    .video-card:hover { transform: translateY(-4px); border-color: var(--border-color); }
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .video-card { background: var(--bg-surface); border-radius: 8px; transition: transform var(--transition), border-color var(--transition); position: relative; display: flex; flex-direction: column; border: 1px solid transparent; overflow: hidden; cursor: pointer; }
+    .video-card:hover { transform: translateY(-2px); border-color: var(--border-color); }
     .thumbnail-container { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; }
     .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition); }
-    .video-card:hover .thumbnail-container img { transform: scale(1.05); }
-    .video-info { display: flex; gap: 12px; padding: 1rem; }
-    .channel-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--bg-elevated); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent); }
+    .video-card:hover .thumbnail-container img { transform: scale(1.02); }
+    .video-info { display: flex; gap: 10px; padding: 0.75rem; }
+    .channel-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-elevated); object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-secondary); font-size: 0.8rem; }
     .video-text { display: flex; flex-direction: column; overflow: hidden; }
-    .video-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-    .video-author { font-size: 0.85rem; color: var(--text-secondary); }
+    .video-title { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
+    .video-author { font-size: 0.75rem; color: var(--text-secondary); }
     
     /* --- PROFILE VIEW --- */
-    .profile-header { display: flex; gap: 2rem; align-items: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; flex-wrap: wrap; }
-    .profile-pfp { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); border: 3px solid var(--border-color); }
-    .profile-info h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .profile-bio { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1.5rem; max-width: 600px; line-height: 1.5; }
-    .profile-stats { display: flex; gap: 2rem; font-weight: 600; color: var(--text-secondary); }
-    .profile-stats span { color: var(--text-primary); font-size: 1.1rem; }
+    .profile-header { display: flex; gap: 1.5rem; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .profile-pfp { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); border: 2px solid var(--border-color); }
+    .profile-info h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.5px; }
+    .profile-bio { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; max-width: 500px; line-height: 1.4; }
+    .profile-stats { display: flex; gap: 1.5rem; font-weight: 500; color: var(--text-secondary); font-size: 0.85rem; align-items: center; }
+    .stat-item { display: flex; align-items: center; gap: 6px; }
+    .stat-item svg { width: 16px; height: 16px; }
+    .profile-stats span { color: var(--text-primary); font-weight: 600; }
 
     /* --- SETTINGS VIEW --- */
-    .settings-group { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; max-width: 600px; }
-    .settings-group h3 { margin-bottom: 1.5rem; font-size: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
-    .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .settings-group { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; max-width: 500px; }
+    .settings-group h3 { margin-bottom: 1rem; font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-weight: 600; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .setting-row:last-child { margin-bottom: 0; }
-    .setting-info h4 { font-size: 1rem; font-weight: 600; }
-    .setting-info p { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+    .setting-info h4 { font-size: 0.85rem; font-weight: 500; }
+    .setting-info p { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
 
     /* --- MODALS --- */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity var(--transition); }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity var(--transition); }
     .modal-overlay.active { opacity: 1; pointer-events: all; }
-    .modal { background: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: 16px; padding: 2.5rem; width: 90%; max-width: 450px; text-align: center; max-height: 90vh; overflow-y: auto; }
-    .modal h3 { margin-bottom: 1.5rem; font-size: 1.5rem; }
-    .modal-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; outline: none; font-size: 0.95rem; }
-    .modal-input:focus { border-color: var(--accent); }
-    .modal-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .modal-btn { padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; flex: 1; }
+    .modal { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; width: 90%; max-width: 380px; text-align: center; max-height: 90vh; overflow-y: auto; }
+    .modal h3 { margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; }
+    .modal-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); color: white; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; outline: none; font-size: 0.85rem; }
+    .modal-input:focus { border-color: var(--text-secondary); }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.25rem; }
+    .modal-btn { padding: 0.6rem 1rem; border-radius: 6px; font-weight: 600; flex: 1; font-size: 0.85rem; }
     .modal-btn.cancel { background: transparent; color: white; border: 1px solid var(--border-color); }
-    .modal-btn.primary { background: var(--accent); color: white; }
-    .auth-toggle { margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem; cursor: pointer; }
+    .modal-btn.primary { background: var(--accent); color: #000000; }
+    .auth-toggle { margin-top: 1rem; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
     .auth-toggle:hover { color: white; text-decoration: underline; }
     
-    .file-input-wrapper { margin-bottom: 1rem; text-align: left; }
-    .file-input-wrapper label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .file-input-wrapper { margin-bottom: 0.75rem; text-align: left; }
+    .file-input-wrapper label { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
     
-    .empty-state { color: var(--text-secondary); font-size: 1rem; grid-column: 1 / -1; text-align: center; padding: 4rem; background: var(--bg-surface); border-radius: 12px; border: 1px dashed var(--border-color); }
-    .loader { border: 3px solid var(--border-color); border-top: 3px solid var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 2rem auto; }
+    .empty-state { color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-surface); border-radius: 8px; border: 1px dashed var(--border-color); }
+    .loader { border: 2px solid var(--border-color); border-top: 2px solid var(--text-primary); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 1.5rem auto; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
@@ -218,7 +229,6 @@
       </div>
     </div>
     
-    <!-- User Mini Profile (Bottom of Sidebar) -->
     <div class="user-mini" id="sidebarUserProfile" onclick="openProfileModal()">
       <img id="sidebarPfp" src="" alt="PFP" />
       <span class="nav-text" id="sidebarUsername">Log In / Sign Up</span>
@@ -243,17 +253,17 @@
       <div class="add-video-box">
         <div class="input-wrapper">
           <svg class="input-icon" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
-          <input type="url" id="urlInput" class="url-input" placeholder="Paste a YouTube link to save privately..." spellcheck="false" />
+          <input type="url" id="urlInput" class="url-input" placeholder="Paste a YouTube link..." spellcheck="false" />
         </div>
         <button id="addBtn" class="btn">
-          <svg viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-          Save Video
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Save
         </button>
       </div>
       <div class="player-container" id="privatePlayerContainer">
         <div class="error-message" id="privateDefaultMsg">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          <span>Select a video to start watching.</span>
+          <svg viewBox="0 0 24 24" style="width:32px;height:32px;margin-bottom:8px;"><path d="M8 5v14l11-7z"/></svg>
+          <span style="font-size:0.85rem; color:var(--text-secondary);">Select a video to start watching.</span>
         </div>
         <div id="privateYoutubeContainer" hidden></div>
       </div>
@@ -289,15 +299,15 @@
               <div class="meta-left">
                 <div class="meta-row">
                   <img id="pubOrigAvatar" src="" />
-                  <div><div class="meta-label">Original Creator</div><div id="pubOrigName" style="font-weight:600; color:white;"></div></div>
+                  <div><div class="meta-label">Original Creator</div><div id="pubOrigName" style="font-weight:500; color:var(--text-primary); font-size:0.8rem;"></div></div>
                 </div>
                 <div class="meta-row">
                   <img id="pubPostAvatar" src="" />
-                  <div><div class="meta-label">Posted on TubeYou by</div><div class="clickable-user" id="pubPostName" onclick="goToProfile()"></div></div>
+                  <div><div class="meta-label">Posted on TubeYou by</div><div class="clickable-user" id="pubPostName" onclick="goToProfile()" style="font-size:0.8rem;"></div></div>
                 </div>
               </div>
-              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
-                <span style="font-size:0.85rem;">👁️ <span id="pubViews">0</span> views</span>
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem;">
+                <span style="font-size:0.75rem; display:flex; align-items:center; gap:4px;"><svg style="width:12px;height:12px;" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> <span id="pubViews">0</span></span>
                 <button class="like-btn" id="pubLikeBtn">
                   <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
                   <span id="pubLikeCount">0</span>
@@ -311,7 +321,7 @@
               <h3>Comments</h3>
               <div class="comment-input-wrapper">
                 <input type="text" id="pubCommentInput" class="comment-input" placeholder="Add a comment..." />
-                <button class="btn" id="pubCommentBtn" style="height: auto; padding: 0 1rem;">Post</button>
+                <button class="btn" id="pubCommentBtn" style="height: auto; padding: 0 0.75rem; font-size:0.75rem;">Post</button>
               </div>
               <div class="comment-list" id="pubCommentList"></div>
             </div>
@@ -328,8 +338,14 @@
           <h1 id="profileViewName">Username</h1>
           <p class="profile-bio" id="profileViewBio">No bio yet.</p>
           <div class="profile-stats">
-            <div>👁️ <span id="profileViewViews">0</span> Views</div>
-            <div>👍 <span id="profileViewLikes">0</span> Likes</div>
+            <div class="stat-item">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+              <span id="profileViewViews">0</span> Views
+            </div>
+            <div class="stat-item">
+              <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+              <span id="profileViewLikes">0</span> Likes
+            </div>
           </div>
         </div>
       </div>
@@ -351,7 +367,7 @@
             <h4>Log Out</h4>
             <p>Sign out of your current session.</p>
           </div>
-          <button class="btn" style="background:var(--danger); height: 2.5rem;" onclick="handleLogout()">Log Out</button>
+          <button class="btn" style="background:var(--danger); color:white; height: 2rem; font-size:0.8rem;" onclick="handleLogout()">Log Out</button>
         </div>
       </div>
     </div>
@@ -363,7 +379,7 @@
           <h1 class="section-title">Search Results</h1>
           <p class="section-subtitle" id="searchSubtitle">Showing results for ""</p>
         </div>
-        <button class="btn btn-outline" id="clearSearchBtn" style="height: 2.5rem; padding: 0 1rem; font-size: 0.9rem;">Clear Search</button>
+        <button class="btn btn-outline" id="clearSearchBtn" style="height: 2rem; font-size:0.8rem;">Clear</button>
       </div>
       <div class="video-grid" id="searchVideoGrid"></div>
     </div>
@@ -391,10 +407,10 @@
       <h3>Edit Profile</h3>
       <div class="file-input-wrapper">
         <label>Profile Picture (PFP)</label>
-        <input type="file" id="editPfpFile" accept="image/*" class="modal-input" style="padding: 0.5rem;" />
+        <input type="file" id="editPfpFile" accept="image/*" class="modal-input" style="padding: 0.4rem;" />
       </div>
       <input type="text" id="editUsername" class="modal-input" placeholder="Username" />
-      <textarea id="editBio" class="modal-input" placeholder="Tell us about yourself..." rows="3" style="resize: none; font-family: inherit;"></textarea>
+      <textarea id="editBio" class="modal-input" placeholder="Tell us about yourself..." rows="3" style="resize: none;"></textarea>
       <div class="modal-actions">
         <button class="modal-btn cancel" onclick="closeProfileModal()">Cancel</button>
         <button class="modal-btn primary" id="saveProfileBtn" onclick="saveProfile()">Save Changes</button>
@@ -439,7 +455,7 @@
         currentProfile = data;
         updateSidebarUser();
       } else {
-        // If it fails (e.g. just signed up), wait 1 second and try again
+        // If it fails, wait 1 second and try again
         setTimeout(async () => {
           const { data: retryData } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
           if (retryData) {
@@ -453,10 +469,10 @@
     function updateSidebarUser() {
       if (currentUser && currentProfile) {
         document.getElementById('sidebarUsername').innerText = currentProfile.username;
-        document.getElementById('sidebarPfp').src = currentProfile.avatar_url || `https://ui-avatars.com/api/?name=${currentProfile.username}&background=0c1322&color=0066ff`;
+        document.getElementById('sidebarPfp').src = currentProfile.avatar_url || `https://ui-avatars.com/api/?name=${currentProfile.username}&background=18181b&color=ffffff`;
       } else {
         document.getElementById('sidebarUsername').innerText = 'Log In / Sign Up';
-        document.getElementById('sidebarPfp').src = `https://ui-avatars.com/api/?name=Guest&background=0c1322&color=0066ff`;
+        document.getElementById('sidebarPfp').src = `https://ui-avatars.com/api/?name=Guest&background=18181b&color=ffffff`;
       }
     }
 
@@ -494,11 +510,8 @@
       if (isSignUpMode) {
         if (!username) { alert('Username required'); btn.innerText = 'Create Account'; btn.disabled = false; return; }
         
-        // Pass username in metadata so the SQL trigger can grab it automatically
         const { data, error } = await db.auth.signUp({ 
-          email, 
-          password,
-          options: { data: { username: username } }
+          email, password, options: { data: { username: username } }
         });
         
         if (error) { alert(error.message); btn.innerText = 'Create Account'; btn.disabled = false; return; }
@@ -587,18 +600,19 @@
         document.querySelector('[data-view="profile"]').classList.add('active');
       }
 
-      document.getElementById('profileViewPfp').src = 'https://ui-avatars.com/api/?name=Loading&background=0c1322&color=0066ff';
+      document.getElementById('profileViewPfp').src = 'https://ui-avatars.com/api/?name=Loading&background=18181b&color=ffffff';
       document.getElementById('profileViewName').innerText = 'Loading...';
       document.getElementById('profileVideoGrid').innerHTML = '<div class="loader"></div>';
 
       const { data: profile } = await db.from('profiles').select('*').eq('id', targetId).single();
+      
       if (!profile) {
         document.getElementById('profileViewName').innerText = 'Profile Not Found';
         document.getElementById('profileVideoGrid').innerHTML = '<div class="empty-state">This user has not set up their profile yet.</div>';
         return;
       }
 
-      document.getElementById('profileViewPfp').src = profile.avatar_url || `https://ui-avatars.com/api/?name=${profile.username}&background=0c1322&color=0066ff`;
+      document.getElementById('profileViewPfp').src = profile.avatar_url || `https://ui-avatars.com/api/?name=${profile.username}&background=18181b&color=ffffff`;
       document.getElementById('profileViewName').innerText = profile.username;
       document.getElementById('profileViewNameSpan').innerText = profile.username;
       document.getElementById('profileViewBio').innerText = profile.bio || 'No bio yet.';
@@ -641,7 +655,7 @@
       const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`);
       const data = await res.json();
       if (data.error) throw new Error('Video unavailable');
-      let avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.author_name)}&background=0c1322&color=0066ff&bold=true`;
+      let avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.author_name)}&background=18181b&color=ffffff&bold=true`;
       try {
         if (data.author_url) {
            const cId = data.author_url.split('/channel/')[1];
@@ -680,7 +694,7 @@
       document.getElementById('pubTitle').innerText = video.title;
       document.getElementById('pubOrigAvatar').src = video.avatar;
       document.getElementById('pubOrigName').innerText = video.author;
-      document.getElementById('pubPostAvatar').src = video.publisher_avatar || `https://ui-avatars.com/api/?name=${video.publisher_name || 'Unknown'}&background=0c1322&color=0066ff`;
+      document.getElementById('pubPostAvatar').src = video.publisher_avatar || `https://ui-avatars.com/api/?name=${video.publisher_name || 'Unknown'}&background=18181b&color=ffffff`;
       document.getElementById('pubPostName').innerText = video.publisher_name || 'Unknown User';
       document.getElementById('pubViews').innerText = video.views;
       document.getElementById('pubLikeCount').innerText = '...';
@@ -733,7 +747,7 @@
       list.innerHTML = '';
 
       if (!comments || comments.length === 0) {
-        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem;">No comments yet.</div>';
+        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem; font-size:0.8rem;">No comments yet.</div>';
         return;
       }
       
@@ -779,14 +793,14 @@
           <img src="${video.thumbnail}" alt="Thumbnail" loading="lazy" />
         </div>
         <div class="video-info">
-          <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=0c1322&color=0066ff'" />
+          <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=18181b&color=ffffff'" />
           <div class="video-text">
             <div class="video-title">${video.title}</div>
             <div class="video-author">${video.author}</div>
           </div>
         </div>
-        <div style="padding: 0 1rem 1rem;">
-          <button class="btn" style="height: 2rem; width: 100%; font-size:0.85rem;" id="pubBtn_${video.youtube_id}">Publish Publicly</button>
+        <div style="padding: 0 0.75rem 0.75rem;">
+          <button class="btn btn-outline" style="height: 1.8rem; width: 100%; font-size:0.75rem;" id="pubBtn_${video.youtube_id}">Publish Publicly</button>
         </div>
       `;
       card.querySelector('.thumbnail-container').onclick = () => playPrivateVideo(video.youtube_id);
@@ -807,7 +821,9 @@
 
         if (error) { alert("Failed to publish: " + error.message); btn.innerText = "Publish Publicly"; } 
         else {
-          btn.innerText = "Published!"; btn.style.background = "var(--bg-hover)"; btn.style.color = "var(--accent)";
+          btn.innerText = "Published!"; 
+          btn.style.color = "var(--text-primary)";
+          btn.style.borderColor = "var(--text-secondary)";
         }
       };
       return card;
@@ -821,11 +837,11 @@
           <img src="${video.thumbnail}" alt="Thumbnail" loading="lazy" />
         </div>
         <div class="video-info">
-          <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=0c1322&color=0066ff'" />
+          <img src="${video.avatar}" class="channel-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(video.author)}&background=18181b&color=ffffff'" />
           <div class="video-text">
             <div class="video-title">${video.title}</div>
             <div class="video-author">${video.author}</div>
-            <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">Posted by: ${video.publisher_name || 'Unknown'}</div>
+            <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">Posted by: ${video.publisher_name || 'Unknown'}</div>
           </div>
         </div>
       `;
@@ -854,7 +870,7 @@
       } catch (err) { alert('Failed to fetch video.'); } 
       finally {
         btn.disabled = false;
-        btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Save Video`;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Save`;
       }
     });
 
