@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TubeYou</title>
   
-  <!-- ============================================================== -->
-  <!-- 👇 PASTE YOUR IMAGE LINK HERE 👇                               -->
   <link rel="icon" type="image/png" href="https://ui-avatars.com/api/?name=TY&background=000000&color=ffffff&bold=true">
-  <!-- ============================================================== -->
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -201,7 +198,6 @@
     .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition); }
     .video-card:hover .thumbnail-container img { transform: scale(1.02); }
     
-    /* Watch Progress Bar */
     .progress-bar-container { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.2); z-index: 2; }
     .progress-bar-fill { height: 100%; background: var(--danger); transition: width 0.3s; }
 
@@ -237,14 +233,28 @@
     .close-mini-btn:hover { color: var(--danger); }
 
     /* --- PROFILE VIEW --- */
-    .profile-header { display: flex; gap: 1.5rem; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .profile-pfp { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); border: 2px solid var(--border-color); }
+    .profile-banner { width: 100%; height: 180px; background: linear-gradient(135deg, #18181b 0%, #000000 100%); border-radius: 8px; margin-bottom: -50px; position: relative; overflow: hidden; background-size: cover; background-position: center; border: 1px solid var(--border-color); }
+    .profile-header { display: flex; gap: 1.5rem; align-items: flex-end; padding: 0 1.5rem 1.5rem 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; position: relative; z-index: 2; }
+    .profile-pfp { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; background: var(--bg-elevated); border: 4px solid var(--bg-base); }
+    .profile-info { flex: 1; padding-top: 50px; }
     .profile-info h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
     .profile-bio { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; max-width: 500px; line-height: 1.4; }
-    .profile-stats { display: flex; gap: 1.5rem; font-weight: 500; color: var(--text-secondary); font-size: 0.85rem; align-items: center; }
+    .profile-stats { display: flex; gap: 1.5rem; font-weight: 500; color: var(--text-secondary); font-size: 0.85rem; align-items: center; flex-wrap: wrap; }
     .stat-item { display: flex; align-items: center; gap: 6px; }
     .stat-item svg { width: 16px; height: 16px; }
     .profile-stats span { color: var(--text-primary); font-weight: 600; }
+    
+    .subscribe-btn { background: var(--accent); color: #000; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+    .subscribe-btn:hover { background: var(--accent-hover); }
+    .subscribe-btn.subscribed { background: var(--bg-hover); color: white; }
+    .subscribe-btn.subscribed:hover { background: var(--border-color); }
+    .subscribe-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .profile-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
+    .profile-tabs { display: flex; gap: 1rem; }
+    .profile-tab { font-size: 1rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; padding: 0.5rem 0; border-bottom: 2px solid transparent; }
+    .profile-tab.active { color: white; border-bottom-color: white; }
+    .sort-select { background: var(--bg-surface); color: white; border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 6px; outline: none; font-size: 0.85rem; cursor: pointer; }
 
     /* --- SETTINGS VIEW --- */
     .settings-group { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; max-width: 600px; }
@@ -289,7 +299,6 @@
     <div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div>
   </div>
 
-  <!-- MINIMIZED PLAYER -->
   <div id="miniPlayer">
     <div class="mini-header">
       <span class="mini-title" id="miniTitle">Playing...</span>
@@ -458,26 +467,35 @@
     <!-- PROFILE VIEW -->
     <div id="profileView" hidden>
       <div id="profileGridArea">
+        <div class="profile-banner" id="profileBanner"></div>
         <div class="profile-header">
           <img id="profileViewPfp" class="profile-pfp" src="" />
           <div class="profile-info">
             <h1 id="profileViewName">Username</h1>
             <p class="profile-bio" id="profileViewBio">No bio yet.</p>
             <div class="profile-stats">
-              <div class="stat-item">
-                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                <span id="profileViewViews">0</span> Views
-              </div>
-              <div class="stat-item">
-                <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
-                <span id="profileViewLikes">0</span> Likes
-              </div>
+              <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg><span id="profileViewViews">0</span> Views</div>
+              <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span id="profileViewLikes">0</span> Likes</div>
+              <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span id="profileViewSubs">0</span> Subscribers</div>
             </div>
           </div>
+          <div>
+            <button class="subscribe-btn" id="subscribeBtn" onclick="toggleSubscription()">Subscribe</button>
+          </div>
         </div>
-        <div class="view-header">
-          <h2 class="section-title">Videos posted by <span id="profileViewNameSpan"></span></h2>
+        
+        <div class="profile-controls">
+          <div class="profile-tabs" id="profileTabs">
+            <div class="profile-tab active" onclick="switchProfileTab('videos')" id="tabVideos">Videos</div>
+            <div class="profile-tab" onclick="switchProfileTab('history')" id="tabHistory" style="display:none;">Watch History</div>
+          </div>
+          <select class="sort-select" id="profileSortSelect" onchange="renderProfileVideos()">
+            <option value="latest">Latest Release</option>
+            <option value="popular">Most Popular</option>
+            <option value="oldest">Oldest Release</option>
+          </select>
         </div>
+
         <div class="video-grid" id="profileVideoGrid"></div>
       </div>
 
@@ -557,51 +575,28 @@
       <div class="settings-group">
         <h3>Playback</h3>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Autoplay Videos</h4>
-            <p>Automatically play videos when clicked.</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="settingAutoplay" checked>
-            <span class="slider"></span>
-          </label>
+          <div class="setting-info"><h4>Autoplay Videos</h4><p>Automatically play videos when clicked.</p></div>
+          <label class="toggle-switch"><input type="checkbox" id="settingAutoplay" checked><span class="slider"></span></label>
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Mute by Default</h4>
-            <p>Start all videos muted.</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="settingMute">
-            <span class="slider"></span>
-          </label>
+          <div class="setting-info"><h4>Mute by Default</h4><p>Start all videos muted.</p></div>
+          <label class="toggle-switch"><input type="checkbox" id="settingMute"><span class="slider"></span></label>
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Default Theater Mode</h4>
-            <p>Always expand the video player in the Public Feed.</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="settingTheater">
-            <span class="slider"></span>
-          </label>
+          <div class="setting-info"><h4>Default Theater Mode</h4><p>Always expand the video player in the Public Feed.</p></div>
+          <label class="toggle-switch"><input type="checkbox" id="settingTheater"><span class="slider"></span></label>
         </div>
       </div>
 
       <div class="settings-group" id="adminSettingsGroup">
         <h3>Admin Access</h3>
         <div class="setting-row" id="adminCodeRow">
-          <div class="setting-info">
-            <h4>Enter Secret Code</h4>
-            <p>Unlock administrator privileges.</p>
-          </div>
+          <div class="setting-info"><h4>Enter Secret Code</h4><p>Unlock administrator privileges.</p></div>
           <div style="display:flex; gap:0.5rem;">
             <input type="password" id="adminCodeInput" class="modal-input" style="margin:0; width:120px; padding:0.4rem; height:2rem;" placeholder="Code..." />
             <button class="btn" style="height:2rem; font-size:0.8rem;" onclick="verifyAdmin()">Verify</button>
           </div>
         </div>
-        
-        <!-- Admin Only Tools -->
         <div id="adminTools" style="display:none; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
           <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Post Update Log</h4>
           <input type="text" id="notifTitleInput" class="modal-input" placeholder="Update Title (e.g., New Feature!)" style="margin-bottom: 0.5rem;" />
@@ -613,17 +608,11 @@
       <div class="settings-group">
         <h3>Data</h3>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Clear Local Library</h4>
-            <p>Delete all privately saved videos from this browser.</p>
-          </div>
+          <div class="setting-info"><h4>Clear Local Library</h4><p>Delete all privately saved videos from this browser.</p></div>
           <button class="btn" style="background:var(--bg-hover); color:white; height: 2rem; font-size:0.8rem;" onclick="clearLocalLibrary()">Clear Library</button>
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Clear Watch History</h4>
-            <p>Delete your watch progress and history.</p>
-          </div>
+          <div class="setting-info"><h4>Clear Watch History</h4><p>Delete your watch progress and history.</p></div>
           <button class="btn" style="background:var(--bg-hover); color:white; height: 2rem; font-size:0.8rem;" onclick="clearHistory()">Clear History</button>
         </div>
       </div>
@@ -631,10 +620,7 @@
       <div class="settings-group">
         <h3>Account</h3>
         <div class="setting-row">
-          <div class="setting-info">
-            <h4>Log Out</h4>
-            <p>Sign out of your current session.</p>
-          </div>
+          <div class="setting-info"><h4>Log Out</h4><p>Sign out of your current session.</p></div>
           <button class="btn" style="background:var(--danger); color:white; height: 2rem; font-size:0.8rem;" onclick="handleLogout()">Log Out</button>
         </div>
       </div>
@@ -643,10 +629,7 @@
     <!-- SEARCH RESULTS VIEW -->
     <div id="searchView" hidden>
       <div class="view-header">
-        <div>
-          <h1 class="section-title">Search Results</h1>
-          <p class="section-subtitle" id="searchSubtitle">Showing results for ""</p>
-        </div>
+        <div><h1 class="section-title">Search Results</h1><p class="section-subtitle" id="searchSubtitle">Showing results for ""</p></div>
         <button class="btn btn-outline" id="clearSearchBtn" style="height: 2rem; font-size:0.8rem;">Clear</button>
       </div>
       <div class="video-grid" id="searchVideoGrid"></div>
@@ -676,6 +659,10 @@
       <div class="file-input-wrapper">
         <label>Profile Picture (PFP)</label>
         <input type="file" id="editPfpFile" accept="image/*" class="modal-input" style="padding: 0.4rem;" />
+      </div>
+      <div class="file-input-wrapper">
+        <label>Profile Banner (Optional)</label>
+        <input type="file" id="editBannerFile" accept="image/*" class="modal-input" style="padding: 0.4rem;" />
       </div>
       <input type="text" id="editUsername" class="modal-input" placeholder="Username" />
       <textarea id="editBio" class="modal-input" placeholder="Tell us about yourself..." rows="3" style="resize: none;"></textarea>
@@ -713,12 +700,17 @@
 
     let replyToPubCommentId = null;
     let replyToProfCommentId = null;
-
+    
     let isAdmin = localStorage.getItem('tubeYouAdmin') === 'true';
 
     // Watch Progress Tracker
     let watchProgress = JSON.parse(localStorage.getItem('tubeYouProgress')) || {};
     let progressInterval;
+
+    // Profile State
+    let currentProfileTab = 'videos';
+    let currentProfileVideosData = [];
+    let isSubscribed = false;
 
     // Crown SVG
     const crownSVG = `<svg class="crown-icon" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>`;
@@ -761,46 +753,34 @@
 
     function minimizePublicVideo() {
       if (!currentPublicVideoId) return;
-      
-      // Get current time
       let currentTime = 0;
       if (ytPlayerPublic && ytPlayerPublic.getCurrentTime) {
         currentTime = ytPlayerPublic.getCurrentTime();
-        // Save progress
         watchProgress[currentPublicVideoId] = currentTime;
         localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
       }
-
       document.getElementById('publicSelectedArea').hidden = true;
       document.getElementById('publicGridArea').hidden = false;
-      
-      if (ytPlayerPublic) ytPlayerPublic.destroy(); // Destroy main player
-
-      // Open Mini Player
-      openMiniPlayer('publicYoutubeContainer', currentPublicVideoId, currentTime);
+      if (ytPlayerPublic) ytPlayerPublic.destroy();
+      openMiniPlayer(currentPublicVideoId, currentTime);
     }
 
     function minimizeProfileVideo() {
       if (!currentProfileVideoId) return;
-      
       let currentTime = 0;
       if (ytPlayerProfile && ytPlayerProfile.getCurrentTime) {
         currentTime = ytPlayerProfile.getCurrentTime();
         watchProgress[currentProfileVideoId] = currentTime;
         localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
       }
-
       document.getElementById('profileSelectedArea').hidden = true;
       document.getElementById('profileGridArea').hidden = false;
-      
       if (ytPlayerProfile) ytPlayerProfile.destroy();
-
-      openMiniPlayer('profileYoutubeContainer', currentProfileVideoId, currentTime);
+      openMiniPlayer(currentProfileVideoId, currentTime);
     }
 
-    function openMiniPlayer(originalContainerId, videoId, startTime) {
+    function openMiniPlayer(videoId, startTime) {
       miniPlayer.style.display = 'flex';
-      // Wait a tiny bit for DOM to render
       setTimeout(() => {
         if (miniYtPlayer) {
           miniYtPlayer.loadVideoById({ videoId: videoId, startSeconds: startTime });
@@ -810,9 +790,7 @@
             playerVars: { 'rel': 0, 'autoplay': 1, 'start': startTime },
             events: {
               'onStateChange': (event) => {
-                 if (event.data === YT.PlayerState.PLAYING) {
-                    trackMiniPlayerProgress(videoId);
-                 }
+                 if (event.data === YT.PlayerState.PLAYING) trackMiniPlayerProgress(videoId);
               }
             }
           });
@@ -821,18 +799,9 @@
     }
 
     function closeMiniPlayer() {
-      if (miniYtPlayer) {
-        let currentTime = miniYtPlayer.getCurrentTime();
-        // Find which video is playing to save progress
-        let vid = miniYtPlayer.getVideoData().video_id;
-        // Save by matching ID
-        Object.keys(watchProgress).forEach(key => {
-           // Not perfect, but works for now
-        });
-        miniYtPlayer.destroy();
-        miniYtPlayer = null;
-      }
+      if (miniYtPlayer) { miniYtPlayer.destroy(); miniYtPlayer = null; }
       miniPlayer.style.display = 'none';
+      if (progressInterval) clearInterval(progressInterval);
     }
 
     function trackMiniPlayerProgress(videoId) {
@@ -869,30 +838,17 @@
     async function loadNotifications() {
       const { data, error } = await db.from('notifications').select('*').order('created_at', { ascending: false }).limit(10);
       if (error) return;
-      
       const list = document.getElementById('notifList');
       list.innerHTML = '';
-      
       if (data.length === 0) {
         list.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.8rem;">No updates yet.</div>';
         return;
       }
-
       data.forEach(n => {
         const date = new Date(n.created_at).toLocaleDateString();
-        list.innerHTML += `
-          <div class="notif-item">
-            <h4>${n.title}</h4>
-            <p>${n.message}</p>
-            <span class="notif-date">${date}</span>
-          </div>
-        `;
+        list.innerHTML += `<div class="notif-item"><h4>${n.title}</h4><p>${n.message}</p><span class="notif-date">${date}</span></div>`;
       });
-
-      if (!hasUnreadNotifs) {
-        notifDot.style.display = 'block';
-        hasUnreadNotifs = true;
-      }
+      if (!hasUnreadNotifs) { notifDot.style.display = 'block'; hasUnreadNotifs = true; }
     }
 
     async function postNotification() {
@@ -900,7 +856,6 @@
       const title = document.getElementById('notifTitleInput').value;
       const msg = document.getElementById('notifMsgInput').value;
       if (!title || !msg) return alert('Fill out both fields.');
-
       const { error } = await db.from('notifications').insert({ title, message: msg });
       if (error) alert(error.message);
       else {
@@ -913,14 +868,10 @@
 
     // --- SEARCH LOGIC ---
     const globalSearchInput = document.getElementById('globalSearchInput');
-    
     globalSearchInput.addEventListener('input', (e) => {
       const query = e.target.value.trim().toLowerCase();
-      if (query.length > 0) {
-        showSearchView(query);
-      } else {
-        hideSearchView();
-      }
+      if (query.length > 0) showSearchView(query);
+      else hideSearchView();
     });
 
     document.getElementById('clearSearchBtn').onclick = () => {
@@ -1001,11 +952,7 @@
       if (confirm('ADMIN ACTION: Permanently delete this public video?')) {
         const { error } = await db.from('videos').delete().eq('id', currentPublicVideoId);
         if (error) alert(error.message);
-        else {
-          alert('Video deleted.');
-          minimizePublicVideo();
-          loadPublicVideos();
-        }
+        else { alert('Video deleted.'); minimizePublicVideo(); loadPublicVideos(); }
       }
     };
 
@@ -1014,14 +961,11 @@
       if (confirm('Are you sure you want to remove this video from your channel?')) {
         const { error } = await db.from('videos').delete().eq('id', currentProfileVideoId);
         if (error) alert("Failed to delete: " + error.message);
-        else {
-          alert('Video removed from your channel.');
-          goToProfile(currentProfileId); 
-        }
+        else { alert('Video removed.'); goToProfile(currentProfileId); }
       }
     };
 
-    // --- AUTHENTICATION ---
+    // --- AUTHENTICATION & PROFILES ---
     db.auth.onAuthStateChange(async (event, session) => {
       if (session) {
         currentUser = session.user;
@@ -1035,17 +979,14 @@
 
     async function fetchProfile() {
       if (!currentUser) return;
-      const { data, error } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+      const { data } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
       if (data) {
         currentProfile = data;
         updateSidebarUser();
       } else {
         setTimeout(async () => {
           const { data: retryData } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
-          if (retryData) {
-            currentProfile = retryData;
-            updateSidebarUser();
-          }
+          if (retryData) { currentProfile = retryData; updateSidebarUser(); }
         }, 1000);
       }
     }
@@ -1128,27 +1069,41 @@
     async function saveProfile() {
       const username = document.getElementById('editUsername').value;
       const bio = document.getElementById('editBio').value;
-      const file = document.getElementById('editPfpFile').files[0];
+      const pfpFile = document.getElementById('editPfpFile').files[0];
+      const bannerFile = document.getElementById('editBannerFile').files[0];
       const btn = document.getElementById('saveProfileBtn');
       
       if (!username) return alert('Username cannot be empty.');
       
       btn.innerText = 'Saving...';
       btn.disabled = true;
+      
       let avatarUrl = currentProfile ? currentProfile.avatar_url : '';
+      let bannerUrl = currentProfile ? currentProfile.banner_url : '';
 
-      if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
-        const { error: uploadError } = await db.storage.from('avatars').upload(fileName, file);
-        if (uploadError) alert('Error uploading image: ' + uploadError.message);
-        else {
+      if (pfpFile) {
+        const fileExt = pfpFile.name.split('.').pop();
+        const fileName = `${currentUser.id}-pfp-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await db.storage.from('avatars').upload(fileName, pfpFile);
+        if (!uploadError) {
           const { data } = db.storage.from('avatars').getPublicUrl(fileName);
           avatarUrl = data.publicUrl;
         }
       }
 
-      const { error } = await db.from('profiles').update({ username: username, bio: bio, avatar_url: avatarUrl }).eq('id', currentUser.id);
+      if (bannerFile) {
+        const fileExt = bannerFile.name.split('.').pop();
+        const fileName = `${currentUser.id}-banner-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await db.storage.from('avatars').upload(fileName, bannerFile);
+        if (!uploadError) {
+          const { data } = db.storage.from('avatars').getPublicUrl(fileName);
+          bannerUrl = data.publicUrl;
+        }
+      }
+
+      const { error } = await db.from('profiles').update({ 
+        username: username, bio: bio, avatar_url: avatarUrl, banner_url: bannerUrl 
+      }).eq('id', currentUser.id);
 
       if (error) alert(error.message);
       else {
@@ -1161,167 +1116,30 @@
       btn.disabled = false;
     }
 
-    // --- COMMENTS LOGIC ---
-    function cancelReply(type) {
-      if (type === 'pub') {
-        replyToPubCommentId = null;
-        document.getElementById('pubReplyContext').style.display = 'none';
+    // --- SUBSCRIPTIONS ---
+    async function toggleSubscription() {
+      if (!currentUser) return alert('Please log in to subscribe.');
+      if (!currentProfileId || currentProfileId === currentUser.id) return;
+
+      const btn = document.getElementById('subscribeBtn');
+      btn.disabled = true;
+
+      if (isSubscribed) {
+        await db.from('subscriptions').delete().eq('subscriber_id', currentUser.id).eq('channel_id', currentProfileId);
+        isSubscribed = false;
+        btn.classList.remove('subscribed');
+        btn.innerText = 'Subscribe';
+        const subsEl = document.getElementById('profileViewSubs');
+        subsEl.innerText = Math.max(0, parseInt(subsEl.innerText) - 1);
       } else {
-        replyToProfCommentId = null;
-        document.getElementById('profReplyContext').style.display = 'none';
+        await db.from('subscriptions').insert({ subscriber_id: currentUser.id, channel_id: currentProfileId });
+        isSubscribed = true;
+        btn.classList.add('subscribed');
+        btn.innerText = 'Subscribed';
+        const subsEl = document.getElementById('profileViewSubs');
+        subsEl.innerText = parseInt(subsEl.innerText) + 1;
       }
-    }
-
-    function startReply(type, commentId, username) {
-      if (type === 'pub') {
-        replyToPubCommentId = commentId;
-        document.getElementById('pubReplyContext').style.display = 'flex';
-        document.getElementById('pubReplyName').innerText = username;
-        document.getElementById('pubCommentInput').focus();
-      } else {
-        replyToProfCommentId = commentId;
-        document.getElementById('profReplyContext').style.display = 'flex';
-        document.getElementById('profReplyName').innerText = username;
-        document.getElementById('profCommentInput').focus();
-      }
-    }
-
-    async function postComment(type, videoId) {
-      if (!currentUser) return alert('Please log in to comment.');
-      const inputId = type === 'pub' ? 'pubCommentInput' : 'profCommentInput';
-      const imgId = type === 'pub' ? 'pubCommentImg' : 'profCommentImg';
-      const input = document.getElementById(inputId);
-      const text = input.value.trim();
-      const file = document.getElementById(imgId).files[0];
-      const parentId = type === 'pub' ? replyToPubCommentId : replyToProfCommentId;
-      
-      if (!text && !file) return;
-
-      let imageUrl = null;
-      if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
-        const { error: uploadError } = await db.storage.from('comments').upload(fileName, file);
-        if (uploadError) return alert('Image upload failed: ' + uploadError.message);
-        const { data } = db.storage.from('comments').getPublicUrl(fileName);
-        imageUrl = data.publicUrl;
-      }
-
-      const { error } = await db.from('comments').insert({ 
-        video_id: videoId, 
-        author: currentProfile.username, 
-        text: text || '', 
-        parent_id: parentId,
-        image_url: imageUrl,
-        avatar_url: currentProfile.avatar_url
-      });
-      
-      if (error) alert("Error posting: " + error.message);
-      else {
-        input.value = '';
-        document.getElementById(imgId).value = '';
-        document.getElementById(type === 'pub' ? 'pubImgName' : 'profImgName').innerText = '';
-        cancelReply(type);
-        if (type === 'pub') loadPublicInteractions(videoId);
-        else loadProfileInteractions(videoId);
-      }
-    }
-
-    document.getElementById('pubCommentBtn').onclick = () => postComment('pub', currentPublicVideoId);
-    document.getElementById('profCommentBtn').onclick = () => postComment('prof', currentProfileVideoId);
-
-    const likedComments = JSON.parse(localStorage.getItem('tubeYouLikedComments')) || {};
-
-    async function toggleCommentLike(commentId, type, videoId, currentLikes) {
-      if (!currentUser) return alert('Please log in to like comments.');
-      
-      const isLiked = likedComments[commentId];
-      let newCount = currentLikes || 0;
-      
-      if (isLiked) {
-        newCount--;
-        delete likedComments[commentId];
-      } else {
-        newCount++;
-        likedComments[commentId] = true;
-      }
-      
-      localStorage.setItem('tubeYouLikedComments', JSON.stringify(likedComments));
-      
-      await db.from('comments').update({ likes: newCount }).eq('id', commentId);
-      
-      if (type === 'pub') loadPublicInteractions(videoId);
-      else loadProfileInteractions(videoId);
-    }
-
-    function renderComments(comments, containerId, type) {
-      const list = document.getElementById(containerId);
-      list.innerHTML = '';
-      if (!comments || comments.length === 0) {
-        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem; font-size:0.8rem;">No comments yet.</div>';
-        return;
-      }
-
-      const rootComments = comments.filter(c => !c.parent_id);
-      const replies = comments.filter(c => c.parent_id);
-
-      rootComments.forEach(c => {
-        const threadDiv = document.createElement('div');
-        threadDiv.className = 'comment-thread';
-        
-        const isCommentAdmin = c.author === currentProfile?.username && isAdmin;
-        const isLiked = likedComments[c.id] ? 'liked' : '';
-        const likeCount = c.likes || 0;
-        const videoId = type === 'pub' ? currentPublicVideoId : currentProfileVideoId;
-
-        let html = `
-          <div class="comment">
-            <img src="${c.avatar_url || `https://ui-avatars.com/api/?name=${c.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
-            <div class="comment-content">
-              <div class="comment-header">
-                <div class="comment-author">${c.author} ${isCommentAdmin ? crownSVG : ''}</div>
-                <button class="comment-like-btn ${isLiked}" onclick="toggleCommentLike('${c.id}', '${type}', '${videoId}', ${likeCount})">
-                  <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                  ${likeCount > 0 ? likeCount : ''}
-                </button>
-              </div>
-              <div class="comment-text">${c.text}</div>
-              ${c.image_url ? `<img src="${c.image_url}" class="comment-img" onclick="window.open('${c.image_url}')" />` : ''}
-              <button class="reply-btn" onclick="startReply('${type}', '${c.id}', '${c.author}')">Reply</button>
-            </div>
-          </div>
-        `;
-        
-        const commentReplies = replies.filter(r => r.parent_id === c.id);
-        if (commentReplies.length > 0) {
-          html += `<div class="replies-container">`;
-          commentReplies.forEach(r => {
-            const isReplyAdmin = r.author === currentProfile?.username && isAdmin;
-            const rIsLiked = likedComments[r.id] ? 'liked' : '';
-            const rLikeCount = r.likes || 0;
-            html += `
-              <div class="comment">
-                <img src="${r.avatar_url || `https://ui-avatars.com/api/?name=${r.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
-                <div class="comment-content">
-                  <div class="comment-header">
-                    <div class="comment-author">${r.author} ${isReplyAdmin ? crownSVG : ''}</div>
-                    <button class="comment-like-btn ${rIsLiked}" onclick="toggleCommentLike('${r.id}', '${type}', '${videoId}', ${rLikeCount})">
-                      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                      ${rLikeCount > 0 ? rLikeCount : ''}
-                    </button>
-                  </div>
-                  <div class="comment-text">${r.text}</div>
-                  ${r.image_url ? `<img src="${r.image_url}" class="comment-img" onclick="window.open('${r.image_url}')" />` : ''}
-                </div>
-              </div>
-            `;
-          });
-          html += `</div>`;
-        }
-        
-        threadDiv.innerHTML = html;
-        list.appendChild(threadDiv);
-      });
+      btn.disabled = false;
     }
 
     // --- PROFILE VIEWING ---
@@ -1330,6 +1148,9 @@
       if (!targetId) return alert('Please log in or select a valid user.');
 
       currentProfileId = targetId;
+      currentProfileTab = 'videos'; 
+      document.getElementById('tabVideos').classList.add('active');
+      document.getElementById('tabHistory').classList.remove('active');
       
       document.getElementById('libraryView').hidden = true;
       document.getElementById('publicView').hidden = true;
@@ -1343,14 +1164,19 @@
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if (targetId === (currentUser ? currentUser.id : null)) {
         document.querySelector('[data-view="profile"]').classList.add('active');
+        document.getElementById('tabHistory').style.display = 'block'; // Show history tab for self
+      } else {
+        document.getElementById('tabHistory').style.display = 'none'; // Hide history for others
       }
 
       document.getElementById('profileViewPfp').src = 'https://ui-avatars.com/api/?name=Loading&background=18181b&color=ffffff';
+      document.getElementById('profileBanner').style.backgroundImage = 'linear-gradient(135deg, #18181b 0%, #000000 100%)';
       document.getElementById('profileViewName').innerText = 'Loading...';
       document.getElementById('profileVideoGrid').innerHTML = '<div class="loader"></div>';
+      document.getElementById('subscribeBtn').style.display = 'none';
 
+      // Fetch Profile
       const { data: profile } = await db.from('profiles').select('*').eq('id', targetId).single();
-      
       if (!profile) {
         document.getElementById('profileViewName').innerText = 'Profile Not Found';
         document.getElementById('profileVideoGrid').innerHTML = '<div class="empty-state">This user has not set up their profile yet.</div>';
@@ -1360,31 +1186,87 @@
       const isProfileAdmin = targetId === (currentUser ? currentUser.id : null) && isAdmin;
 
       document.getElementById('profileViewPfp').src = profile.avatar_url || `https://ui-avatars.com/api/?name=${profile.username}&background=18181b&color=ffffff`;
+      if(profile.banner_url) {
+        document.getElementById('profileBanner').style.backgroundImage = `url(${profile.banner_url})`;
+      }
       document.getElementById('profileViewName').innerHTML = profile.username + (isProfileAdmin ? ` ${crownSVG}` : '');
-      document.getElementById('profileViewNameSpan').innerText = profile.username;
       document.getElementById('profileViewBio').innerText = profile.bio || 'No bio yet.';
 
+      // Fetch Subscription Data
+      if (currentUser && currentUser.id !== targetId) {
+        const { data: sub } = await db.from('subscriptions').select('*').eq('subscriber_id', currentUser.id).eq('channel_id', targetId).single();
+        isSubscribed = !!sub;
+        
+        const btn = document.getElementById('subscribeBtn');
+        btn.style.display = 'block';
+        if (isSubscribed) { btn.classList.add('subscribed'); btn.innerText = 'Subscribed'; }
+        else { btn.classList.remove('subscribed'); btn.innerText = 'Subscribe'; }
+      }
+
+      // Fetch Subscriber Count
+      const { count: subCount } = await db.from('subscriptions').select('*', { count: 'exact', head: true }).eq('channel_id', targetId);
+      document.getElementById('profileViewSubs').innerText = subCount || 0;
+
+      // Fetch Videos
       const { data: vids } = await db.from('videos').select('*').eq('publisher_id', targetId);
+      currentProfileVideosData = vids || [];
+      
       let totalViews = 0;
       let totalLikes = 0;
       
-      const grid = document.getElementById('profileVideoGrid');
-      grid.innerHTML = '';
-      
       if (vids && vids.length > 0) {
-        vids.forEach(v => {
-          totalViews += v.views;
-          grid.appendChild(createProfileCard(v));
-        });
+        vids.forEach(v => totalViews += v.views);
         const vidsIds = vids.map(v => v.id);
         const { data: likes } = await db.from('likes').select('*').in('video_id', vidsIds);
         totalLikes = likes ? likes.length : 0;
-      } else {
-        grid.innerHTML = '<div class="empty-state">No videos posted yet.</div>';
       }
 
       document.getElementById('profileViewViews').innerText = totalViews;
       document.getElementById('profileViewLikes').innerText = totalLikes;
+
+      renderProfileVideos();
+    }
+
+    function switchProfileTab(tab) {
+      currentProfileTab = tab;
+      if (tab === 'videos') {
+        document.getElementById('tabVideos').classList.add('active');
+        document.getElementById('tabHistory').classList.remove('active');
+      } else {
+        document.getElementById('tabHistory').classList.add('active');
+        document.getElementById('tabVideos').classList.remove('active');
+      }
+      renderProfileVideos();
+    }
+
+    function renderProfileVideos() {
+      const grid = document.getElementById('profileVideoGrid');
+      grid.innerHTML = '';
+      
+      let displayData = [];
+
+      if (currentProfileTab === 'history') {
+        // Show watch history
+        const historyIds = Object.keys(watchProgress);
+        // Find video objects matching the history IDs
+        const allKnownVideos = [...localVideos, ...publicVideos, ...currentProfileVideosData];
+        displayData = historyIds.map(id => allKnownVideos.find(v => v.id === id)).filter(v => v);
+      } else {
+        displayData = [...currentProfileVideosData];
+      }
+
+      // Apply Sorting
+      const sortMode = document.getElementById('profileSortSelect').value;
+      if (sortMode === 'latest') displayData.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+      if (sortMode === 'oldest') displayData.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+      if (sortMode === 'popular') displayData.sort((a, b) => (b.views || 0) - (a.views || 0));
+
+      if (displayData.length === 0) {
+        grid.innerHTML = `<div class="empty-state">No ${currentProfileTab === 'history' ? 'watch history' : 'videos'} found.</div>`;
+        return;
+      }
+
+      displayData.forEach(video => grid.appendChild(createProfileCard(video)));
     }
 
     function createProfileCard(video) {
@@ -1401,7 +1283,7 @@
 
       // Watch Progress
       const progress = watchProgress[video.id] || 0;
-      const progressPercent = Math.min((progress / 300) * 100, 95); // Assume 5 mins (300s) average, capped at 95%
+      const progressPercent = Math.min((progress / 300) * 100, 95);
       const progressBar = progress > 0 ? `<div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>` : '';
 
       card.innerHTML = `
@@ -1441,7 +1323,6 @@
         document.getElementById('ownerDeleteBtn').style.display = 'none';
       }
 
-      // Check for saved progress
       const startTime = watchProgress[video.id] || 0;
 
       if (window.YT && window.YT.Player) {
@@ -1576,7 +1457,6 @@
       if (isAdmin) document.getElementById('adminDeleteBtn').style.display = 'flex';
       else document.getElementById('adminDeleteBtn').style.display = 'none';
 
-      // Check for saved progress
       const startTime = watchProgress[video.id] || 0;
 
       if (window.YT && window.YT.Player) {
@@ -1693,9 +1573,8 @@
          else if(diff > 60) timeAgo = Math.floor(diff/60) + 'm ago';
       }
 
-      // Watch Progress
       const progress = watchProgress[video.id] || 0;
-      const progressPercent = Math.min((progress / 300) * 100, 95); // Assume 5 mins (300s) average, capped at 95%
+      const progressPercent = Math.min((progress / 300) * 100, 95);
       const progressBar = progress > 0 ? `<div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>` : '';
 
       card.innerHTML = `
