@@ -108,7 +108,7 @@
     .public-player-section.theater .player-container { max-width: 100%; }
     .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; max-height: 500px; display: flex; flex-direction: column; transition: all var(--transition); }
     
-    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: center; }
     .public-video-meta { display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.75rem; }
     
     .meta-left { display: flex; flex-direction: column; gap: 8px; }
@@ -406,7 +406,10 @@
             <div class="player-container" style="margin-bottom: 1rem;">
               <div id="profileYoutubeContainer"></div>
             </div>
-            <h2 class="public-video-title" id="profTitle"></h2>
+            <h2 class="public-video-title" id="profTitle">
+              <span id="profTitleText"></span>
+              <button class="btn" style="background:var(--danger); height:1.8rem; font-size:0.75rem;" id="ownerDeleteBtn">Delete Video</button>
+            </h2>
             <div class="public-video-meta">
               <div class="meta-left">
                 <div class="meta-row">
@@ -651,6 +654,19 @@
           alert('Video deleted.');
           document.getElementById('backToFeedBtn').click();
           loadPublicVideos();
+        }
+      }
+    };
+
+    // --- OWNER DELETE LOGIC ---
+    document.getElementById('ownerDeleteBtn').onclick = async () => {
+      if (!currentProfileVideoId) return;
+      if (confirm('Are you sure you want to remove this video from your channel?')) {
+        const { error } = await db.from('videos').delete().eq('id', currentProfileVideoId);
+        if (error) alert("Failed to delete: " + error.message);
+        else {
+          alert('Video removed from your channel.');
+          goToProfile(currentProfileId); // Refresh profile
         }
       }
     };
@@ -1002,12 +1018,19 @@
       document.getElementById('profileGridArea').hidden = true;
       document.getElementById('profileSelectedArea').hidden = false;
       
-      document.getElementById('profTitle').innerText = video.title;
+      document.getElementById('profTitleText').innerText = video.title;
       document.getElementById('profOrigAvatar').src = video.avatar;
       document.getElementById('profOrigName').innerText = video.author;
       document.getElementById('profViews').innerText = video.views;
       document.getElementById('profLikeCount').innerText = '...';
       document.getElementById('profCommentList').innerHTML = '<div class="loader"></div>';
+      
+      // Show delete button only if it's your own profile
+      if (currentUser && currentProfileId === currentUser.id) {
+        document.getElementById('ownerDeleteBtn').style.display = 'block';
+      } else {
+        document.getElementById('ownerDeleteBtn').style.display = 'none';
+      }
 
       if (window.YT && window.YT.Player) {
         if (ytPlayerProfile) ytPlayerProfile.loadVideoById(video.youtube_id);
