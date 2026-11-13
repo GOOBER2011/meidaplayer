@@ -28,7 +28,6 @@
       --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* --- MONOCHROME AURORA --- */
     @keyframes auroraMove {
       0% { transform: translate(-10%, -10%) scale(1); }
       50% { transform: translate(10%, 10%) scale(1.2); }
@@ -65,7 +64,6 @@
     .nav-item:hover { background-color: var(--bg-hover); color: var(--text-primary); }
     .nav-item.active { background-color: var(--bg-elevated); color: var(--accent); border-left: 2px solid var(--accent); }
     
-    /* User Mini Profile */
     .user-mini { padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; }
     .sidebar.collapsed .user-mini { justify-content: center; padding: 0.75rem 0; }
     .user-mini:hover { background: var(--bg-hover); }
@@ -108,9 +106,9 @@
     .public-player-section.theater .public-player-main { flex: 1 1 100%; max-width: 1300px; margin: 0 auto; }
     .public-player-section.theater .public-player-sidebar { max-width: 1300px; width: 100%; margin: 0 auto; max-height: none; height: auto; }
     .public-player-section.theater .player-container { max-width: 100%; }
-    .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; max-height: 450px; display: flex; flex-direction: column; transition: all var(--transition); }
+    .public-player-sidebar { flex: 1 1 300px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; max-height: 500px; display: flex; flex-direction: column; transition: all var(--transition); }
     
-    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .public-video-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: flex-start; }
     .public-video-meta { display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.75rem; }
     
     .meta-left { display: flex; flex-direction: column; gap: 8px; }
@@ -133,17 +131,30 @@
     .like-btn.liked { color: var(--text-primary); border-color: var(--text-primary); background: var(--bg-elevated); }
     .like-btn svg { width: 14px; height: 14px; }
 
+    /* --- COMMENTS --- */
     .comments-section { display: flex; flex-direction: column; height: 100%; }
     .comments-section h3 { font-size: 0.9rem; margin-bottom: 0.75rem; font-weight: 600; }
-    .comment-input-wrapper { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .comment-input-wrapper { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+    .comment-input-row { display: flex; gap: 0.5rem; }
     .comment-input { flex: 1; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem; color: white; outline: none; font-size: 0.8rem; }
     .comment-input:focus { border-color: var(--text-secondary); }
+    .comment-actions-row { display: flex; justify-content: space-between; align-items: center; }
+    
     .comment-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 4px; }
+    
+    .comment-thread { display: flex; flex-direction: column; gap: 0.5rem; }
     .comment { display: flex; gap: 8px; }
-    .comment-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--bg-hover); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.7rem; flex-shrink: 0; }
+    .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-hover); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.75rem; flex-shrink: 0; object-fit: cover; }
     .comment-content { background: var(--bg-base); padding: 0.6rem; border-radius: 6px; flex: 1; border: 1px solid var(--border-color); }
-    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+    .comment-author { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; display: flex; justify-content: space-between; }
     .comment-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; word-break: break-word; }
+    .comment-img { max-width: 100%; border-radius: 4px; margin-top: 0.5rem; cursor: pointer; border: 1px solid var(--border-color); }
+    .reply-btn { font-size: 0.7rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; padding: 0; margin-top: 4px; text-decoration: underline; }
+    .reply-btn:hover { color: white; }
+    
+    .replies-container { margin-left: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; border-left: 1px solid var(--border-color); padding-left: 0.5rem; }
+    .reply-context { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+    .cancel-reply { cursor: pointer; color: var(--danger); font-weight: 600; }
 
     /* --- VIDEO GRID --- */
     .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; }
@@ -176,7 +187,6 @@
     .setting-info h4 { font-size: 0.9rem; font-weight: 500; }
     .setting-info p { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
     
-    /* Toggle Switch */
     .toggle-switch { position: relative; width: 40px; height: 22px; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-hover); border: 1px solid var(--border-color); transition: .3s; border-radius: 34px; }
@@ -301,7 +311,10 @@
             <div class="player-container" style="margin-bottom: 1rem;">
               <div id="publicYoutubeContainer"></div>
             </div>
-            <h2 class="public-video-title" id="pubTitle"></h2>
+            <h2 class="public-video-title" id="pubTitle">
+              <span id="pubTitleText"></span>
+              <button class="btn" style="background:var(--danger); height:1.8rem; font-size:0.75rem; display:none;" id="adminDeleteBtn">Delete Video</button>
+            </h2>
             <div class="public-video-meta">
               <div class="meta-left">
                 <div class="meta-row">
@@ -327,8 +340,21 @@
             <div class="comments-section">
               <h3>Comments</h3>
               <div class="comment-input-wrapper">
-                <input type="text" id="pubCommentInput" class="comment-input" placeholder="Add a comment..." />
-                <button class="btn" id="pubCommentBtn" style="height: auto; padding: 0 0.75rem; font-size:0.75rem;">Post</button>
+                <div class="reply-context" id="pubReplyContext" style="display:none;">
+                  Replying to <span id="pubReplyName"></span>
+                  <span class="cancel-reply" onclick="cancelReply('pub')">Cancel</span>
+                </div>
+                <div class="comment-input-row">
+                  <input type="text" id="pubCommentInput" class="comment-input" placeholder="Add a comment..." />
+                  <button class="btn" id="pubCommentBtn" style="height: auto; padding: 0 0.75rem; font-size:0.75rem;">Post</button>
+                </div>
+                <div class="comment-actions-row">
+                  <label class="btn btn-outline" style="height:1.8rem; font-size:0.7rem; cursor:pointer;">
+                    Attach Image
+                    <input type="file" id="pubCommentImg" accept="image/*" style="display:none;" onchange="document.getElementById('pubImgName').innerText = this.files[0] ? this.files[0].name : ''">
+                  </label>
+                  <span id="pubImgName" style="font-size:0.7rem; color:var(--text-secondary); max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
+                </div>
               </div>
               <div class="comment-list" id="pubCommentList"></div>
             </div>
@@ -402,8 +428,21 @@
             <div class="comments-section">
               <h3>Comments</h3>
               <div class="comment-input-wrapper">
-                <input type="text" id="profCommentInput" class="comment-input" placeholder="Add a comment..." />
-                <button class="btn" id="profCommentBtn" style="height: auto; padding: 0 0.75rem; font-size:0.75rem;">Post</button>
+                <div class="reply-context" id="profReplyContext" style="display:none;">
+                  Replying to <span id="profReplyName"></span>
+                  <span class="cancel-reply" onclick="cancelReply('prof')">Cancel</span>
+                </div>
+                <div class="comment-input-row">
+                  <input type="text" id="profCommentInput" class="comment-input" placeholder="Add a comment..." />
+                  <button class="btn" id="profCommentBtn" style="height: auto; padding: 0 0.75rem; font-size:0.75rem;">Post</button>
+                </div>
+                <div class="comment-actions-row">
+                  <label class="btn btn-outline" style="height:1.8rem; font-size:0.7rem; cursor:pointer;">
+                    Attach Image
+                    <input type="file" id="profCommentImg" accept="image/*" style="display:none;" onchange="document.getElementById('profImgName').innerText = this.files[0] ? this.files[0].name : ''">
+                  </label>
+                  <span id="profImgName" style="font-size:0.7rem; color:var(--text-secondary); max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
+                </div>
               </div>
               <div class="comment-list" id="profCommentList"></div>
             </div>
@@ -449,6 +488,20 @@
             <input type="checkbox" id="settingTheater">
             <span class="slider"></span>
           </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>Admin Access</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Enter Secret Code</h4>
+            <p>Unlock administrator privileges.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <input type="password" id="adminCodeInput" class="modal-input" style="margin:0; width:120px; padding:0.4rem; height:2rem;" placeholder="Code..." />
+            <button class="btn" style="height:2rem; font-size:0.8rem;" onclick="verifyAdmin()">Verify</button>
+          </div>
         </div>
       </div>
 
@@ -535,7 +588,6 @@
     let currentPublicVideoId = null;
     let currentPublicPublisherId = null;
     
-    // Profile state
     let currentProfileId = null;
     let currentProfileVideoId = null;
     
@@ -546,11 +598,14 @@
     let isTheaterPublic = false;
     let isTheaterProfile = false;
 
+    let replyToPubCommentId = null;
+    let replyToProfCommentId = null;
+
+    let isAdmin = localStorage.getItem('tubeYouAdmin') === 'true';
+
     // Settings state
     let settings = JSON.parse(localStorage.getItem('tubeYouSettings')) || {
-      autoplay: true,
-      mute: false,
-      theater: false
+      autoplay: true, mute: false, theater: false
     };
 
     // --- SETTINGS INIT ---
@@ -573,6 +628,33 @@
       }
     }
 
+    // --- ADMIN LOGIC ---
+    function verifyAdmin() {
+      const code = document.getElementById('adminCodeInput').value;
+      if (code === 'googoogaga') {
+        isAdmin = true;
+        localStorage.setItem('tubeYouAdmin', 'true');
+        alert('Admin access granted. You can now delete any public video.');
+        document.getElementById('adminCodeInput').value = '';
+        if(currentPublicVideoId) document.getElementById('adminDeleteBtn').style.display = 'block';
+      } else {
+        alert('Invalid code.');
+      }
+    }
+
+    document.getElementById('adminDeleteBtn').onclick = async () => {
+      if (!currentPublicVideoId || !isAdmin) return;
+      if (confirm('ADMIN ACTION: Permanently delete this public video?')) {
+        const { error } = await db.from('videos').delete().eq('id', currentPublicVideoId);
+        if (error) alert(error.message);
+        else {
+          alert('Video deleted.');
+          document.getElementById('backToFeedBtn').click();
+          loadPublicVideos();
+        }
+      }
+    };
+
     // --- AUTHENTICATION ---
     db.auth.onAuthStateChange(async (event, session) => {
       if (session) {
@@ -587,9 +669,7 @@
 
     async function fetchProfile() {
       if (!currentUser) return;
-      
       const { data, error } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
-      
       if (data) {
         currentProfile = data;
         updateSidebarUser();
@@ -647,13 +727,8 @@
 
       if (isSignUpMode) {
         if (!username) { alert('Username required'); btn.innerText = 'Create Account'; btn.disabled = false; return; }
-        
-        const { data, error } = await db.auth.signUp({ 
-          email, password, options: { data: { username: username } }
-        });
-        
+        const { data, error } = await db.auth.signUp({ email, password, options: { data: { username: username } } });
         if (error) { alert(error.message); btn.innerText = 'Create Account'; btn.disabled = false; return; }
-        
         setTimeout(fetchProfile, 1000);
       } else {
         const { data, error } = await db.auth.signInWithPassword({ email, password });
@@ -699,7 +774,6 @@
         const fileExt = file.name.split('.').pop();
         const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
         const { error: uploadError } = await db.storage.from('avatars').upload(fileName, file);
-        
         if (uploadError) alert('Error uploading image: ' + uploadError.message);
         else {
           const { data } = db.storage.from('avatars').getPublicUrl(fileName);
@@ -707,9 +781,7 @@
         }
       }
 
-      const { error } = await db.from('profiles').update({
-        username: username, bio: bio, avatar_url: avatarUrl
-      }).eq('id', currentUser.id);
+      const { error } = await db.from('profiles').update({ username: username, bio: bio, avatar_url: avatarUrl }).eq('id', currentUser.id);
 
       if (error) alert(error.message);
       else {
@@ -720,6 +792,128 @@
       }
       btn.innerText = 'Save Changes';
       btn.disabled = false;
+    }
+
+    // --- COMMENTS LOGIC ---
+    function cancelReply(type) {
+      if (type === 'pub') {
+        replyToPubCommentId = null;
+        document.getElementById('pubReplyContext').style.display = 'none';
+      } else {
+        replyToProfCommentId = null;
+        document.getElementById('profReplyContext').style.display = 'none';
+      }
+    }
+
+    function startReply(type, commentId, username) {
+      if (type === 'pub') {
+        replyToPubCommentId = commentId;
+        document.getElementById('pubReplyContext').style.display = 'flex';
+        document.getElementById('pubReplyName').innerText = username;
+        document.getElementById('pubCommentInput').focus();
+      } else {
+        replyToProfCommentId = commentId;
+        document.getElementById('profReplyContext').style.display = 'flex';
+        document.getElementById('profReplyName').innerText = username;
+        document.getElementById('profCommentInput').focus();
+      }
+    }
+
+    async function postComment(type, videoId) {
+      if (!currentUser) return alert('Please log in to comment.');
+      const inputId = type === 'pub' ? 'pubCommentInput' : 'profCommentInput';
+      const imgId = type === 'pub' ? 'pubCommentImg' : 'profCommentImg';
+      const input = document.getElementById(inputId);
+      const text = input.value.trim();
+      const file = document.getElementById(imgId).files[0];
+      const parentId = type === 'pub' ? replyToPubCommentId : replyToProfCommentId;
+      
+      if (!text && !file) return;
+
+      let imageUrl = null;
+      if (file) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await db.storage.from('comments').upload(fileName, file);
+        if (uploadError) return alert('Image upload failed: ' + uploadError.message);
+        const { data } = db.storage.from('comments').getPublicUrl(fileName);
+        imageUrl = data.publicUrl;
+      }
+
+      const { error } = await db.from('comments').insert({ 
+        video_id: videoId, 
+        author: currentProfile.username, 
+        text: text || '', 
+        parent_id: parentId,
+        image_url: imageUrl,
+        avatar_url: currentProfile.avatar_url
+      });
+      
+      if (error) alert("Error posting: " + error.message);
+      else {
+        input.value = '';
+        document.getElementById(imgId).value = '';
+        document.getElementById(type === 'pub' ? 'pubImgName' : 'profImgName').innerText = '';
+        cancelReply(type);
+        if (type === 'pub') loadPublicInteractions(videoId);
+        else loadProfileInteractions(videoId);
+      }
+    }
+
+    document.getElementById('pubCommentBtn').onclick = () => postComment('pub', currentPublicVideoId);
+    document.getElementById('profCommentBtn').onclick = () => postComment('prof', currentProfileVideoId);
+
+    function renderComments(comments, containerId, type) {
+      const list = document.getElementById(containerId);
+      list.innerHTML = '';
+      if (!comments || comments.length === 0) {
+        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem; font-size:0.8rem;">No comments yet.</div>';
+        return;
+      }
+
+      // Organize into threads
+      const rootComments = comments.filter(c => !c.parent_id);
+      const replies = comments.filter(c => c.parent_id);
+
+      rootComments.forEach(c => {
+        const threadDiv = document.createElement('div');
+        threadDiv.className = 'comment-thread';
+        
+        // Root Comment
+        let html = `
+          <div class="comment">
+            <img src="${c.avatar_url || `https://ui-avatars.com/api/?name=${c.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
+            <div class="comment-content">
+              <div class="comment-author">${c.author}</div>
+              <div class="comment-text">${c.text}</div>
+              ${c.image_url ? `<img src="${c.image_url}" class="comment-img" onclick="window.open('${c.image_url}')" />` : ''}
+              <button class="reply-btn" onclick="startReply('${type}', '${c.id}', '${c.author}')">Reply</button>
+            </div>
+          </div>
+        `;
+        
+        // Replies
+        const commentReplies = replies.filter(r => r.parent_id === c.id);
+        if (commentReplies.length > 0) {
+          html += `<div class="replies-container">`;
+          commentReplies.forEach(r => {
+            html += `
+              <div class="comment">
+                <img src="${r.avatar_url || `https://ui-avatars.com/api/?name=${r.author}&background=18181b&color=ffffff`}" class="comment-avatar" />
+                <div class="comment-content">
+                  <div class="comment-author">${r.author}</div>
+                  <div class="comment-text">${r.text}</div>
+                  ${r.image_url ? `<img src="${r.image_url}" class="comment-img" onclick="window.open('${r.image_url}')" />` : ''}
+                </div>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+        
+        threadDiv.innerHTML = html;
+        list.appendChild(threadDiv);
+      });
     }
 
     // --- PROFILE VIEWING ---
@@ -835,26 +1029,8 @@
       document.getElementById('profLikeCount').innerText = likeCount;
       document.getElementById('profLikeBtn').classList.toggle('liked', hasLiked);
 
-      const { data: comments } = await db.from('comments').select('*').eq('video_id', videoId).order('created_at', { ascending: false });
-      const list = document.getElementById('profCommentList');
-      list.innerHTML = '';
-
-      if (!comments || comments.length === 0) {
-        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem; font-size:0.8rem;">No comments yet.</div>';
-        return;
-      }
-      
-      comments.forEach(c => {
-        list.innerHTML += `
-          <div class="comment">
-            <div class="comment-avatar">${c.author.charAt(0).toUpperCase()}</div>
-            <div class="comment-content">
-              <div class="comment-author">${c.author}</div>
-              <div class="comment-text">${c.text}</div>
-            </div>
-          </div>
-        `;
-      });
+      const { data: comments } = await db.from('comments').select('*').eq('video_id', videoId).order('created_at', { ascending: true });
+      renderComments(comments, 'profCommentList', 'prof');
     }
 
     document.getElementById('backToProfileBtn').onclick = () => {
@@ -884,17 +1060,6 @@
       const isLiked = document.getElementById('profLikeBtn').classList.contains('liked');
       if (isLiked) await db.from('likes').delete().eq('video_id', currentProfileVideoId).eq('session_id', sessionId);
       else await db.from('likes').insert({ video_id: currentProfileVideoId, session_id: sessionId });
-      loadProfileInteractions(currentProfileVideoId);
-    };
-
-    document.getElementById('profCommentBtn').onclick = async () => {
-      if (!currentUser) return alert('Please log in to comment.');
-      const input = document.getElementById('profCommentInput');
-      const text = input.value.trim();
-      if (!text || !currentProfileVideoId) return;
-      const { error } = await db.from('comments').insert({ video_id: currentProfileVideoId, author: currentProfile.username, text: text });
-      if (error) alert("Error: " + error.message);
-      input.value = '';
       loadProfileInteractions(currentProfileVideoId);
     };
 
@@ -948,7 +1113,7 @@
       document.getElementById('publicGridArea').hidden = true;
       document.getElementById('publicSelectedArea').hidden = false;
       
-      document.getElementById('pubTitle').innerText = video.title;
+      document.getElementById('pubTitleText').innerText = video.title;
       document.getElementById('pubOrigAvatar').src = video.avatar;
       document.getElementById('pubOrigName').innerText = video.author;
       document.getElementById('pubPostAvatar').src = video.publisher_avatar || `https://ui-avatars.com/api/?name=${video.publisher_name || 'Unknown'}&background=18181b&color=ffffff`;
@@ -956,6 +1121,10 @@
       document.getElementById('pubViews').innerText = video.views;
       document.getElementById('pubLikeCount').innerText = '...';
       document.getElementById('pubCommentList').innerHTML = '<div class="loader"></div>';
+      
+      // Admin Check
+      if (isAdmin) document.getElementById('adminDeleteBtn').style.display = 'block';
+      else document.getElementById('adminDeleteBtn').style.display = 'none';
 
       if (window.YT && window.YT.Player) {
         if (ytPlayerPublic) ytPlayerPublic.loadVideoById(video.youtube_id);
@@ -999,26 +1168,8 @@
       document.getElementById('pubLikeCount').innerText = likeCount;
       document.getElementById('pubLikeBtn').classList.toggle('liked', hasLiked);
 
-      const { data: comments } = await db.from('comments').select('*').eq('video_id', videoId).order('created_at', { ascending: false });
-      const list = document.getElementById('pubCommentList');
-      list.innerHTML = '';
-
-      if (!comments || comments.length === 0) {
-        list.innerHTML = '<div style="color:var(--text-secondary); text-align:center; margin-top:1rem; font-size:0.8rem;">No comments yet.</div>';
-        return;
-      }
-      
-      comments.forEach(c => {
-        list.innerHTML += `
-          <div class="comment">
-            <div class="comment-avatar">${c.author.charAt(0).toUpperCase()}</div>
-            <div class="comment-content">
-              <div class="comment-author">${c.author}</div>
-              <div class="comment-text">${c.text}</div>
-            </div>
-          </div>
-        `;
-      });
+      const { data: comments } = await db.from('comments').select('*').eq('video_id', videoId).order('created_at', { ascending: true });
+      renderComments(comments, 'pubCommentList', 'pub');
     }
 
     document.getElementById('pubLikeBtn').onclick = async () => {
@@ -1028,17 +1179,6 @@
       const isLiked = document.getElementById('pubLikeBtn').classList.contains('liked');
       if (isLiked) await db.from('likes').delete().eq('video_id', currentPublicVideoId).eq('session_id', sessionId);
       else await db.from('likes').insert({ video_id: currentPublicVideoId, session_id: sessionId });
-      loadPublicInteractions(currentPublicVideoId);
-    };
-
-    document.getElementById('pubCommentBtn').onclick = async () => {
-      if (!currentUser) return alert('Please log in to comment.');
-      const input = document.getElementById('pubCommentInput');
-      const text = input.value.trim();
-      if (!text || !currentPublicVideoId) return;
-      const { error } = await db.from('comments').insert({ video_id: currentPublicVideoId, author: currentProfile.username, text: text });
-      if (error) alert("Error: " + error.message);
-      input.value = '';
       loadPublicInteractions(currentPublicVideoId);
     };
 
