@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TubeYou</title>
   
+  <!-- FAVICON / WEBSITE ICON -->
+  <link rel="icon" type="image/png" href="./favicon.png">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -645,6 +648,71 @@
         renderLocalVideos();
         alert('Library cleared.');
       }
+    }
+
+    // --- SEARCH LOGIC ---
+    const globalSearchInput = document.getElementById('globalSearchInput');
+    
+    globalSearchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (query.length > 0) {
+        showSearchView(query);
+      } else {
+        hideSearchView();
+      }
+    });
+
+    document.getElementById('clearSearchBtn').onclick = () => {
+      globalSearchInput.value = '';
+      hideSearchView();
+    };
+
+    function hideSearchView() {
+      document.getElementById('searchView').hidden = true;
+      const activeNav = document.querySelector('.nav-item.active');
+      if (activeNav) activeNav.click();
+    }
+
+    function showSearchView(query) {
+      document.getElementById('libraryView').hidden = true;
+      document.getElementById('publicView').hidden = true;
+      document.getElementById('profileView').hidden = true;
+      document.getElementById('settingsView').hidden = true;
+      document.getElementById('searchView').hidden = false;
+      
+      document.getElementById('searchSubtitle').innerText = `Showing results for "${query}"`;
+      
+      const allVideos = [...localVideos, ...publicVideos];
+      const results = allVideos.filter(v => v.title.toLowerCase().includes(query) || v.author.toLowerCase().includes(query));
+      
+      const grid = document.getElementById('searchVideoGrid');
+      grid.innerHTML = '';
+      
+      if (results.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No videos found matching your search.</div>';
+        return;
+      }
+      
+      // Remove duplicates based on youtube_id
+      const uniqueResults = Array.from(new Map(results.map(v => [v.youtube_id, v])).values());
+      
+      uniqueResults.forEach(video => {
+        const isPublic = publicVideos.some(pv => pv.youtube_id === video.youtube_id);
+        const card = createPublicCard(video);
+        card.onclick = () => {
+          if (isPublic) {
+            const fullPubVideo = publicVideos.find(pv => pv.youtube_id === video.youtube_id);
+            document.getElementById('publicView').hidden = false;
+            document.getElementById('searchView').hidden = true;
+            playPublicVideo(fullPubVideo);
+          } else {
+            document.getElementById('libraryView').hidden = false;
+            document.getElementById('searchView').hidden = true;
+            playPrivateVideo(video.youtube_id);
+          }
+        };
+        grid.appendChild(card);
+      });
     }
 
     // --- ADMIN LOGIC ---
