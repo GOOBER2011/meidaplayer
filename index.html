@@ -30,6 +30,7 @@
       100% { transform: translate(-10%, -10%) scale(1); }
     }
     .aurora-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background-color: var(--bg-base); overflow: hidden; transition: opacity 0.5s ease; }
+    .aurora-bg.disabled { opacity: 0; }
     .aurora-blob { position: absolute; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(0,102,255,0.12) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(60px); animation: auroraMove 15s infinite alternate ease-in-out; }
     .aurora-blob:nth-child(2) { top: 20%; left: 50%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,51,153,0.15) 0%, rgba(0,0,0,0) 70%); animation-duration: 20s; animation-direction: alternate-reverse; }
     .aurora-blob:nth-child(3) { top: 60%; left: 10%; width: 70vw; height: 70vw; background: radial-gradient(circle, rgba(0,170,255,0.08) 0%, rgba(0,0,0,0) 70%); animation-duration: 25s; animation-delay: -5s; }
@@ -51,7 +52,7 @@
     .sidebar.collapsed .nav-text { display: none; }
     .logo-icon { color: var(--accent); margin-right: 12px; width: 28px; height: 28px; flex-shrink: 0; }
     .sidebar.collapsed .logo-icon { margin-right: 0; }
-    .nav-section { padding: 1rem 0; display: flex; flex-direction: column; gap: 4px; }
+    .nav-section { padding: 1rem 0; display: flex; flex-direction: column; gap: 4px; flex: 1; }
     .nav-item { padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 1.2rem; cursor: pointer; color: var(--text-secondary); transition: all var(--transition); font-size: 0.95rem; font-weight: 600; border-left: 3px solid transparent; white-space: nowrap; }
     .sidebar.collapsed .nav-item { justify-content: center; padding: 0.8rem 0; border-left: none; border-radius: 8px; margin: 0 10px; }
     .nav-item svg { width: 22px; height: 22px; flex-shrink: 0; }
@@ -70,7 +71,7 @@
     .section-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
     .section-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
 
-    /* --- GLOBAL SEARCH BAR --- */
+    /* --- SEARCH BAR --- */
     .global-search-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
     .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; max-width: 800px; }
     .search-icon { position: absolute; left: 1.2rem; color: var(--text-secondary); width: 22px; height: 22px; }
@@ -157,6 +158,14 @@
     .profile-stats { display: flex; gap: 2rem; font-weight: 600; color: var(--text-secondary); }
     .profile-stats span { color: var(--text-primary); font-size: 1.1rem; }
 
+    /* --- SETTINGS VIEW --- */
+    .settings-group { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; max-width: 600px; }
+    .settings-group h3 { margin-bottom: 1.5rem; font-size: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .setting-row:last-child { margin-bottom: 0; }
+    .setting-info h4 { font-size: 1rem; font-weight: 600; }
+    .setting-info p { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+
     /* --- MODALS --- */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity var(--transition); }
     .modal-overlay.active { opacity: 1; pointer-events: all; }
@@ -199,6 +208,14 @@
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         <span class="nav-text">Public Feed</span>
       </div>
+      <div class="nav-item" data-view="profile">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span class="nav-text">Profile</span>
+      </div>
+      <div class="nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+        <span class="nav-text">Settings</span>
+      </div>
     </div>
     
     <!-- User Mini Profile (Bottom of Sidebar) -->
@@ -210,8 +227,8 @@
 
   <div class="main-content">
     
-    <!-- GLOBAL SEARCH BAR -->
-    <div class="global-search-container" id="globalSearchContainer">
+    <!-- SEARCH BAR -->
+    <div class="global-search-container">
       <div class="search-input-wrapper">
         <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search videos..." />
@@ -221,10 +238,7 @@
     <!-- LIBRARY VIEW -->
     <div id="libraryView">
       <div class="view-header">
-        <div>
-          <h1 class="section-title">Your Library</h1>
-          <p class="section-subtitle">Save videos locally and publish them to the world</p>
-        </div>
+        <div><h1 class="section-title">Your Library</h1><p class="section-subtitle">Save videos locally and publish them to the world</p></div>
       </div>
       <div class="add-video-box">
         <div class="input-wrapper">
@@ -249,9 +263,7 @@
     <!-- PUBLIC VIEW -->
     <div id="publicView" hidden>
       <div id="publicGridArea">
-        <div class="view-header">
-          <div><h1 class="section-title">Public Feed</h1><p class="section-subtitle">Watch videos published by everyone</p></div>
-        </div>
+        <div class="view-header"><div><h1 class="section-title">Public Feed</h1><p class="section-subtitle">Watch videos published by everyone</p></div></div>
         <div class="video-grid" id="publicVideoGrid"></div>
       </div>
       
@@ -273,27 +285,17 @@
               <div id="publicYoutubeContainer"></div>
             </div>
             <h2 class="public-video-title" id="pubTitle"></h2>
-            
             <div class="public-video-meta">
               <div class="meta-left">
-                <!-- Original Creator -->
                 <div class="meta-row">
                   <img id="pubOrigAvatar" src="" />
-                  <div>
-                    <div class="meta-label">Original Creator</div>
-                    <div id="pubOrigName" style="font-weight:600; color:white;"></div>
-                  </div>
+                  <div><div class="meta-label">Original Creator</div><div id="pubOrigName" style="font-weight:600; color:white;"></div></div>
                 </div>
-                <!-- TubeYou Publisher -->
                 <div class="meta-row">
                   <img id="pubPostAvatar" src="" />
-                  <div>
-                    <div class="meta-label">Posted on TubeYou by</div>
-                    <div class="clickable-user" id="pubPostName" onclick="goToProfile()"></div>
-                  </div>
+                  <div><div class="meta-label">Posted on TubeYou by</div><div class="clickable-user" id="pubPostName" onclick="goToProfile()"></div></div>
                 </div>
               </div>
-              
               <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
                 <span style="font-size:0.85rem;">👁️ <span id="pubViews">0</span> views</span>
                 <button class="like-btn" id="pubLikeBtn">
@@ -337,6 +339,23 @@
       <div class="video-grid" id="profileVideoGrid"></div>
     </div>
 
+    <!-- SETTINGS VIEW -->
+    <div id="settingsView" hidden>
+      <div class="view-header">
+        <div><h1 class="section-title">Settings</h1><p class="section-subtitle">Manage your TubeYou account</p></div>
+      </div>
+      <div class="settings-group">
+        <h3>Account Info</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Log Out</h4>
+            <p>Sign out of your current session.</p>
+          </div>
+          <button class="btn" style="background:var(--danger); height: 2.5rem;" onclick="handleLogout()">Log Out</button>
+        </div>
+      </div>
+    </div>
+
     <!-- SEARCH RESULTS VIEW -->
     <div id="searchView" hidden>
       <div class="view-header">
@@ -355,11 +374,9 @@
   <div class="modal-overlay" id="authModal">
     <div class="modal">
       <h3 id="authTitle">Log In</h3>
-      
       <input type="email" id="authEmail" class="modal-input" placeholder="Email Address" />
       <input type="text" id="authUsername" class="modal-input" placeholder="Username (For Sign Up)" hidden />
       <input type="password" id="authPassword" class="modal-input" placeholder="Password" />
-      
       <div class="modal-actions">
         <button class="modal-btn cancel" onclick="closeAuthModal()">Cancel</button>
         <button class="modal-btn primary" id="authSubmitBtn" onclick="handleAuth()">Log In</button>
@@ -372,27 +389,22 @@
   <div class="modal-overlay" id="profileModal">
     <div class="modal">
       <h3>Edit Profile</h3>
-      
       <div class="file-input-wrapper">
         <label>Profile Picture (PFP)</label>
         <input type="file" id="editPfpFile" accept="image/*" class="modal-input" style="padding: 0.5rem;" />
       </div>
-      
       <input type="text" id="editUsername" class="modal-input" placeholder="Username" />
       <textarea id="editBio" class="modal-input" placeholder="Tell us about yourself..." rows="3" style="resize: none; font-family: inherit;"></textarea>
-      
       <div class="modal-actions">
         <button class="modal-btn cancel" onclick="closeProfileModal()">Cancel</button>
         <button class="modal-btn primary" id="saveProfileBtn" onclick="saveProfile()">Save Changes</button>
       </div>
-      <div class="auth-toggle" onclick="handleLogout()">Log Out</div>
     </div>
   </div>
 
   <script>
     const SUPABASE_URL = 'https://yudpsvfjqeiffsahhutf.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_kDGmA7Bcq4VCHrnOT2vtLg_bUpV5IZH';
-    
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -402,24 +414,39 @@
     let publicVideos = [];
     let currentPublicVideoId = null;
     let currentPublicPublisherId = null;
-    
     let ytPlayerPrivate = null;
     let ytPlayerPublic = null;
     let isTheater = false;
+    let currentSearchMode = 'videos';
 
-    // --- AUTHENTICATION & PROFILES ---
-    async function initAuth() {
-      const { data: { session } } = await db.auth.getSession();
+    // --- AUTHENTICATION ---
+    // Listen for auth state changes (Login, Logout, Page Reload)
+    db.auth.onAuthStateChange(async (event, session) => {
       if (session) {
         currentUser = session.user;
         await fetchProfile();
+      } else {
+        currentUser = null;
+        currentProfile = null;
       }
       updateSidebarUser();
-    }
+    });
 
     async function fetchProfile() {
-      const { data } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
-      currentProfile = data;
+      if (!currentUser) return;
+      // Add a slight retry mechanism in case the profile row is still being created on signup
+      const { data, error } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+      if (data) {
+        currentProfile = data;
+      } else if (error && error.code === 'PGRST116') { // Profile doesn't exist yet
+        // Fallback for users who signed up before the profile table existed
+        const fallbackName = currentUser.email.split('@')[0];
+        const defaultAvatar = `https://ui-avatars.com/api/?name=${fallbackName}&background=0c1322&color=0066ff&bold=true`;
+        const { data: newProfile } = await db.from('profiles').insert({
+          id: currentUser.id, username: fallbackName, avatar_url: defaultAvatar
+        }).select().single();
+        currentProfile = newProfile;
+      }
     }
 
     function updateSidebarUser() {
@@ -465,16 +492,11 @@
 
       if (isSignUpMode) {
         if (!username) { alert('Username required'); btn.innerText = 'Create Account'; btn.disabled = false; return; }
-        
         const { data, error } = await db.auth.signUp({ email, password });
         if (error) { alert(error.message); btn.innerText = 'Create Account'; btn.disabled = false; return; }
         
-        // Create Profile
         const defaultAvatar = `https://ui-avatars.com/api/?name=${username}&background=0c1322&color=0066ff&bold=true`;
-        await db.from('profiles').insert({
-          id: data.user.id, username: username, avatar_url: defaultAvatar
-        });
-
+        await db.from('profiles').insert({ id: data.user.id, username: username, avatar_url: defaultAvatar });
         currentUser = data.user;
         await fetchProfile();
       } else {
@@ -489,7 +511,12 @@
       btn.innerText = isSignUpMode ? 'Create Account' : 'Log In';
       btn.disabled = false;
       
-      // Refresh public videos to show publisher names if logged in
+      // Clear forms
+      document.getElementById('authEmail').value = '';
+      document.getElementById('authPassword').value = '';
+      document.getElementById('authUsername').value = '';
+      
+      // Refresh public videos if open
       if (!document.getElementById('publicView').hidden) loadPublicVideos();
     }
 
@@ -499,6 +526,9 @@
       currentProfile = null;
       updateSidebarUser();
       closeProfileModal();
+      
+      // Go to library
+      document.querySelector('[data-view="library"]').click();
     }
 
     async function saveProfile() {
@@ -511,18 +541,15 @@
       
       btn.innerText = 'Saving...';
       btn.disabled = true;
-      
       let avatarUrl = currentProfile.avatar_url;
 
-      // Upload new PFP if selected
       if (file) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
         const { error: uploadError } = await db.storage.from('avatars').upload(fileName, file);
         
-        if (uploadError) {
-          alert('Error uploading image: ' + uploadError.message);
-        } else {
+        if (uploadError) alert('Error uploading image: ' + uploadError.message);
+        else {
           const { data } = db.storage.from('avatars').getPublicUrl(fileName);
           avatarUrl = data.publicUrl;
         }
@@ -537,28 +564,34 @@
         await fetchProfile();
         updateSidebarUser();
         closeProfileModal();
+        // Refresh profile view if open
+        if (!document.getElementById('profileView').hidden) goToProfile(currentUser.id);
       }
-      
       btn.innerText = 'Save Changes';
       btn.disabled = false;
     }
 
     // --- PROFILE VIEWING ---
-    async function goToProfile(userId = null, fallbackName = null) {
-      const targetId = userId || currentPublicPublisherId;
-      if (!targetId) return alert('This is an old video without a publisher profile.');
+    async function goToProfile(userId = null) {
+      const targetId = userId || currentPublicPublisherId || (currentUser ? currentUser.id : null);
+      if (!targetId) return alert('Please log in or select a valid user.');
 
       document.getElementById('libraryView').hidden = true;
       document.getElementById('publicView').hidden = true;
+      document.getElementById('settingsView').hidden = true;
       document.getElementById('searchView').hidden = true;
       document.getElementById('profileView').hidden = false;
 
+      // Update active nav
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      if (targetId === (currentUser ? currentUser.id : null)) {
+        document.querySelector('[data-view="profile"]').classList.add('active');
+      }
+
       document.getElementById('profileViewPfp').src = 'https://ui-avatars.com/api/?name=Loading&background=0c1322&color=0066ff';
       document.getElementById('profileViewName').innerText = 'Loading...';
-      document.getElementById('profileViewBio').innerText = '';
       document.getElementById('profileVideoGrid').innerHTML = '<div class="loader"></div>';
 
-      // Fetch Profile
       const { data: profile } = await db.from('profiles').select('*').eq('id', targetId).single();
       if (!profile) return alert('Profile not found.');
 
@@ -567,25 +600,23 @@
       document.getElementById('profileViewNameSpan').innerText = profile.username;
       document.getElementById('profileViewBio').innerText = profile.bio || 'No bio yet.';
 
-      // Fetch Videos & Stats
       const { data: vids } = await db.from('videos').select('*').eq('publisher_id', targetId);
-      
       let totalViews = 0;
       let totalLikes = 0;
       
-      document.getElementById('profileVideoGrid').innerHTML = '';
+      const grid = document.getElementById('profileVideoGrid');
+      grid.innerHTML = '';
       
       if (vids && vids.length > 0) {
         vids.forEach(v => {
           totalViews += v.views;
-          document.getElementById('profileVideoGrid').appendChild(createPublicCard(v));
+          grid.appendChild(createPublicCard(v));
         });
-        
         const vidsIds = vids.map(v => v.id);
         const { data: likes } = await db.from('likes').select('*').in('video_id', vidsIds);
         totalLikes = likes ? likes.length : 0;
       } else {
-        document.getElementById('profileVideoGrid').innerHTML = '<div class="empty-state">No videos posted yet.</div>';
+        grid.innerHTML = '<div class="empty-state">No videos posted yet.</div>';
       }
 
       document.getElementById('profileViewViews').innerText = totalViews;
@@ -593,7 +624,6 @@
     }
 
     // --- CORE APP LOGIC ---
-
     function getYouTubeId(url) {
       try {
         const parsed = new URL(url);
@@ -645,15 +675,10 @@
       document.getElementById('publicSelectedArea').hidden = false;
       
       document.getElementById('pubTitle').innerText = video.title;
-      
-      // Original Creator Meta
       document.getElementById('pubOrigAvatar').src = video.avatar;
       document.getElementById('pubOrigName').innerText = video.author;
-      
-      // Publisher Meta
       document.getElementById('pubPostAvatar').src = video.publisher_avatar || `https://ui-avatars.com/api/?name=${video.publisher_name || 'Unknown'}&background=0c1322&color=0066ff`;
       document.getElementById('pubPostName').innerText = video.publisher_name || 'Unknown User';
-      
       document.getElementById('pubViews').innerText = video.views;
       document.getElementById('pubLikeCount').innerText = '...';
       document.getElementById('pubCommentList').innerHTML = '<div class="loader"></div>';
@@ -675,7 +700,6 @@
     async function loadPublicVideos() {
       document.getElementById('publicGridArea').hidden = false;
       document.getElementById('publicSelectedArea').hidden = true;
-      
       const grid = document.getElementById('publicVideoGrid');
       grid.innerHTML = '<div class="loader"></div>';
       
@@ -695,6 +719,8 @@
     async function loadPublicInteractions(videoId) {
       const { data: likes } = await db.from('likes').select('*').eq('video_id', videoId);
       const likeCount = likes ? likes.length : 0;
+      // Session ID is unique per browser to track if they liked
+      const sessionId = localStorage.getItem('tubeYouSessionId');
       const hasLiked = likes ? likes.some(l => l.session_id === sessionId) : false;
       
       document.getElementById('pubLikeCount').innerText = likeCount;
@@ -725,6 +751,7 @@
     document.getElementById('pubLikeBtn').onclick = async () => {
       if (!currentUser) return alert('Please log in to like videos.');
       if (!currentPublicVideoId) return;
+      const sessionId = localStorage.getItem('tubeYouSessionId');
       const isLiked = document.getElementById('pubLikeBtn').classList.contains('liked');
       if (isLiked) await db.from('likes').delete().eq('video_id', currentPublicVideoId).eq('session_id', sessionId);
       else await db.from('likes').insert({ video_id: currentPublicVideoId, session_id: sessionId });
@@ -736,13 +763,7 @@
       const input = document.getElementById('pubCommentInput');
       const text = input.value.trim();
       if (!text || !currentPublicVideoId) return;
-      
-      const { error } = await db.from('comments').insert({ 
-        video_id: currentPublicVideoId, 
-        author: currentProfile.username, 
-        text: text 
-      });
-      
+      const { error } = await db.from('comments').insert({ video_id: currentPublicVideoId, author: currentProfile.username, text: text });
       if (error) alert("Error: " + error.message);
       input.value = '';
       loadPublicInteractions(currentPublicVideoId);
@@ -766,13 +787,11 @@
           <button class="btn" style="height: 2rem; width: 100%; font-size:0.85rem;" id="pubBtn_${video.youtube_id}">Publish Publicly</button>
         </div>
       `;
-      
       card.querySelector('.thumbnail-container').onclick = () => playPrivateVideo(video.youtube_id);
       
       card.querySelector(`#pubBtn_${video.youtube_id}`).onclick = async (e) => {
         e.stopPropagation();
         if (!currentUser) return alert('Please log in to publish videos.');
-        
         const btn = e.target;
         btn.innerText = "Publishing...";
         
@@ -780,11 +799,8 @@
         if (existing && existing.length > 0) { btn.innerText = "Already Public"; return; }
 
         const { error } = await db.from('videos').insert({
-          youtube_id: video.youtube_id, title: video.title, author: video.author, 
-          thumbnail: video.thumbnail, avatar: video.avatar,
-          publisher_id: currentUser.id,
-          publisher_name: currentProfile.username,
-          publisher_avatar: currentProfile.avatar_url
+          youtube_id: video.youtube_id, title: video.title, author: video.author, thumbnail: video.thumbnail, avatar: video.avatar,
+          publisher_id: currentUser.id, publisher_name: currentProfile.username, publisher_avatar: currentProfile.avatar_url
         });
 
         if (error) { alert("Failed to publish: " + error.message); btn.innerText = "Publish Publicly"; } 
@@ -856,20 +872,38 @@
     document.querySelector('[data-view="library"]').onclick = () => {
       document.getElementById('libraryView').hidden = false;
       document.getElementById('publicView').hidden = true;
-      document.getElementById('searchView').hidden = true;
       document.getElementById('profileView').hidden = true;
+      document.getElementById('settingsView').hidden = true;
+      document.getElementById('searchView').hidden = true;
       document.querySelector('[data-view="library"]').classList.add('active');
-      document.querySelector('[data-view="public"]').classList.remove('active');
+      document.querySelectorAll('.nav-item').forEach(el => { if(el.dataset.view !== 'library') el.classList.remove('active') });
     };
     
     document.querySelector('[data-view="public"]').onclick = () => {
       document.getElementById('libraryView').hidden = true;
       document.getElementById('publicView').hidden = false;
-      document.getElementById('searchView').hidden = true;
       document.getElementById('profileView').hidden = true;
+      document.getElementById('settingsView').hidden = true;
+      document.getElementById('searchView').hidden = true;
       document.querySelector('[data-view="public"]').classList.add('active');
-      document.querySelector('[data-view="library"]').classList.remove('active');
+      document.querySelectorAll('.nav-item').forEach(el => { if(el.dataset.view !== 'public') el.classList.remove('active') });
       loadPublicVideos();
+    };
+
+    document.querySelector('[data-view="profile"]').onclick = () => {
+      if (!currentUser) return openProfileModal();
+      goToProfile(currentUser.id);
+    };
+
+    document.querySelector('[data-view="settings"]').onclick = () => {
+      if (!currentUser) return openProfileModal();
+      document.getElementById('libraryView').hidden = true;
+      document.getElementById('publicView').hidden = true;
+      document.getElementById('profileView').hidden = true;
+      document.getElementById('searchView').hidden = true;
+      document.getElementById('settingsView').hidden = false;
+      document.querySelector('[data-view="settings"]').classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(el => { if(el.dataset.view !== 'settings') el.classList.remove('active') });
     };
 
     document.getElementById('backToFeedBtn').onclick = () => {
@@ -900,7 +934,11 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
 
-    initAuth();
+    // Generate Session ID for likes if it doesn't exist
+    if (!localStorage.getItem('tubeYouSessionId')) {
+      localStorage.setItem('tubeYouSessionId', crypto.randomUUID());
+    }
+
     renderLocalVideos();
   </script>
 </body>
