@@ -209,29 +209,6 @@
     .video-title { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
     .video-author { font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;}
     
-    /* --- MINIMIZED PLAYER (PiP) --- */
-    #miniPlayer {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 350px;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      border: 1px solid var(--border-color);
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-    }
-    #miniPlayer iframe { width: 100%; height: 100%; border: 0; }
-    .mini-header { position: absolute; top: 0; left: 0; right: 0; padding: 8px; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); display: flex; justify-content: space-between; align-items: center; opacity: 0; transition: opacity 0.2s; z-index: 10; }
-    #miniPlayer:hover .mini-header { opacity: 1; }
-    .mini-title { font-size: 0.75rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%; }
-    .close-mini-btn { background: transparent; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
-    .close-mini-btn:hover { color: var(--danger); }
-
     /* --- PROFILE VIEW --- */
     .profile-banner { width: 100%; height: 180px; background: linear-gradient(135deg, #18181b 0%, #000000 100%); border-radius: 8px; margin-bottom: -50px; position: relative; overflow: hidden; background-size: cover; background-position: center; border: 1px solid var(--border-color); }
     .profile-header { display: flex; gap: 1.5rem; align-items: flex-end; padding: 0 1.5rem 1.5rem 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; position: relative; z-index: 2; }
@@ -297,14 +274,6 @@
 
   <div class="aurora-bg" id="auroraBg">
     <div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div>
-  </div>
-
-  <div id="miniPlayer">
-    <div class="mini-header">
-      <span class="mini-title" id="miniTitle">Playing...</span>
-      <button class="close-mini-btn" onclick="closeMiniPlayer()">×</button>
-    </div>
-    <div id="miniYoutubeContainer"></div>
   </div>
 
   <div class="sidebar" id="sidebar">
@@ -395,7 +364,7 @@
       
       <div id="publicSelectedArea" hidden>
         <div class="action-bar">
-          <button class="back-btn" onclick="minimizePublicVideo()">
+          <button class="back-btn" onclick="stopPublicVideo()">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             Back
           </button>
@@ -501,7 +470,7 @@
 
       <div id="profileSelectedArea" hidden>
         <div class="action-bar">
-          <button class="back-btn" onclick="minimizeProfileVideo()">
+          <button class="back-btn" onclick="stopProfileVideo()">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             Back to Channel
           </button>
@@ -693,7 +662,6 @@
     let ytPlayerPrivate = null;
     let ytPlayerPublic = null;
     let ytPlayerProfile = null;
-    let miniYtPlayer = null;
     
     let isTheaterPublic = false;
     let isTheaterProfile = false;
@@ -748,71 +716,19 @@
       }
     }
 
-    // --- MINIMIZED PLAYER LOGIC ---
-    const miniPlayer = document.getElementById('miniPlayer');
-
-    function minimizePublicVideo() {
-      if (!currentPublicVideoId) return;
-      let currentTime = 0;
-      if (ytPlayerPublic && ytPlayerPublic.getCurrentTime) {
-        currentTime = ytPlayerPublic.getCurrentTime();
-        watchProgress[currentPublicVideoId] = currentTime;
-        localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
-      }
+    // --- BACK BUTTON LOGIC (No Mini Player) ---
+    function stopPublicVideo() {
       document.getElementById('publicSelectedArea').hidden = true;
       document.getElementById('publicGridArea').hidden = false;
       if (ytPlayerPublic) { ytPlayerPublic.destroy(); ytPlayerPublic = null; }
-      openMiniPlayer(currentPublicVideoId, currentTime);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function minimizeProfileVideo() {
-      if (!currentProfileVideoId) return;
-      let currentTime = 0;
-      if (ytPlayerProfile && ytPlayerProfile.getCurrentTime) {
-        currentTime = ytPlayerProfile.getCurrentTime();
-        watchProgress[currentProfileVideoId] = currentTime;
-        localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
-      }
+    function stopProfileVideo() {
       document.getElementById('profileSelectedArea').hidden = true;
       document.getElementById('profileGridArea').hidden = false;
       if (ytPlayerProfile) { ytPlayerProfile.destroy(); ytPlayerProfile = null; }
-      openMiniPlayer(currentProfileVideoId, currentTime);
-    }
-
-    function openMiniPlayer(videoId, startTime) {
-      miniPlayer.style.display = 'flex';
-      setTimeout(() => {
-        if (miniYtPlayer) {
-          miniYtPlayer.loadVideoById({ videoId: videoId, startSeconds: startTime });
-        } else {
-          miniYtPlayer = new YT.Player('miniYoutubeContainer', {
-            height: '100%', width: '100%', videoId: videoId,
-            playerVars: { 'rel': 0, 'autoplay': 1, 'start': startTime },
-            events: {
-              'onStateChange': (event) => {
-                 if (event.data === YT.PlayerState.PLAYING) trackMiniPlayerProgress(videoId);
-              }
-            }
-          });
-        }
-      }, 50); // Small delay to ensure DOM is ready
-    }
-
-    function closeMiniPlayer() {
-      if (miniYtPlayer) { miniYtPlayer.destroy(); miniYtPlayer = null; }
-      miniPlayer.style.display = 'none';
-      if (progressInterval) clearInterval(progressInterval);
-    }
-
-    function trackMiniPlayerProgress(videoId) {
-      if (progressInterval) clearInterval(progressInterval);
-      progressInterval = setInterval(() => {
-        if (miniYtPlayer && miniYtPlayer.getCurrentTime) {
-          const time = miniYtPlayer.getCurrentTime();
-          watchProgress[videoId] = time;
-          localStorage.setItem('tubeYouProgress', JSON.stringify(watchProgress));
-        }
-      }, 2000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // --- NOTIFICATIONS ---
@@ -955,7 +871,7 @@
         else { 
           alert('Video deleted.'); 
           currentPublicVideoId = null;
-          minimizePublicVideo(); 
+          stopPublicVideo(); 
           loadPublicVideos(); 
         }
       }
