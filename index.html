@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TubeYou</title>
+  <title>ToYou</title>
   
+  <!-- ============================================================== -->
+  <!-- 👇 PASTE YOUR IMAGE LINK HERE 👇                               -->
   <link rel="icon" type="image/png" href="https://ui-avatars.com/api/?name=TY&background=000000&color=ffffff&bold=true">
+  <!-- ============================================================== -->
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -310,7 +313,7 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header" id="sidebarToggle">
       <svg class="logo-icon" viewBox="0 0 24 24"><path d="M21.582 6.186a2.6 2.6 0 0 0-1.836-1.844C18.09 3.9 12 3.9 12 3.9s-6.09 0-7.746.442a2.6 2.6 0 0 0-1.836 1.844C2 7.863 2 12 2 12s0 4.137.418 5.814a2.6 2.6 0 0 0 1.836 1.844C5.91 20.1 12 20.1 12 20.1s6.09 0 7.746-.442a2.6 2.6 0 0 0 1.836-1.844C22 16.137 22 12 22 12s0-4.137-.418-5.814zM9.9 15.3V8.7l5.8 3.3-5.8 3.3z"/></svg>
-      <span class="nav-text">TubeYou</span>
+      <span class="nav-text">ToYou</span>
     </div>
     <div class="nav-section">
       <div class="nav-item active" data-view="library">
@@ -424,7 +427,7 @@
                 </div>
                 <div class="meta-row">
                   <img id="pubPostAvatar" src="" />
-                  <div><div class="meta-label">Posted on TubeYou by</div><div class="clickable-user" id="pubPostName" onclick="goToProfile(currentPublicPublisherId)" style="font-size:0.8rem;"></div></div>
+                  <div><div class="meta-label">Posted on ToYou by</div><div class="clickable-user" id="pubPostName" onclick="goToProfile(currentPublicPublisherId)" style="font-size:0.8rem;"></div></div>
                 </div>
               </div>
               <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem;">
@@ -569,7 +572,7 @@
     <!-- SETTINGS VIEW -->
     <div id="settingsView" hidden>
       <div class="view-header">
-        <div><h1 class="section-title">Settings</h1><p class="section-subtitle">Manage your TubeYou experience</p></div>
+        <div><h1 class="section-title">Settings</h1><p class="section-subtitle">Manage your ToYou experience</p></div>
       </div>
       
       <div class="settings-group">
@@ -761,7 +764,7 @@
       }
       document.getElementById('publicSelectedArea').hidden = true;
       document.getElementById('publicGridArea').hidden = false;
-      if (ytPlayerPublic) ytPlayerPublic.destroy();
+      if (ytPlayerPublic) { ytPlayerPublic.destroy(); ytPlayerPublic = null; }
       openMiniPlayer(currentPublicVideoId, currentTime);
     }
 
@@ -775,7 +778,7 @@
       }
       document.getElementById('profileSelectedArea').hidden = true;
       document.getElementById('profileGridArea').hidden = false;
-      if (ytPlayerProfile) ytPlayerProfile.destroy();
+      if (ytPlayerProfile) { ytPlayerProfile.destroy(); ytPlayerProfile = null; }
       openMiniPlayer(currentProfileVideoId, currentTime);
     }
 
@@ -952,7 +955,12 @@
       if (confirm('ADMIN ACTION: Permanently delete this public video?')) {
         const { error } = await db.from('videos').delete().eq('id', currentPublicVideoId);
         if (error) alert(error.message);
-        else { alert('Video deleted.'); minimizePublicVideo(); loadPublicVideos(); }
+        else { 
+          alert('Video deleted.'); 
+          currentPublicVideoId = null;
+          minimizePublicVideo(); 
+          loadPublicVideos(); 
+        }
       }
     };
 
@@ -961,7 +969,11 @@
       if (confirm('Are you sure you want to remove this video from your channel?')) {
         const { error } = await db.from('videos').delete().eq('id', currentProfileVideoId);
         if (error) alert("Failed to delete: " + error.message);
-        else { alert('Video removed.'); goToProfile(currentProfileId); }
+        else { 
+          alert('Video removed.'); 
+          currentProfileVideoId = null;
+          goToProfile(currentProfileId); 
+        }
       }
     };
 
@@ -1164,9 +1176,9 @@
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if (targetId === (currentUser ? currentUser.id : null)) {
         document.querySelector('[data-view="profile"]').classList.add('active');
-        document.getElementById('tabHistory').style.display = 'block'; // Show history tab for self
+        document.getElementById('tabHistory').style.display = 'block';
       } else {
-        document.getElementById('tabHistory').style.display = 'none'; // Hide history for others
+        document.getElementById('tabHistory').style.display = 'none';
       }
 
       document.getElementById('profileViewPfp').src = 'https://ui-avatars.com/api/?name=Loading&background=18181b&color=ffffff';
@@ -1175,7 +1187,6 @@
       document.getElementById('profileVideoGrid').innerHTML = '<div class="loader"></div>';
       document.getElementById('subscribeBtn').style.display = 'none';
 
-      // Fetch Profile
       const { data: profile } = await db.from('profiles').select('*').eq('id', targetId).single();
       if (!profile) {
         document.getElementById('profileViewName').innerText = 'Profile Not Found';
@@ -1192,7 +1203,6 @@
       document.getElementById('profileViewName').innerHTML = profile.username + (isProfileAdmin ? ` ${crownSVG}` : '');
       document.getElementById('profileViewBio').innerText = profile.bio || 'No bio yet.';
 
-      // Fetch Subscription Data
       if (currentUser && currentUser.id !== targetId) {
         const { data: sub } = await db.from('subscriptions').select('*').eq('subscriber_id', currentUser.id).eq('channel_id', targetId).single();
         isSubscribed = !!sub;
@@ -1203,11 +1213,9 @@
         else { btn.classList.remove('subscribed'); btn.innerText = 'Subscribe'; }
       }
 
-      // Fetch Subscriber Count
       const { count: subCount } = await db.from('subscriptions').select('*', { count: 'exact', head: true }).eq('channel_id', targetId);
       document.getElementById('profileViewSubs').innerText = subCount || 0;
 
-      // Fetch Videos
       const { data: vids } = await db.from('videos').select('*').eq('publisher_id', targetId);
       currentProfileVideosData = vids || [];
       
@@ -1246,16 +1254,13 @@
       let displayData = [];
 
       if (currentProfileTab === 'history') {
-        // Show watch history
         const historyIds = Object.keys(watchProgress);
-        // Find video objects matching the history IDs
         const allKnownVideos = [...localVideos, ...publicVideos, ...currentProfileVideosData];
         displayData = historyIds.map(id => allKnownVideos.find(v => v.id === id)).filter(v => v);
       } else {
         displayData = [...currentProfileVideosData];
       }
 
-      // Apply Sorting
       const sortMode = document.getElementById('profileSortSelect').value;
       if (sortMode === 'latest') displayData.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
       if (sortMode === 'oldest') displayData.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
@@ -1281,7 +1286,6 @@
          else if(diff > 60) timeAgo = Math.floor(diff/60) + 'm ago';
       }
 
-      // Watch Progress
       const progress = watchProgress[video.id] || 0;
       const progressPercent = Math.min((progress / 300) * 100, 95);
       const progressBar = progress > 0 ? `<div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>` : '';
